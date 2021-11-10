@@ -157,7 +157,7 @@ export const Diagram = Node.create<DiagramOptions>({
   addInputRules() {
     return [
       textblockTypeInputRule({
-        find: /^```diagram$/,
+        find: /^:::diagram$/,
         type: this.type,
       }),
     ];

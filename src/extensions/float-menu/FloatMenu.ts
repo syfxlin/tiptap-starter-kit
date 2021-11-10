@@ -10,7 +10,7 @@ import { Plugin, PluginKey } from "prosemirror-state";
 import FloatMenuView from "./FloatMenuView";
 import "tippy.js/animations/shift-away.css";
 import { buttonView } from "./utils";
-import { items } from "./default-items";
+import { defaultFloatMenuItems } from "./default-items";
 
 export type FloatMenuItem = {
   name: string;
@@ -31,7 +31,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
   addOptions() {
     return {
       pluginKey: "floatMenu",
-      items,
+      items: defaultFloatMenuItems,
     };
   },
   addProseMirrorPlugins() {

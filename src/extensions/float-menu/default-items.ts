@@ -8,7 +8,7 @@ import {
   TextItalic,
 } from "@icon-park/svg";
 
-export const items: FloatMenuItem[] = [
+export const defaultFloatMenuItems: FloatMenuItem[] = [
   {
     name: "粗体",
     icon: TextBold({}),

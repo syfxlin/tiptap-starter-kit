@@ -20,6 +20,8 @@ export type MathInlineOptions = {
   dictionary: {
     empty: string;
     error: string;
+    inputMath: string;
+    openHelp: string;
   };
 };
 
@@ -55,6 +57,8 @@ export const MathInline = Node.create<MathInlineOptions>({
       dictionary: {
         empty: "(empty)",
         error: "(error)",
+        inputMath: "输入或粘贴公式",
+        openHelp: "帮助",
       },
     };
   },
@@ -158,7 +162,7 @@ export const MathInline = Node.create<MathInlineOptions>({
               editor.isEditable && isNodeActive(editor.state, this.name),
             init: (dom, editor) => {
               const code = inputView({
-                placeholder: "输入或粘贴公式",
+                placeholder: this.options.dictionary.inputMath,
               });
               code.input.addEventListener("input", () => {
                 const pos = editor.state.selection.from;
@@ -172,7 +176,7 @@ export const MathInline = Node.create<MathInlineOptions>({
               });
 
               const helper = buttonView({
-                name: "帮助",
+                name: this.options.dictionary.openHelp,
                 icon: Help({}),
               });
               helper.button.addEventListener("click", () => {
@@ -194,7 +198,7 @@ export const MathInline = Node.create<MathInlineOptions>({
             update: (dom, { editor }) => {
               const attrs = editor.getAttributes(this.name);
               const code = dom.querySelector("input") as HTMLInputElement;
-              code.value = attrs.value;
+              code.value = attrs.value || "";
             },
             tippyOptions: {
               onMount(instance) {

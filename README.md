@@ -26,10 +26,10 @@
 - MathInline\*：行内公式，提供渲染 [Katex](https://katex.org/) 公式的功能。
 - MathBlock\*：公式块，提供渲染 [Katex](https://katex.org/) 公式的功能。
 - Diagram\*：图表块，提供渲染 [Mermaid](https://mermaid-js.github.io/mermaid/#/) 图标的功能。
-- Audio\*：音频块，未完成。
-- Video\*：视频块，未完成。
+- Audio\*：音频块。
+- Video\*：视频块。
 - Details\*：折叠内容块。
-- Embed\*：嵌入块，提供嵌入网页的功能。未完成。
+- Embed\*：嵌入块，提供嵌入网页的功能。
 - Document
 - Paragraph
 - Text

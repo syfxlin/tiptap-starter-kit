@@ -3,7 +3,7 @@ import { Suggestion } from "@tiptap/suggestion";
 import { Plugin, PluginKey } from "prosemirror-state";
 import BlockMenuView from "./BlockMenuView";
 import { Decoration, DecorationSet } from "prosemirror-view";
-import { items } from "./default-items";
+import { defaultBlockMenuItems } from "./default-items";
 
 export type BlockMenuItem =
   | {
@@ -33,7 +33,7 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
   addOptions() {
     return {
       pluginKey: "blockMenu",
-      items,
+      items: defaultBlockMenuItems,
       dictionary: {
         newLineEmpty: "输入 '/' 以插入块...",
         newLineWithSlash: "继续输入进行过滤...",

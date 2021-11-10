@@ -17,7 +17,7 @@ import {
   VideoFile,
 } from "@icon-park/svg";
 
-export const items: BlockMenuItem[] = [
+export const defaultBlockMenuItems: BlockMenuItem[] = [
   {
     name: "h1",
     keywords: "heading1,bt1",
@@ -97,9 +97,7 @@ export const items: BlockMenuItem[] = [
       name: "图片",
       icon: Pic({}),
     }),
-    // TODO: update, 无图片时在内容处显示输入框，添加上传功能
-    command: (editor) =>
-      editor.chain().setImage({ src: "https://ixk.me/bg.jpg" }).run(),
+    command: (editor) => editor.chain().setImage({ src: "" }).run(),
     disable: (editor) => !editor.schema.nodes.image,
   },
   {
@@ -109,12 +107,7 @@ export const items: BlockMenuItem[] = [
       name: "音频",
       icon: AudioFile({}),
     }),
-    // TODO: update，同上，另外优化样式
-    command: (editor) =>
-      editor
-        .chain()
-        .setAudio({ src: "https://lab.ixk.me/assets/media/Summer.mp3" })
-        .run(),
+    command: (editor) => editor.chain().setAudio({ src: "" }).run(),
     disable: (editor) => !editor.schema.nodes.audio,
   },
   {
@@ -124,12 +117,7 @@ export const items: BlockMenuItem[] = [
       name: "视频",
       icon: VideoFile({}),
     }),
-    // TODO: update，同上，优化样式
-    command: (editor) =>
-      editor
-        .chain()
-        .setVideo({ src: "https://lab.ixk.me/assets/media/movie.mp4" })
-        .run(),
+    command: (editor) => editor.chain().setVideo({ src: "" }).run(),
     disable: (editor) => !editor.schema.nodes.video,
   },
   {
@@ -233,9 +221,7 @@ export const items: BlockMenuItem[] = [
       name: "嵌入",
       icon: Browser({}),
     }),
-    command: (editor) =>
-      // TODO: update
-      editor.chain().setEmbed({ src: "https://ixk.me" }).run(),
+    command: (editor) => editor.chain().setEmbed({ src: "" }).run(),
     disable: (editor) => !editor.schema.nodes.embed,
   },
 ];

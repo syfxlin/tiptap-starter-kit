@@ -16,6 +16,10 @@ export const editorCss = css`
     white-space: break-spaces;
     font-variant-ligatures: none;
     font-feature-settings: "liga" 0;
+
+    > * {
+      margin: 0.5em;
+    }
   }
 
   pre {
@@ -244,16 +248,15 @@ export const editorCss = css`
     background-color: var(--tiptap-color-mark);
   }
 
-  img {
+  img:not(.ProseMirror-separator),
+  audio,
+  video {
     max-width: 100%;
-  }
-
-  img.ProseMirror-separator {
-    display: inline !important;
-    border: none !important;
-    margin: 0 !important;
-    width: 1px !important;
-    height: 1px !important;
+    color: var(--tiptap-color-text);
+    background-color: var(--tiptap-color-background-secondly);
+    border: 1px solid var(--tiptap-color-border);
+    padding: 0.5em 0.5em;
+    border-radius: 4px;
   }
 
   table {

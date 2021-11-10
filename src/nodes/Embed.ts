@@ -1,9 +1,22 @@
-import { mergeAttributes, Node, nodeInputRule } from "@tiptap/core";
+import {
+  isNodeActive,
+  mergeAttributes,
+  Node,
+  nodeInputRule,
+} from "@tiptap/core";
 import { Node as ProseNode } from "prosemirror-model";
 import { attrs } from "./utils";
 import { NodeMarkdownStorage } from "../extensions/markdown/Markdown";
-import { Share } from "@icon-park/svg";
+import { Delete, Share } from "@icon-park/svg";
 import { css } from "@emotion/css";
+import { Plugin } from "prosemirror-state";
+import FloatMenuView from "../extensions/float-menu/FloatMenuView";
+import {
+  buttonView,
+  groupView,
+  inputView,
+} from "../extensions/float-menu/utils";
+import { defaultEmbedItems } from "./default-embeds";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -15,17 +28,23 @@ declare module "@tiptap/core" {
 
 export type EmbedItem = {
   name: string;
-  matcher: (src: string) => boolean;
-  href: (src: string) => string;
   icon: (() => HTMLElement) | HTMLElement | string;
-  view: (dom: HTMLIFrameElement, node: ProseNode) => void;
+  matcher: (src: string) => string | undefined | null | false;
+  view?: (
+    iframe: HTMLIFrameElement,
+    toolbar: HTMLDivElement,
+    node: ProseNode
+  ) => void;
 };
 
 export type EmbedOptions = {
   items: EmbedItem[];
   HTMLAttributes: Record<string, any>;
   dictionary: {
-    open: string;
+    openEmbed: string;
+    inputSrc: string;
+    inputTitle: string;
+    deleteEmbed: string;
   };
 };
 
@@ -36,10 +55,12 @@ export const Embed = Node.create<EmbedOptions>({
   atom: true,
   addOptions() {
     return {
-      // TODO: 增加预设的 embed 项
-      items: [],
+      items: defaultEmbedItems,
       dictionary: {
-        open: "打开",
+        openEmbed: "打开",
+        inputSrc: "输入或粘贴链接",
+        inputTitle: "标题",
+        deleteEmbed: "删除嵌入",
       },
       HTMLAttributes: {},
     };
@@ -83,14 +104,21 @@ export const Embed = Node.create<EmbedOptions>({
         iframe {
           flex: 1;
         }
+
+        img {
+          border: 0 !important;
+          padding: 0 !important;
+          background-color: transparent !important;
+          width: 1em;
+          height: 1em;
+        }
       `);
 
       const iframe = document.createElement("iframe");
-      iframe.src = node.attrs.src;
-      iframe.title = node.attrs.title;
       Object.entries(this.options.HTMLAttributes).forEach(([key, value]) => {
         iframe.setAttribute(key, value);
       });
+      iframe.title = node.attrs.title;
 
       dom.append(iframe);
 
@@ -99,7 +127,7 @@ export const Embed = Node.create<EmbedOptions>({
       );
 
       if (item) {
-        item.view(iframe, node);
+        iframe.src = item.matcher(node.attrs.src) as string;
 
         const toolbar = document.createElement("div");
         toolbar.classList.add(css`
@@ -141,15 +169,19 @@ export const Embed = Node.create<EmbedOptions>({
         const open = document.createElement("a");
         open.target = "_blank";
         open.rel = "noopener noreferrer";
-        open.href = item.href(node.attrs.src);
-        open.textContent = this.options.dictionary.open;
+        open.href = node.attrs.src;
+        open.textContent = this.options.dictionary.openEmbed;
         right.append(share);
         right.append(open);
+
+        // custom
+        item.view?.(iframe, toolbar, node);
 
         toolbar.append(left);
         toolbar.append(right);
         dom.append(toolbar);
       } else {
+        iframe.src = node.attrs.src;
         dom.classList.add(css`
           padding-bottom: 1em;
         `);
@@ -198,6 +230,67 @@ export const Embed = Node.create<EmbedOptions>({
         find: /(:embed{([^}]+)})/,
         type: this.type,
         getAttributes: (match) => attrs(match[2]),
+      }),
+    ];
+  },
+  addProseMirrorPlugins() {
+    return [
+      new Plugin({
+        view: () =>
+          new FloatMenuView({
+            editor: this.editor,
+            shouldShow: ({ editor }) =>
+              editor.isEditable && isNodeActive(editor.state, this.name),
+            init: (dom, editor) => {
+              const group = groupView("column");
+
+              const src = inputView({
+                id: "src",
+                placeholder: this.options.dictionary.inputSrc,
+              });
+
+              const title = inputView({
+                id: "title",
+                placeholder: this.options.dictionary.inputTitle,
+              });
+
+              const remove = buttonView({
+                name: this.options.dictionary.deleteEmbed,
+                icon: Delete({}),
+              });
+              remove.button.addEventListener("click", () => {
+                editor.chain().deleteSelection().run();
+              });
+
+              dom.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                  editor
+                    .chain()
+                    .updateAttributes(this.name, {
+                      src: src.input.value,
+                      title: title.input.value,
+                    })
+                    .focus()
+                    .run();
+                }
+              });
+              group.append(src.input);
+              group.append(title.input);
+              dom.append(group);
+              dom.append(remove.button);
+            },
+            update: (dom, { editor }) => {
+              const attrs = editor.getAttributes(this.name);
+
+              const src = dom.querySelector("input.id-src") as HTMLInputElement;
+              src.value = attrs.src || "";
+
+              const title = dom.querySelector(
+                "input.id-title"
+              ) as HTMLInputElement;
+              title.value = attrs.title || "";
+            },
+          }),
       }),
     ];
   },

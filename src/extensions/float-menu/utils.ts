@@ -140,6 +140,36 @@ export const inputView = (props: InputViewProps) => {
   return { input };
 };
 
+export const groupView = (direction: "column" | "row") => {
+  const group = document.createElement("div");
+  group.classList.add(css`
+    display: flex;
+    flex-direction: ${direction};
+
+    > * {
+      margin-top: 0.5em;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  `);
+  return group;
+};
+
+export const uploadView = (props: ButtonViewProps) => {
+  const button = buttonView(props);
+  const file = document.createElement("input");
+  file.type = "file";
+  button.button.addEventListener("click", () => {
+    file.click();
+  });
+  return {
+    ...button,
+    file,
+  };
+};
+
 export const editorView = (
   outerView: EditorView,
   getPos: (() => number) | boolean
@@ -159,6 +189,7 @@ export const editorView = (
     border: 1px solid var(--tiptap-color-border);
     white-space: pre;
     tab-size: 4;
+    font-size: 85%;
 
     &.show {
       display: block;

@@ -12,7 +12,11 @@ export const Clipboard = Extension.create({
           handlePaste: (view, event) => {
             const editable = this.editor.isEditable;
             const { clipboardData } = event;
-            if (!editable || !clipboardData) {
+            if (
+              !editable ||
+              !clipboardData ||
+              clipboardData.files.length !== 0
+            ) {
               return false;
             }
 

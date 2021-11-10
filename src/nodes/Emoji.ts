@@ -15,7 +15,13 @@ declare module "@tiptap/core" {
   }
 }
 
-export const Emoji = Node.create({
+export type EmojiOptions = {
+  dictionary: {
+    queryEmpty: string;
+  };
+};
+
+export const Emoji = Node.create<EmojiOptions>({
   name: "emoji",
   inline: true,
   group: "inline",
@@ -26,6 +32,13 @@ export const Emoji = Node.create({
   },
   renderHTML({ node }) {
     return ["span", { "data-type": this.name }, nameToEmoji[node.textContent]];
+  },
+  addOptions() {
+    return {
+      dictionary: {
+        queryEmpty: "没有找到结果",
+      },
+    };
   },
   addStorage() {
     return {
@@ -93,9 +106,7 @@ export const Emoji = Node.create({
             onStart: (props) => {
               view = new BlockMenuView({
                 editor: this.editor,
-                dictionary: {
-                  queryEmpty: "没有找到结果",
-                },
+                dictionary: this.options.dictionary,
               });
               view.update(props);
             },

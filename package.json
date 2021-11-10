@@ -1,12 +1,20 @@
 {
-  "name": "tiptap",
-  "version": "0.0.0",
+  "name": "tiptap-starter-kit",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "lib": "tsc && vite build --config vite.config.lib.ts",
     "serve": "vite preview",
     "lint": "eslint --ext .jsx,.js,.ts,.tsx --quiet src/"
   },
+  "main": "lib/starter-kit.umd.js",
+  "module": "lib/starter-kit.es.js",
+  "types": "lib/src/index.d.ts",
+  "files": [
+    "lib",
+    "src"
+  ],
   "dependencies": {
     "@emotion/css": "^11.5.0",
     "@icon-park/svg": "^1.3.5",
@@ -72,6 +80,7 @@
     "@types/react-dom": "^17.0.0",
     "@vitejs/plugin-react": "^1.0.0",
     "typescript": "^4.3.2",
-    "vite": "^2.6.4"
+    "vite": "^2.6.4",
+    "vite-plugin-dts": "^0.9.4"
   }
 }

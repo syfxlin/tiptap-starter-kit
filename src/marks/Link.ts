@@ -1,11 +1,32 @@
-import { Link as TLink } from "@tiptap/extension-link";
+import {
+  Link as TLink,
+  LinkOptions as TLinkOptions,
+} from "@tiptap/extension-link";
 import { MarkMarkdownStorage } from "../extensions/markdown/Markdown";
 import { Plugin } from "prosemirror-state";
 import FloatMenuView from "../extensions/float-menu/FloatMenuView";
 import { buttonView, inputView } from "../extensions/float-menu/utils";
 import { Delete, Share } from "@icon-park/svg";
 
-export const Link = TLink.extend({
+export type LinkOptions = TLinkOptions & {
+  dictionary: {
+    inputLink: string;
+    openLink: string;
+    deleteLink: string;
+  };
+};
+
+export const Link = TLink.extend<LinkOptions>({
+  addOptions() {
+    return {
+      ...this.parent?.(),
+      dictionary: {
+        inputLink: "输入或粘贴链接",
+        openLink: "打开链接",
+        deleteLink: "删除链接",
+      },
+    };
+  },
   addKeyboardShortcuts() {
     return {
       "Mod-k": () =>
@@ -54,11 +75,11 @@ export const Link = TLink.extend({
               editor.isActive(this.name),
             init: (dom, editor) => {
               const href = inputView({
-                placeholder: "输入或粘贴链接",
+                placeholder: this.options.dictionary.inputLink,
               });
 
               const open = buttonView({
-                name: "打开链接",
+                name: this.options.dictionary.openLink,
                 icon: Share({}),
               });
               open.button.addEventListener("click", () => {
@@ -69,7 +90,7 @@ export const Link = TLink.extend({
               });
 
               const remove = buttonView({
-                name: "删除链接",
+                name: this.options.dictionary.deleteLink,
                 icon: Delete({}),
               });
               remove.button.addEventListener("click", () => {
@@ -95,7 +116,7 @@ export const Link = TLink.extend({
             update: (dom, { editor }) => {
               const attrs = editor.getAttributes(this.name);
               const href = dom.querySelector("input") as HTMLInputElement;
-              href.value = attrs.href;
+              href.value = attrs.href || "";
             },
             tippyOptions: {
               onMount(instance) {

@@ -1,4 +1,7 @@
-import { TableHeader as TTableHeader } from "@tiptap/extension-table-header";
+import {
+  TableHeader as TTableHeader,
+  TableHeaderOptions as TTableHeaderOptions,
+} from "@tiptap/extension-table-header";
 import { NodeMarkdownStorage } from "../extensions/markdown/Markdown";
 import { Plugin } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
@@ -12,7 +15,25 @@ import FloatMenuView from "../extensions/float-menu/FloatMenuView";
 import { buttonView } from "../extensions/float-menu/utils";
 import { Delete, DoubleLeft, DoubleRight } from "@icon-park/svg";
 
-export const TableHeader = TTableHeader.extend({
+export type TableHeaderOptions = TTableHeaderOptions & {
+  dictionary: {
+    insertLeft: string;
+    insertRight: string;
+    delete: string;
+  };
+};
+
+export const TableHeader = TTableHeader.extend<TableHeaderOptions>({
+  addOptions() {
+    return {
+      ...this.parent?.(),
+      dictionary: {
+        insertLeft: "在左边插入列",
+        insertRight: "在右边插入列",
+        delete: "删除",
+      },
+    };
+  },
   addStorage() {
     return {
       ...this.parent?.(),
@@ -63,21 +84,21 @@ export const TableHeader = TTableHeader.extend({
             },
             init: (dom, editor) => {
               const insertLeft = buttonView({
-                name: "在左边插入列",
+                name: this.options.dictionary.insertLeft,
                 icon: DoubleLeft({}),
               });
               insertLeft.button.addEventListener("click", () => {
                 editor.chain().addColumnBefore().run();
               });
               const insertRight = buttonView({
-                name: "在右边插入列",
+                name: this.options.dictionary.insertRight,
                 icon: DoubleRight({}),
               });
               insertRight.button.addEventListener("click", () => {
                 editor.chain().addColumnAfter().run();
               });
               const remove = buttonView({
-                name: "删除",
+                name: this.options.dictionary.delete,
                 icon: Delete({}),
               });
               remove.button.addEventListener("click", () => {

@@ -11,7 +11,6 @@ import { BoldOptions } from "@tiptap/extension-bold";
 import { CodeOptions } from "@tiptap/extension-code";
 import { HighlightOptions } from "@tiptap/extension-highlight";
 import { ItalicOptions } from "@tiptap/extension-italic";
-import { LinkOptions } from "@tiptap/extension-link";
 import { StrikeOptions } from "@tiptap/extension-strike";
 import { ParagraphOptions } from "@tiptap/extension-paragraph/src/paragraph";
 import { BlockquoteOptions } from "@tiptap/extension-blockquote";
@@ -21,11 +20,8 @@ import { CodeBlockLowlightOptions } from "@tiptap/extension-code-block-lowlight"
 import { HardBreakOptions } from "@tiptap/extension-hard-break";
 import { HeadingOptions } from "@tiptap/extension-heading";
 import { HorizontalRuleOptions } from "@tiptap/extension-horizontal-rule";
-import { ImageOptions } from "@tiptap/extension-image";
 import { OrderedListOptions } from "@tiptap/extension-ordered-list";
 import { TableOptions } from "@tiptap/extension-table";
-import { TableCellOptions } from "@tiptap/extension-table-cell";
-import { TableHeaderOptions } from "@tiptap/extension-table-header";
 import { TableRowOptions } from "@tiptap/extension-table-row";
 import { TaskListOptions } from "@tiptap/extension-task-list";
 import { TaskItemOptions } from "@tiptap/extension-task-item";
@@ -33,7 +29,7 @@ import { Bold } from "../../marks/Bold";
 import { Code } from "../../marks/Code";
 import { Highlight } from "../../marks/Highlight";
 import { Italic } from "../../marks/Italic";
-import { Link } from "../../marks/Link";
+import { Link, LinkOptions } from "../../marks/Link";
 import { Strike } from "../../marks/Strike";
 import { Document } from "../../nodes/Document";
 import { Paragraph } from "../../nodes/Paragraph";
@@ -45,11 +41,11 @@ import { CodeBlock } from "../../nodes/CodeBlock";
 import { HardBreak } from "../../nodes/HardBreak";
 import { Heading } from "../../nodes/Heading";
 import { HorizontalRule } from "../../nodes/HorizontalRule";
-import { Image } from "../../nodes/Image";
+import { Image, ImageOptions } from "../../nodes/Image";
 import { OrderedList } from "../../nodes/OrderedList";
 import { Table } from "../../nodes/Table";
-import { TableCell } from "../../nodes/TableCell";
-import { TableHeader } from "../../nodes/TableHeader";
+import { TableCell, TableCellOptions } from "../../nodes/TableCell";
+import { TableHeader, TableHeaderOptions } from "../../nodes/TableHeader";
 import { TableRow } from "../../nodes/TableRow";
 import { TaskList } from "../../nodes/TaskList";
 import { TaskItem } from "../../nodes/TaskItem";
@@ -60,7 +56,8 @@ import { Audio, AudioOptions } from "../../nodes/Audio";
 import { Video, VideoOptions } from "../../nodes/Video";
 import { Details, DetailsOptions } from "../../nodes/Details";
 import { Embed, EmbedOptions } from "../../nodes/Embed";
-import { Emoji } from "../../nodes/Emoji";
+import { Emoji, EmojiOptions } from "../../nodes/Emoji";
+import { Uploader, UploaderOptions } from "../uploader/Uploader";
 
 export type StarterKitOptions = {
   // extensions
@@ -98,7 +95,8 @@ export type StarterKitOptions = {
   clipboard?: false;
   floatMenu?: Partial<FloatMenuOptions> | false;
   markdown?: false;
-  emoji?: false;
+  uploader?: Partial<UploaderOptions> | false;
+  emoji?: Partial<EmojiOptions> | false;
   mathInline?: Partial<MathInlineOptions> | false;
   mathBlock?: Partial<MathBlockOptions> | false;
   diagram?: Partial<DiagramOptions> | false;
@@ -212,6 +210,9 @@ export const StarterKit = Extension.create<StarterKitOptions>({
     }
     if (this.options.markdown !== false) {
       extensions.push(Markdown);
+    }
+    if (this.options.uploader !== false) {
+      extensions.push(Uploader.configure(this.options?.uploader));
     }
     if (this.options.emoji !== false) {
       extensions.push(Emoji.configure(this.options?.emoji));

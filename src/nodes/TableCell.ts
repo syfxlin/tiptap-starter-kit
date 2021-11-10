@@ -1,4 +1,7 @@
-import { TableCell as TTableCell } from "@tiptap/extension-table-cell";
+import {
+  TableCell as TTableCell,
+  TableCellOptions as TTableCellOptions,
+} from "@tiptap/extension-table-cell";
 import { NodeMarkdownStorage } from "../extensions/markdown/Markdown";
 import { Plugin } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
@@ -13,7 +16,25 @@ import FloatMenuView from "../extensions/float-menu/FloatMenuView";
 import { buttonView } from "../extensions/float-menu/utils";
 import { Delete, DoubleDown, DoubleUp } from "@icon-park/svg";
 
-export const TableCell = TTableCell.extend({
+export type TableCellOptions = TTableCellOptions & {
+  dictionary: {
+    insertTop: string;
+    insertBottom: string;
+    delete: string;
+  };
+};
+
+export const TableCell = TTableCell.extend<TableCellOptions>({
+  addOptions() {
+    return {
+      ...this.parent?.(),
+      dictionary: {
+        insertTop: "在上边插入行",
+        insertBottom: "在下边插入行",
+        delete: "删除",
+      },
+    };
+  },
   addStorage() {
     return {
       ...this.parent?.(),
@@ -61,7 +82,7 @@ export const TableCell = TTableCell.extend({
             init: (dom, editor) => {
               const insertTop = buttonView({
                 id: "insert-top",
-                name: "在上边插入列",
+                name: this.options.dictionary.insertTop,
                 icon: DoubleUp({}),
               });
               insertTop.button.addEventListener("click", () => {
@@ -69,14 +90,14 @@ export const TableCell = TTableCell.extend({
               });
               const insertBottom = buttonView({
                 id: "insert-bottom",
-                name: "在下边插入列",
+                name: this.options.dictionary.insertBottom,
                 icon: DoubleDown({}),
               });
               insertBottom.button.addEventListener("click", () => {
                 editor.chain().addRowAfter().run();
               });
               const remove = buttonView({
-                name: "删除",
+                name: this.options.dictionary.delete,
                 icon: Delete({}),
               });
               remove.button.addEventListener("click", () => {
