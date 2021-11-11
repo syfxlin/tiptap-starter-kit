@@ -3,7 +3,7 @@ import { NodeMarkdownStorage } from "../extensions/markdown/Markdown";
 import remarkMath from "remark-math";
 import katex from "katex";
 import "katex/dist/katex.css";
-import { Plugin } from "prosemirror-state";
+import { Plugin, PluginKey } from "prosemirror-state";
 import FloatMenuView from "../extensions/float-menu/FloatMenuView";
 import { buttonView, inputView } from "../extensions/float-menu/utils";
 import { Help } from "@icon-park/svg";
@@ -155,6 +155,7 @@ export const MathInline = Node.create<MathInlineOptions>({
   addProseMirrorPlugins() {
     return [
       new Plugin({
+        key: new PluginKey(`${this.name}FloatMenu`),
         view: () =>
           new FloatMenuView({
             editor: this.editor,

@@ -3,7 +3,7 @@ import {
   LinkOptions as TLinkOptions,
 } from "@tiptap/extension-link";
 import { MarkMarkdownStorage } from "../extensions/markdown/Markdown";
-import { Plugin } from "prosemirror-state";
+import { Plugin, PluginKey } from "prosemirror-state";
 import FloatMenuView from "../extensions/float-menu/FloatMenuView";
 import { buttonView, inputView } from "../extensions/float-menu/utils";
 import { Delete, Share } from "@icon-park/svg";
@@ -66,6 +66,7 @@ export const Link = TLink.extend<LinkOptions>({
   addProseMirrorPlugins() {
     return [
       new Plugin({
+        key: new PluginKey(`${this.name}FloatMenu`),
         view: () =>
           new FloatMenuView({
             editor: this.editor,

@@ -6,6 +6,7 @@ export * from "./extensions/block-menu/default-items";
 
 // Clipboard
 export * from "./extensions/clipboard/Clipboard";
+export * from "./extensions/clipboard/utils";
 
 // FloatMenu
 export * from "./extensions/float-menu/FloatMenu";

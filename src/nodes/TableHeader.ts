@@ -3,7 +3,7 @@ import {
   TableHeaderOptions as TTableHeaderOptions,
 } from "@tiptap/extension-table-header";
 import { NodeMarkdownStorage } from "../extensions/markdown/Markdown";
-import { Plugin } from "prosemirror-state";
+import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import {
   getCellsInRow,
@@ -65,6 +65,7 @@ export const TableHeader = TTableHeader.extend<TableHeaderOptions>({
   addProseMirrorPlugins() {
     return [
       new Plugin({
+        key: new PluginKey(`${this.name}FloatMenu`),
         view: () =>
           new FloatMenuView({
             editor: this.editor,

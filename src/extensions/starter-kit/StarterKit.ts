@@ -116,7 +116,7 @@ export const StarterKit = Extension.create<StarterKitOptions>({
       extensions.push(Dropcursor.configure(this.options?.dropCursor));
     }
     if (this.options.gapCursor !== false) {
-      extensions.push(Gapcursor.configure(this.options?.gapCursor));
+      extensions.push(Gapcursor);
     }
     if (this.options.history !== false) {
       extensions.push(History.configure(this.options?.history));

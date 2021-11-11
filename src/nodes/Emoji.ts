@@ -64,7 +64,7 @@ export const Emoji = Node.create<EmojiOptions>({
     return [
       Suggestion({
         editor: this.editor,
-        pluginKey: new PluginKey(`${this.name}-suggestion`),
+        pluginKey: new PluginKey(`${this.name}Suggestion`),
         char: "::",
         items: ({ query }) => {
           const items = Object.keys(nameToEmoji).map((name) => ({

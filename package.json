@@ -1,6 +1,22 @@
 {
-  "name": "tiptap-starter-kit",
-  "version": "1.0.0",
+  "name": "@syfxlin/tiptap-starter-kit",
+  "version": "0.0.1-beta.1",
+  "description": "The non-official starter kit of the Tiptap editor contains common extensions.",
+  "author": "syfxlin <syfxlin@gmail.com>",
+  "private": false,
+  "keywords": [
+    "tiptap",
+    "tiptap-extension"
+  ],
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/syfxlin/tiptap-starter-kit",
+  "bugs": {
+    "url": "https://github.com/syfxlin/tiptap-starter-kit/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/syfxlin/tiptap-starter-kit"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -16,9 +32,7 @@
     "src"
   ],
   "dependencies": {
-    "@emotion/css": "^11.5.0",
     "@icon-park/svg": "^1.3.5",
-    "@tiptap/core": "^2.0.0-beta.131",
     "@tiptap/extension-blockquote": "^2.0.0-beta.21",
     "@tiptap/extension-bold": "^2.0.0-beta.21",
     "@tiptap/extension-bubble-menu": "^2.0.0-beta.45",
@@ -48,7 +62,6 @@
     "@tiptap/extension-task-item": "^2.0.0-beta.24",
     "@tiptap/extension-task-list": "^2.0.0-beta.20",
     "@tiptap/extension-text": "^2.0.0-beta.13",
-    "@tiptap/react": "^2.0.0-beta.87",
     "@tiptap/suggestion": "^2.0.0-beta.78",
     "@types/jest": "^27.0.2",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
@@ -74,7 +87,12 @@
     "ts-jest": "^27.0.7",
     "vite-plugin-checker": "^0.3.4"
   },
+  "peerDependencies": {
+    "@emotion/css": "^11.5.0",
+    "@tiptap/core": "^2.0.0-beta.138"
+  },
   "devDependencies": {
+    "@tiptap/react": "^2.0.0-beta.93",
     "@types/mermaid": "^8.2.7",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",

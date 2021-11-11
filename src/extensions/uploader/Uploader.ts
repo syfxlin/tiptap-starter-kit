@@ -1,12 +1,13 @@
 import { Extension } from "@tiptap/core";
 import { defaultUploader } from "./default-uploader";
-import { Plugin } from "prosemirror-state";
+import { Plugin, PluginKey } from "prosemirror-state";
 
 export type UploaderFn = (files: FileList) => Promise<
   {
     name: string;
     size: number;
     url: string;
+    type: string;
   }[]
 >;
 
@@ -27,8 +28,40 @@ export const Uploader = Extension.create<UploaderOptions, UploaderOptions>({
     };
   },
   addProseMirrorPlugins() {
+    const upload = (files: FileList) => {
+      this.storage.uploader(files).then((items) => {
+        items.map((item) => {
+          if (item.type.startsWith("image")) {
+            this.editor
+              .chain()
+              .setImage({
+                src: item.url,
+                alt: item.name,
+              })
+              .run();
+          } else if (item.type.startsWith("audio")) {
+            this.editor
+              .chain()
+              .setAudio({
+                src: item.url,
+                title: item.name,
+              })
+              .run();
+          } else if (item.type.startsWith("video")) {
+            this.editor
+              .chain()
+              .setVideo({
+                src: item.url,
+                title: item.name,
+              })
+              .run();
+          }
+        });
+      });
+    };
     return [
       new Plugin({
+        key: new PluginKey(`${this.name}Handler`),
         props: {
           handlePaste: (view, event) => {
             const editable = this.editor.isEditable;
@@ -40,18 +73,7 @@ export const Uploader = Extension.create<UploaderOptions, UploaderOptions>({
             ) {
               return false;
             }
-            this.storage.uploader(clipboardData.files).then((items) => {
-              // TODO: 按照文件属性分配
-              items.map((item) =>
-                this.editor
-                  .chain()
-                  .setImage({
-                    src: item.url,
-                    alt: item.name,
-                  })
-                  .run()
-              );
-            });
+            upload(clipboardData.files);
             return true;
           },
           handleDrop: (view, event) => {
@@ -62,17 +84,7 @@ export const Uploader = Extension.create<UploaderOptions, UploaderOptions>({
             if (!files || files.length <= 0) {
               return false;
             }
-            this.storage.uploader(files).then((items) => {
-              items.map((item) =>
-                this.editor
-                  .chain()
-                  .setImage({
-                    src: item.url,
-                    alt: item.name,
-                  })
-                  .run()
-              );
-            });
+            upload(files);
             return true;
           },
         },

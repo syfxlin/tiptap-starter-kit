@@ -9,6 +9,10 @@ export const editorCss = css`
   line-height: var(--tiptap-line-height);
   width: 100%;
 
+  * {
+    box-sizing: border-box;
+  }
+
   .ProseMirror {
     position: relative;
     outline: none;
@@ -18,7 +22,7 @@ export const editorCss = css`
     font-feature-settings: "liga" 0;
 
     > * {
-      margin: 0.5em;
+      margin: 0.5em 0;
     }
   }
 

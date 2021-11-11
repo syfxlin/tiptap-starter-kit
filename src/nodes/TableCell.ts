@@ -3,7 +3,7 @@ import {
   TableCellOptions as TTableCellOptions,
 } from "@tiptap/extension-table-cell";
 import { NodeMarkdownStorage } from "../extensions/markdown/Markdown";
-import { Plugin } from "prosemirror-state";
+import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import {
   getCellsInColumn,
@@ -66,6 +66,7 @@ export const TableCell = TTableCell.extend<TableCellOptions>({
   addProseMirrorPlugins() {
     return [
       new Plugin({
+        key: new PluginKey(`${this.name}FloatMenu`),
         view: () =>
           new FloatMenuView({
             editor: this.editor,

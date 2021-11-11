@@ -99,9 +99,9 @@ const preCss = css`
   white-space: pre;
 
   code {
-    background: none;
-    padding: 0;
-    border: 0;
+    background: none !important;
+    padding: 0 !important;
+    border: 0 !important;
   }
 
   select {
@@ -277,7 +277,13 @@ export const CodeBlock = CodeBlockLowlight.extend({
   },
   addKeyboardShortcuts() {
     return {
-      Tab: () => this.editor.commands.insertContent("\t"),
+      Tab: ({ editor }) => {
+        if (editor.isActive(this.name)) {
+          this.editor.commands.insertContent("\t");
+          return true;
+        }
+        return false;
+      },
     };
   },
 });

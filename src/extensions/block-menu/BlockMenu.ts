@@ -115,7 +115,7 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
         },
       }),
       new Plugin({
-        key: new PluginKey(`${this.options.pluginKey}-placeholder`),
+        key: new PluginKey(`${this.options.pluginKey}Placeholder`),
         props: {
           decorations: (state) => {
             const parent = findParentNode(

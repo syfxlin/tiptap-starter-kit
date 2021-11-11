@@ -6,7 +6,7 @@ import {
 } from "@tiptap/core";
 import { NodeMarkdownStorage } from "../extensions/markdown/Markdown";
 import { attrs } from "./utils";
-import { Plugin } from "prosemirror-state";
+import { Plugin, PluginKey } from "prosemirror-state";
 import FloatMenuView from "../extensions/float-menu/FloatMenuView";
 import {
   buttonView,
@@ -125,6 +125,7 @@ export const Video = Node.create<VideoOptions>({
   addProseMirrorPlugins() {
     return [
       new Plugin({
+        key: new PluginKey(`${this.name}FloatMenu`),
         view: () =>
           new FloatMenuView({
             editor: this.editor,

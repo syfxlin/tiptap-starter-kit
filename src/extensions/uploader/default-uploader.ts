@@ -2,7 +2,7 @@ import { UploaderFn } from "./Uploader";
 
 const saveFileAsBase64 = (
   file: File
-): Promise<{ name: string; size: number; url: string }> => {
+): Promise<{ name: string; size: number; url: string; type: string }> => {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.addEventListener(
@@ -12,6 +12,7 @@ const saveFileAsBase64 = (
           name: file.name,
           size: file.size,
           url: reader.result as string,
+          type: file.type,
         });
       },
       false

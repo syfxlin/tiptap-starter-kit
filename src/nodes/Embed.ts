@@ -9,7 +9,7 @@ import { attrs } from "./utils";
 import { NodeMarkdownStorage } from "../extensions/markdown/Markdown";
 import { Delete, Share } from "@icon-park/svg";
 import { css } from "@emotion/css";
-import { Plugin } from "prosemirror-state";
+import { Plugin, PluginKey } from "prosemirror-state";
 import FloatMenuView from "../extensions/float-menu/FloatMenuView";
 import {
   buttonView,
@@ -236,6 +236,7 @@ export const Embed = Node.create<EmbedOptions>({
   addProseMirrorPlugins() {
     return [
       new Plugin({
+        key: new PluginKey(`${this.name}FloatMenu`),
         view: () =>
           new FloatMenuView({
             editor: this.editor,
