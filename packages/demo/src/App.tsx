@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { editorCss, StarterKit } from "@syfxlin/tiptap-starter-kit";
 import { css, injectGlobal } from "@emotion/css";
+import "katex/dist/katex.css";
 
 injectGlobal`
   :root {
@@ -71,7 +72,7 @@ const content = {
       content: [
         {
           type: "text",
-          text: "🚧 WIP，目前还处于开发中，后续会发布到 npm 上。",
+          text: "见 Github 仓库里的 README.md",
         },
       ],
     },
@@ -178,7 +179,9 @@ const content = {
         },
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "History" }] }],
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: "History" }] },
+          ],
         },
       ],
     },
@@ -305,7 +308,9 @@ const content = {
           content: [
             {
               type: "paragraph",
-              content: [{ type: "text", text: "Embed*：嵌入块，提供嵌入网页的功能。" }],
+              content: [
+                { type: "text", text: "Embed*：嵌入块，提供嵌入网页的功能。" },
+              ],
             },
           ],
         },
@@ -329,7 +334,9 @@ const content = {
         },
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "Text" }] }],
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: "Text" }] },
+          ],
         },
         {
           type: "listItem",
@@ -363,7 +370,9 @@ const content = {
           content: [
             {
               type: "paragraph",
-              content: [{ type: "text", text: "CodeBlock：添加选择语言的功能" }],
+              content: [
+                { type: "text", text: "CodeBlock：添加选择语言的功能" },
+              ],
             },
           ],
         },
@@ -378,7 +387,9 @@ const content = {
         },
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "Heading" }] }],
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: "Heading" }] },
+          ],
         },
         {
           type: "listItem",
@@ -473,11 +484,15 @@ const content = {
       content: [
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "Bold" }] }],
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: "Bold" }] },
+          ],
         },
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "Code" }] }],
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: "Code" }] },
+          ],
         },
         {
           type: "listItem",
@@ -490,7 +505,9 @@ const content = {
         },
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "Italic" }] }],
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: "Italic" }] },
+          ],
         },
         {
           type: "listItem",
@@ -503,7 +520,9 @@ const content = {
         },
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "Strike" }] }],
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: "Strike" }] },
+          ],
         },
       ],
     },
@@ -602,7 +621,9 @@ const content = {
       content: [
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "item 1" }] }],
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: "item 1" }] },
+          ],
         },
         {
           type: "listItem",
@@ -642,7 +663,9 @@ const content = {
         },
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "item 5" }] }],
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: "item 5" }] },
+          ],
         },
       ],
     },
@@ -651,7 +674,9 @@ const content = {
       content: [
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "item 1" }] }],
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: "item 1" }] },
+          ],
         },
         {
           type: "listItem",
@@ -689,7 +714,9 @@ const content = {
         },
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "item 5" }] }],
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: "item 5" }] },
+          ],
         },
       ],
     },
@@ -699,7 +726,9 @@ const content = {
         {
           type: "taskItem",
           attrs: { checked: false },
-          content: [{ type: "paragraph", content: [{ type: "text", text: "item 1" }] }],
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: "item 1" }] },
+          ],
         },
         {
           type: "taskItem",
@@ -741,7 +770,9 @@ const content = {
         {
           type: "taskItem",
           attrs: { checked: false },
-          content: [{ type: "paragraph", content: [{ type: "text", text: "item 5" }] }],
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: "item 5" }] },
+          ],
         },
       ],
     },
@@ -795,7 +826,9 @@ const content = {
     },
     {
       type: "blockquote",
-      content: [{ type: "paragraph", content: [{ type: "text", text: "blockquote" }] }],
+      content: [
+        { type: "paragraph", content: [{ type: "text", text: "blockquote" }] },
+      ],
     },
     {
       type: "codeBlock",
@@ -909,7 +942,9 @@ const content = {
     {
       type: "details",
       attrs: { open: true, summary: "summary" },
-      content: [{ type: "paragraph", content: [{ type: "text", text: "content" }] }],
+      content: [
+        { type: "paragraph", content: [{ type: "text", text: "content" }] },
+      ],
     },
     {
       type: "diagram",

@@ -6,7 +6,80 @@
 
 ## 安装 Installation
 
-🚧 WIP，目前还处于开发中，后续会发布到 npm 上。
+```shell
+npm i @syfxlin/tiptap-starter-kit
+# or
+yarn add @syfxlin/tiptap-starter-kit
+```
+
+## 使用 Usage
+
+```typescript jsx
+import React, { useEffect, useState } from "react";
+import { EditorContent, useEditor } from "@tiptap/react";
+import { editorCss, StarterKit } from "@syfxlin/tiptap-starter-kit";
+// StarterKit uses Emotion.js to apply the style
+import { css, injectGlobal } from "@emotion/css";
+// If you need support for mathematical formulas then you need to import.
+import "katex/dist/katex.css";
+
+// default theme variables, you can also set the css variables to html or body
+injectGlobal`
+  :root {
+    --tiptap-color-text: #000;
+    --tiptap-color-text-secondly: #adb5bd;
+    --tiptap-color-background: #fff;
+    --tiptap-color-background-hover: #e9ecef;
+    --tiptap-color-background-secondly: #f8f9fa;
+    --tiptap-color-border: #ced4da;
+    --tiptap-color-reverse-text: #fff;
+    --tiptap-color-reverse-text-secondly: #f8f9fa;
+    --tiptap-color-reverse-background: #25262b;
+    --tiptap-color-reverse-bakcground-secondly: #5c5f66;
+    --tiptap-color-primary: #1c7ed6;
+    --tiptap-color-selected: #8cf;
+    --tiptap-color-code: #c92a2a;
+    --tiptap-color-mark: #ffec99;
+    --tiptap-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    --tiptap-font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+    --tiptap-font-weight: 400;
+    --tiptap-font-size: 1em;
+    --tiptap-line-height: 1.7;
+  }
+`;
+
+const App: React.FC = () => {
+  const editor = useEditor({
+    editable: true,
+    extensions: [StarterKit],
+    content: "<h1>Hello World!</h2>",
+  });
+  // You can use editorCss to apply starterkit's default style
+  return <EditorContent editor={editor} className={editorCss} />;
+};
+```
+
+You can configure the included extensions, or disable some of them.
+
+```typescript
+import { useEditor } from "@tiptap/react";
+import { StarterKit } from "@syfxlin/tiptap-starter-kit";
+
+const editor = useEditor({
+  extensions: [
+    StarterKit.configure({
+      // disable
+      emoji: false,
+      // configure
+      heading: {
+        levels: [1, 2],
+      },
+    }),
+  ],
+});
+```
 
 ## 包含的扩展 Included extensions
 
@@ -15,8 +88,7 @@
 - BlockMenu\*：块菜单，也称为斜杠菜单，通过 '/' 字符开启菜单，用于添加 nodes。
 - FloatMenu\*：浮动菜单，选中文本开启菜单，用于将 marks 应用到文本。
 - Clipboard\*：剪贴板扩展，用于解析粘贴的 Markdown 内容，同时在复制时将内容序列化为 Markdown。
-- Markdown\*：Markdown 扩展，提供 Markdown 解析器和序列化器，使用 [remark](https://github.com/remarkjs/remark) 处理
-  Markdown 语法。
+- Markdown\*：Markdown 扩展，提供 Markdown 解析器和序列化器，使用 [remark](https://github.com/remarkjs/remark) 处理 Markdown 语法。
 - DropCursor
 - GapCursor
 - History
