@@ -15,7 +15,8 @@
 - BlockMenu\*：块菜单，也称为斜杠菜单，通过 '/' 字符开启菜单，用于添加 nodes。
 - FloatMenu\*：浮动菜单，选中文本开启菜单，用于将 marks 应用到文本。
 - Clipboard\*：剪贴板扩展，用于解析粘贴的 Markdown 内容，同时在复制时将内容序列化为 Markdown。
-- Markdown\*：Markdown 扩展，提供 Markdown 解析器和序列化器，使用 [remark](https://github.com/remarkjs/remark) 处理 Markdown 语法。
+- Markdown\*：Markdown 扩展，提供 Markdown 解析器和序列化器，使用 [remark](https://github.com/remarkjs/remark) 处理
+  Markdown 语法。
 - DropCursor
 - GapCursor
 - History

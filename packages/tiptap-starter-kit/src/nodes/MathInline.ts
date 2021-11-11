@@ -2,7 +2,6 @@ import { InputRule, isNodeActive, Node } from "@tiptap/core";
 import { NodeMarkdownStorage } from "../extensions/markdown/Markdown";
 import remarkMath from "remark-math";
 import katex from "katex";
-import "katex/dist/katex.css";
 import { Plugin, PluginKey } from "prosemirror-state";
 import FloatMenuView from "../extensions/float-menu/FloatMenuView";
 import { buttonView, inputView } from "../extensions/float-menu/utils";

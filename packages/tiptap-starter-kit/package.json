@@ -1,0 +1,81 @@
+{
+  "name": "@syfxlin/tiptap-starter-kit",
+  "version": "0.0.1-beta.2",
+  "description": "The non-official starter kit of the Tiptap editor contains common extensions.",
+  "author": "syfxlin <syfxlin@gmail.com>",
+  "private": false,
+  "keywords": [
+    "tiptap",
+    "tiptap-extension"
+  ],
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/syfxlin/tiptap-starter-kit",
+  "bugs": {
+    "url": "https://github.com/syfxlin/tiptap-starter-kit/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/syfxlin/tiptap-starter-kit"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "main": "dist/index.cjs.js",
+  "umd": "dist/index.umd.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/packages/tiptap-starter-kit/src/index.d.ts",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "dependencies": {
+    "@emotion/css": "^11.5.0",
+    "@icon-park/svg": "^1.3.5",
+    "@tiptap/core": "^2.0.0-beta.138",
+    "@tiptap/extension-blockquote": "^2.0.0-beta.24",
+    "@tiptap/extension-bold": "^2.0.0-beta.24",
+    "@tiptap/extension-bubble-menu": "^2.0.0-beta.49",
+    "@tiptap/extension-bullet-list": "^2.0.0-beta.23",
+    "@tiptap/extension-code": "^2.0.0-beta.25",
+    "@tiptap/extension-code-block": "^2.0.0-beta.29",
+    "@tiptap/extension-code-block-lowlight": "^2.0.0-beta.55",
+    "@tiptap/extension-document": "^2.0.0-beta.15",
+    "@tiptap/extension-dropcursor": "^2.0.0-beta.24",
+    "@tiptap/extension-gapcursor": "^2.0.0-beta.33",
+    "@tiptap/extension-hard-break": "^2.0.0-beta.30",
+    "@tiptap/extension-heading": "^2.0.0-beta.23",
+    "@tiptap/extension-highlight": "^2.0.0-beta.30",
+    "@tiptap/extension-history": "^2.0.0-beta.21",
+    "@tiptap/extension-horizontal-rule": "^2.0.0-beta.30",
+    "@tiptap/extension-image": "^2.0.0-beta.24",
+    "@tiptap/extension-italic": "^2.0.0-beta.24",
+    "@tiptap/extension-link": "^2.0.0-beta.28",
+    "@tiptap/extension-list-item": "^2.0.0-beta.19",
+    "@tiptap/extension-mention": "^2.0.0-beta.86",
+    "@tiptap/extension-ordered-list": "^2.0.0-beta.24",
+    "@tiptap/extension-paragraph": "^2.0.0-beta.22",
+    "@tiptap/extension-strike": "^2.0.0-beta.26",
+    "@tiptap/extension-table": "^2.0.0-beta.42",
+    "@tiptap/extension-table-cell": "^2.0.0-beta.20",
+    "@tiptap/extension-table-header": "^2.0.0-beta.22",
+    "@tiptap/extension-table-row": "^2.0.0-beta.19",
+    "@tiptap/extension-task-item": "^2.0.0-beta.28",
+    "@tiptap/extension-task-list": "^2.0.0-beta.23",
+    "@tiptap/extension-text": "^2.0.0-beta.15",
+    "@tiptap/suggestion": "^2.0.0-beta.82",
+    "gemoji": "^7.1.0",
+    "katex": "^0.15.1",
+    "mermaid": "^8.13.3",
+    "remark": "^14.0.1",
+    "remark-directive": "^2.0.1",
+    "remark-gemoji": "^7.0.1",
+    "remark-gfm": "^3.0.1",
+    "remark-math": "^5.1.0",
+    "smooth-scroll-into-view-if-needed": "^1.1.32",
+    "tippy.js": "^6.3.7"
+  },
+  "devDependencies": {
+    "@types/mermaid": "^8.2.7",
+    "rollup-plugin-import-css": "^3.0.2"
+  }
+}

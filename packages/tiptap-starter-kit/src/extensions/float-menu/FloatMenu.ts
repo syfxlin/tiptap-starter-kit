@@ -8,7 +8,6 @@ import {
 } from "@tiptap/core";
 import { Plugin, PluginKey } from "prosemirror-state";
 import FloatMenuView from "./FloatMenuView";
-import "tippy.js/animations/shift-away.css";
 import { buttonView } from "./utils";
 import { defaultFloatMenuItems } from "./default-items";
 

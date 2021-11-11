@@ -1,104 +1,42 @@
 {
-  "name": "@syfxlin/tiptap-starter-kit",
-  "version": "0.0.1-beta.1",
-  "description": "The non-official starter kit of the Tiptap editor contains common extensions.",
-  "author": "syfxlin <syfxlin@gmail.com>",
-  "private": false,
-  "keywords": [
-    "tiptap",
-    "tiptap-extension"
+  "private": true,
+  "workspaces": [
+    "packages/*"
   ],
-  "license": "Apache-2.0",
-  "homepage": "https://github.com/syfxlin/tiptap-starter-kit",
-  "bugs": {
-    "url": "https://github.com/syfxlin/tiptap-starter-kit/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/syfxlin/tiptap-starter-kit"
-  },
+  "browserslist": [
+    "defaults",
+    "not IE 11"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lib": "tsc && vite build --config vite.config.lib.ts",
-    "serve": "vite preview",
-    "lint": "eslint --ext .jsx,.js,.ts,.tsx --quiet src/"
+    "dev": "yarn workspace @syfxlin/demo dev",
+    "build": "yarn workspace @syfxlin/tiptap-starter-kit build",
+    "publish": "yarn workspace @syfxlin/tiptap-starter-kit publish --registry https://registry.npmjs.org/",
+    "lint": "eslint --ext .jsx,.js,.ts,.tsx --quiet packages/tiptap-starter-kit/src/",
+    "clean": "rm -rf ./packages/*/dist"
   },
-  "main": "lib/starter-kit.umd.js",
-  "module": "lib/starter-kit.es.js",
-  "types": "lib/src/index.d.ts",
-  "files": [
-    "lib",
-    "src"
-  ],
+  "devDependencies": {
+    "@atomico/rollup-plugin-sizes": "^1.1.4",
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.16.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-react": "^7.16.0",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "minimist": "^1.2.5",
+    "rollup": "^2.59.0",
+    "rollup-plugin-auto-external": "^2.0.0",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "typescript": "^4.4.4"
+  },
   "dependencies": {
-    "@icon-park/svg": "^1.3.5",
-    "@tiptap/extension-blockquote": "^2.0.0-beta.21",
-    "@tiptap/extension-bold": "^2.0.0-beta.21",
-    "@tiptap/extension-bubble-menu": "^2.0.0-beta.45",
-    "@tiptap/extension-bullet-list": "^2.0.0-beta.20",
-    "@tiptap/extension-code": "^2.0.0-beta.22",
-    "@tiptap/extension-code-block-lowlight": "^2.0.0-beta.51",
-    "@tiptap/extension-document": "^2.0.0-beta.13",
-    "@tiptap/extension-dropcursor": "^2.0.0-beta.21",
-    "@tiptap/extension-gapcursor": "^2.0.0-beta.30",
-    "@tiptap/extension-hard-break": "^2.0.0-beta.27",
-    "@tiptap/extension-heading": "^2.0.0-beta.20",
-    "@tiptap/extension-highlight": "^2.0.0-beta.27",
-    "@tiptap/extension-history": "^2.0.0-beta.18",
-    "@tiptap/extension-horizontal-rule": "^2.0.0-beta.26",
-    "@tiptap/extension-image": "^2.0.0-beta.21",
-    "@tiptap/extension-italic": "^2.0.0-beta.21",
-    "@tiptap/extension-link": "^2.0.0-beta.25",
-    "@tiptap/extension-list-item": "^2.0.0-beta.16",
-    "@tiptap/extension-mention": "^2.0.0-beta.82",
-    "@tiptap/extension-ordered-list": "^2.0.0-beta.21",
-    "@tiptap/extension-paragraph": "^2.0.0-beta.19",
-    "@tiptap/extension-strike": "^2.0.0-beta.23",
-    "@tiptap/extension-table": "^2.0.0-beta.38",
-    "@tiptap/extension-table-cell": "^2.0.0-beta.17",
-    "@tiptap/extension-table-header": "^2.0.0-beta.19",
-    "@tiptap/extension-table-row": "^2.0.0-beta.16",
-    "@tiptap/extension-task-item": "^2.0.0-beta.24",
-    "@tiptap/extension-task-list": "^2.0.0-beta.20",
-    "@tiptap/extension-text": "^2.0.0-beta.13",
-    "@tiptap/suggestion": "^2.0.0-beta.78",
-    "@types/jest": "^27.0.2",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "eslint": "^8.2.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-jest": "^25.2.4",
     "eslint-plugin-prettier": "^4.0.0",
-    "gemoji": "^7.1.0",
-    "jest": "^27.3.1",
-    "katex": "^0.15.1",
-    "mermaid": "^8.13.3",
-    "prettier": "^2.4.1",
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0",
-    "remark": "^14.0.1",
-    "remark-directive": "^2.0.1",
-    "remark-gemoji": "^7.0.0",
-    "remark-gfm": "^3.0.1",
-    "remark-math": "^5.1.0",
-    "smooth-scroll-into-view-if-needed": "^1.1.32",
-    "tippy.js": "^6.3.5",
-    "ts-jest": "^27.0.7",
-    "vite-plugin-checker": "^0.3.4"
-  },
-  "peerDependencies": {
-    "@emotion/css": "^11.5.0",
-    "@tiptap/core": "^2.0.0-beta.138"
-  },
-  "devDependencies": {
-    "@tiptap/react": "^2.0.0-beta.93",
-    "@types/mermaid": "^8.2.7",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@vitejs/plugin-react": "^1.0.0",
-    "typescript": "^4.3.2",
-    "vite": "^2.6.4",
-    "vite-plugin-dts": "^0.9.4"
+    "prettier": "^2.4.1"
   }
 }
