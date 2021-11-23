@@ -41,6 +41,9 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
           new FloatMenuView({
             editor: this.editor,
             shouldShow: ({ editor, range }) => {
+              if (!editor.isEditable) {
+                return false;
+              }
               const state = editor.state;
               const { doc, selection } = state;
               const { empty } = selection;
