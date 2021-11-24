@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { editorCss, StarterKit } from "@syfxlin/tiptap-starter-kit";
 import { css, injectGlobal } from "@emotion/css";
+import "tippy.js/animations/shift-away.css";
 import "katex/dist/katex.css";
 
 injectGlobal`

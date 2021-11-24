@@ -20,6 +20,8 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import { editorCss, StarterKit } from "@syfxlin/tiptap-starter-kit";
 // StarterKit uses Emotion.js to apply the style
 import { css, injectGlobal } from "@emotion/css";
+// tippy animation
+import "tippy.js/animations/shift-away.css";
 // If you need support for mathematical formulas then you need to import.
 import "katex/dist/katex.css";
 

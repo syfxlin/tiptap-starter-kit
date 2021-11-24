@@ -87,14 +87,20 @@ export const editorCss = css`
     }
   }
 
-  .placeholder::before {
-    display: block;
-    opacity: 0;
-    transition: opacity 150ms ease-in-out;
-    content: attr(data-empty-text);
-    pointer-events: none;
-    height: 0;
-    color: var(--tiptap-color-text-secondly);
+  .placeholder {
+    &::before {
+      display: block;
+      opacity: 0;
+      transition: opacity 150ms ease-in-out;
+      content: attr(data-empty-text);
+      pointer-events: none;
+      height: 0;
+      color: var(--tiptap-color-text-secondly);
+    }
+
+    &:nth-child(1)::before {
+      opacity: 1;
+    }
   }
 
   .ProseMirror-focused {
@@ -396,25 +402,5 @@ export const editorCss = css`
         display: none;
       }
     }
-  }
-
-  .tippy-box[data-animation="shift-away"][data-state="hidden"] {
-    opacity: 0;
-  }
-
-  .tippy-box[data-animation="shift-away"][data-state="hidden"][data-placement^="top"] {
-    transform: translateY(10px);
-  }
-
-  .tippy-box[data-animation="shift-away"][data-state="hidden"][data-placement^="bottom"] {
-    transform: translateY(-10px);
-  }
-
-  .tippy-box[data-animation="shift-away"][data-state="hidden"][data-placement^="left"] {
-    transform: translateX(10px);
-  }
-
-  .tippy-box[data-animation="shift-away"][data-state="hidden"][data-placement^="right"] {
-    transform: translateX(-10px);
   }
 `;
