@@ -16,7 +16,7 @@ injectGlobal`
     --tiptap-color-reverse-text: #fff;
     --tiptap-color-reverse-text-secondly: #f8f9fa;
     --tiptap-color-reverse-background: #25262b;
-    --tiptap-color-reverse-bakcground-secondly: #5c5f66;
+    --tiptap-color-reverse-background-secondly: #5c5f66;
     --tiptap-color-primary: #1c7ed6;
     --tiptap-color-selected: #8cf;
     --tiptap-color-code: #c92a2a;

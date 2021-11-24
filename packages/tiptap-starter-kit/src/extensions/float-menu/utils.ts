@@ -118,7 +118,7 @@ export const inputView = (props: InputViewProps) => {
   const input = document.createElement("input");
   input.classList.add(css`
     font-size: 0.9em;
-    background: var(--tiptap-color-reverse-bakcground-secondly);
+    background: var(--tiptap-color-reverse-background-secondly);
     color: var(--tiptap-color-reverse-text-secondly);
     border-radius: 2px;
     padding: 0.3em 0.5em;
