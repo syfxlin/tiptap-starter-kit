@@ -20,10 +20,48 @@
   "publishConfig": {
     "access": "public"
   },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "bunchee",
+    "watch": "bunchee --watch"
+  },
+  "peerDependencies": {
+    "@tiptap/core": "^2.2.4",
+    "@tiptap/pm": "^2.2.4"
+  },
+  "dependencies": {
+    "@tiptap/extension-bold": "^2.2.4",
+    "@tiptap/extension-document": "^2.2.4",
+    "@tiptap/extension-paragraph": "^2.2.4",
+    "@tiptap/extension-text": "^2.2.4",
+    "remark": "^15.0.1",
+    "unified": "^11.0.4"
+  },
   "devDependencies": {
     "@syfxlin/eslint-config": "^1.0.4",
+    "@tiptap/core": "^2.2.4",
+    "@tiptap/pm": "^2.2.4",
+    "@types/mdast": "^4.0.3",
+    "@types/unist": "^3.0.2",
     "bunchee": "^4.4.8",
     "eslint": "^8.57.0",
-    "typescript": "^5.3.3"
+    "prosemirror-model": "^1.19.4",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.5"
   }
 }
