@@ -1,42 +1,29 @@
 {
-  "private": true,
-  "workspaces": [
-    "packages/*"
+  "name": "@syfxlin/tiptap-starter-kit",
+  "type": "module",
+  "version": "0.0.0-semantic-release",
+  "description": "The non-official starter kit of the Tiptap editor contains common extensions.",
+  "author": "syfxlin <i@ixk.me>",
+  "license": "MIT",
+  "homepage": "https://github.com/syfxlin/tiptap-starter-kit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/syfxlin/tiptap-starter-kit"
+  },
+  "bugs": {
+    "url": "https://github.com/syfxlin/tiptap-starter-kit/issues"
+  },
+  "keywords": [
+    "tiptap",
+    "tiptap-extension"
   ],
-  "browserslist": [
-    "defaults",
-    "not IE 11"
-  ],
-  "scripts": {
-    "dev": "yarn workspace @syfxlin/demo dev",
-    "build": "yarn workspace @syfxlin/tiptap-starter-kit build",
-    "publish": "yarn workspace @syfxlin/tiptap-starter-kit publish --registry https://registry.npmjs.org/",
-    "lint": "eslint --ext .jsx,.js,.ts,.tsx --quiet packages/tiptap-starter-kit/src/",
-    "clean": "rm -rf ./packages/*/dist"
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
-    "@atomico/rollup-plugin-sizes": "^1.1.4",
-    "@babel/core": "^7.16.0",
-    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.16.0",
-    "@babel/plugin-proposal-optional-chaining": "^7.16.0",
-    "@babel/preset-env": "^7.16.0",
-    "@babel/preset-react": "^7.16.0",
-    "@rollup/plugin-babel": "^5.3.0",
-    "@rollup/plugin-commonjs": "^21.0.1",
-    "@rollup/plugin-node-resolve": "^13.0.6",
-    "minimist": "^1.2.5",
-    "rollup": "^2.59.0",
-    "rollup-plugin-auto-external": "^2.0.0",
-    "rollup-plugin-sourcemaps": "^0.6.3",
-    "rollup-plugin-typescript2": "^0.30.0",
-    "typescript": "^4.4.4"
-  },
-  "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.3.1",
-    "@typescript-eslint/parser": "^5.3.1",
-    "eslint": "^8.2.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "prettier": "^2.4.1"
+    "@syfxlin/eslint-config": "^1.0.4",
+    "bunchee": "^4.4.8",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3"
   }
 }
