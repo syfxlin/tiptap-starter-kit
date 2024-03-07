@@ -1,5 +1,5 @@
 import { Paragraph as TParagraph } from "@tiptap/extension-paragraph";
-import { NodeMarkdownStorage } from "../markdown/types";
+import { NodeMarkdownStorage } from "../extensions/markdown";
 
 export const Paragraph = TParagraph.extend({
   addStorage() {
@@ -20,12 +20,9 @@ export const Paragraph = TParagraph.extend({
       serializer: {
         match: node => node.type.name === this.name,
         apply: (state, node) => {
-          state
-            .openNode({
-              type: "paragraph",
-            })
-            .next(node.content)
-            .closeNode();
+          state.openNode({ type: "paragraph" });
+          state.next(node.content);
+          state.closeNode();
         },
       },
     } satisfies NodeMarkdownStorage;

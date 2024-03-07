@@ -15,11 +15,28 @@ export class SerializerStack {
     this.nodes = [];
   }
 
-  public openNode(node: MarkdownNode) {
+  public openMark(mark: Mark, node: MarkdownNode): void {
+    const isIn = mark.isInSet(this.marks);
+    if (isIn) {
+      return;
+    }
+    this.marks = mark.addToSet(this.marks);
+    this.openNode(node);
+  }
+
+  public closeMark(mark: Mark): void {
+    if (!mark.isInSet(this.marks)) {
+      return;
+    }
+    this.marks = mark.type.removeFromSet(this.marks);
+    this.closeNode();
+  }
+
+  public openNode(node: MarkdownNode): void {
     this.nodes.push(node);
   }
 
-  public addNode(node: MarkdownNode) {
+  public addNode(node: MarkdownNode): MarkdownNode | null {
     if (this.nodes.length) {
       const top = this.nodes[this.nodes.length - 1];
       if (!top.children) {
@@ -30,27 +47,12 @@ export class SerializerStack {
     return node;
   }
 
-  public closeNode() {
+  public closeNode(): MarkdownNode | null {
     const node = this.nodes.pop();
-    // @ts-expect-error
-    return this.addNode(node);
-  }
-
-  public openMark(mark: Mark, node: MarkdownNode) {
-    const isIn = mark.isInSet(this.marks);
-    if (isIn) {
-      return;
-    }
-    this.marks = mark.addToSet(this.marks);
-    this.openNode(node);
-  }
-
-  public closeMark(mark: Mark) {
-    if (!mark.isInSet(this.marks)) {
+    if (!node) {
       return null;
     }
-    this.marks = mark.type.removeFromSet(this.marks);
-    return this.closeNode();
+    return this.addNode(node);
   }
 
   public serialize() {

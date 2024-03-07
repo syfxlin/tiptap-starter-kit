@@ -13,7 +13,7 @@ export class ParserStack {
     this.nodes = [];
   }
 
-  public addText(value?: string) {
+  public addText(value?: string): void {
     const nodes = this.nodes[this.nodes.length - 1].content;
     const last = nodes[nodes.length - 1];
     const node = this.editor.schema.text(value ?? "", this.marks);
@@ -23,20 +23,18 @@ export class ParserStack {
     } else {
       nodes.push(node);
     }
-    return this;
   }
 
-  public openMark(type: MarkType, attrs?: Attrs) {
+  public openMark(type: MarkType, attrs?: Attrs): void {
     const mark = type.create(attrs);
     this.marks = mark.addToSet(this.marks);
-    return this;
   }
 
   public closeMark(type: MarkType) {
     this.marks = type.removeFromSet(this.marks);
   }
 
-  public openNode(type: NodeType, attrs?: Attrs) {
+  public openNode(type: NodeType, attrs?: Attrs): void {
     this.nodes.push({
       type,
       attrs,
@@ -44,7 +42,7 @@ export class ParserStack {
     });
   }
 
-  public addNode(type: NodeType, attrs?: Attrs, content?: Node[]) {
+  public addNode(type: NodeType, attrs?: Attrs, content?: Node[]): Node | null {
     const node = type.createAndFill(attrs, content, this.marks);
     if (!node) {
       return null;
@@ -55,10 +53,12 @@ export class ParserStack {
     return node;
   }
 
-  public closeNode() {
+  public closeNode(): Node | null {
     this.marks = Mark.none;
     const node = this.nodes.pop();
-    // @ts-expect-error
+    if (!node) {
+      return null;
+    }
     return this.addNode(node.type, node.attrs, node.content);
   }
 

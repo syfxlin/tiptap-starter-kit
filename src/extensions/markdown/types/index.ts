@@ -36,3 +36,12 @@ export interface NodeMarkdownStorage {
     apply: (state: SerializerState, node: Node) => void;
   };
 }
+
+declare module "unist" {
+  interface Data {
+    hName?: string;
+    hProperties?: {
+      className?: string[];
+    };
+  }
+}

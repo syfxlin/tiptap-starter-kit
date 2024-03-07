@@ -1,5 +1,5 @@
 import { Document as TDocument } from "@tiptap/extension-document";
-import { NodeMarkdownStorage } from "../markdown/types";
+import { NodeMarkdownStorage } from "../extensions/markdown";
 
 export const Document = TDocument.extend({
   addStorage() {
@@ -14,11 +14,7 @@ export const Document = TDocument.extend({
       serializer: {
         match: node => node.type.name === this.name,
         apply: (state, node) => {
-          state
-            .openNode({
-              type: "root",
-            })
-            .next(node.content);
+          state.openNode({ type: "root" }).next(node.content);
         },
       },
     } satisfies NodeMarkdownStorage;

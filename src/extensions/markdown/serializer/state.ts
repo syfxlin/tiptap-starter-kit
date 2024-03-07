@@ -1,15 +1,15 @@
-import { remark } from "remark";
 import { Editor } from "@tiptap/core";
+import { Processor } from "unified";
 import { Fragment, Mark, Node } from "@tiptap/pm/model";
 import { MarkMarkdownStorage, MarkdownNode, NodeMarkdownStorage } from "../types";
 import { SerializerStack } from "./stack";
 
 export class SerializerState {
-  private stack: SerializerStack;
-  private editor: Editor;
-  private processor: ReturnType<typeof remark>;
+  public readonly editor: Editor;
+  public readonly processor: Processor;
+  private readonly stack: SerializerStack;
 
-  constructor(editor: Editor, processor: ReturnType<typeof remark>) {
+  constructor(editor: Editor, processor: Processor) {
     this.stack = new SerializerStack(editor);
     this.editor = editor;
     this.processor = processor;
