@@ -52,11 +52,13 @@
     "@tiptap/extension-italic": "^2.2.4",
     "@tiptap/extension-link": "^2.2.4",
     "@tiptap/extension-paragraph": "^2.2.4",
+    "@tiptap/extension-strike": "^2.2.4",
     "@tiptap/extension-text": "^2.2.4",
     "remark": "^15.0.1",
     "remark-directive": "^3.0.0",
     "remark-flexible-markers": "^1.0.4",
     "remark-gfm": "^4.0.0",
+    "tippy.js": "^6.3.7",
     "unified": "^11.0.4"
   },
   "devDependencies": {

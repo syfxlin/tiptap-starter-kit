@@ -1,0 +1,136 @@
+:root {
+  --tiptap-color-text: #000;
+  --tiptap-color-text-secondly: #adb5bd;
+  --tiptap-color-background: #fff;
+  --tiptap-color-background-hover: #e9ecef;
+  --tiptap-color-background-secondly: #f8f9fa;
+  --tiptap-color-border: #ced4da;
+  --tiptap-color-dark-text: #fff;
+  --tiptap-color-dark-text-secondly: #f8f9fa;
+  --tiptap-color-dark-background: #25262b;
+  --tiptap-color-dark-background-secondly: #5c5f66;
+  --tiptap-color-primary: #1c7ed6;
+  --tiptap-color-selected: #8cf;
+  --tiptap-color-code: #c92a2a;
+  --tiptap-color-mark: #ffec99;
+  --tiptap-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+  Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --tiptap-font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+  "Liberation Mono", "Courier New", monospace;
+  --tiptap-font-weight: 400;
+  --tiptap-font-size: 1em;
+  --tiptap-line-height: 1.7;
+}
+
+.tiptap * {
+  box-sizing: border-box;
+}
+
+.tippy-box[data-theme~="tiptap"] {
+  font-size: inherit;
+  line-height: inherit;
+  color: var(--tiptap-color-text);
+  background-color: var(--tiptap-color-background);
+}
+
+.tippy-box[data-theme~="tiptap"] .tippy-content {
+  padding: 0;
+}
+
+.tippy-box[data-theme~="tiptap"] .tippy-arrow {
+  color: var(--tiptap-color-background);
+}
+
+.tippy-box[data-theme~="tiptap-dark"] {
+  font-size: inherit;
+  line-height: inherit;
+  color: var(--tiptap-color-dark-text);
+  background-color: var(--tiptap-color-dark-background);
+}
+
+.tippy-box[data-theme~="tiptap-dark"] .tippy-content {
+  padding: 0;
+}
+
+.tippy-box[data-theme~="tiptap-dark"] .tippy-arrow {
+  color: var(--tiptap-color-dark-background);
+}
+
+.tiptap-fm {
+  display: flex;
+  padding: 0.5em 0.7em;
+}
+
+.tiptap-fm-input {
+  font-size: 0.9em;
+  flex-grow: 1;
+  border: 0;
+  margin: 0;
+  outline: none;
+  padding: 0.3em 0.5em;
+  border-radius: 2px;
+  color: var(--tiptap-color-dark-text-secondly);
+  background: var(--tiptap-color-dark-background-secondly);
+}
+
+.tiptap-fm-button {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  opacity: 0.7;
+  margin-left: 0.8em;
+  transition: opacity 150ms ease-in-out;
+  color: var(--tiptap-color-dark-text);
+  background-color: transparent;
+}
+
+.tiptap-fm-button:first-child {
+  margin-left: 0;
+}
+
+.tiptap-fm-button.active, .tiptap-fm-button:hover {
+  opacity: 1;
+}
+
+.tiptap-fm-button.disable {
+  display: none;
+}
+
+.tiptap-fm-button svg {
+  width: 1.6em;
+  height: 1.6em;
+}
+
+.tiptap-fm-button-popover {
+  display: flex;
+  padding: 0.5em 1em;
+  font-size: 0.5em;
+  border-radius: 4px;
+  color: var(--tiptap-color-dark-text);
+  background-color: var(--tiptap-color-dark-background);
+}
+
+.tiptap-fm-button-popover kbd {
+  font-family: var(--tiptap-font-family-mono);
+  font-size: 0.2em;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.05em 0.2em;
+  border-radius: 4px;
+  border-width: 1px 1px 2px;
+  border-style: solid;
+  border-color: var(--tiptap-color-border);
+  color: var(--tiptap-color-text);
+  background-color: var(--tiptap-color-background-secondly);
+}
+
+@media print {
+  .tiptap-fm {
+    display: none;
+  }
+}

@@ -26,6 +26,9 @@ dependencies:
   '@tiptap/extension-paragraph':
     specifier: ^2.2.4
     version: 2.2.4(@tiptap/core@2.2.4)
+  '@tiptap/extension-strike':
+    specifier: ^2.2.4
+    version: 2.2.4(@tiptap/core@2.2.4)
   '@tiptap/extension-text':
     specifier: ^2.2.4
     version: 2.2.4(@tiptap/core@2.2.4)
@@ -41,6 +44,9 @@ dependencies:
   remark-gfm:
     specifier: ^4.0.0
     version: 4.0.0
+  tippy.js:
+    specifier: ^6.3.7
+    version: 6.3.7
   unified:
     specifier: ^11.0.4
     version: 11.0.4
@@ -591,6 +597,10 @@ packages:
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
     dev: true
 
+  /@popperjs/core@2.11.8:
+    resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+    dev: false
+
   /@remirror/core-constants@2.0.2:
     resolution: {integrity: sha512-dyHY+sMF0ihPus3O27ODd4+agdHMEmuRdyiZJ2CCWjPV5UFmn17ZbElvk6WOGVE4rdCJKZQCrPV2BcikOMLUGQ==}
 
@@ -1080,6 +1090,14 @@ packages:
 
   /@tiptap/extension-paragraph@2.2.4(@tiptap/core@2.2.4):
     resolution: {integrity: sha512-m1KwyvTNJxsq7StbspbcOhxO4Wk4YpElDbqOouWi+H4c8azdpI5Pn96ZqhFeE9bSyjByg6OcB/wqoJsLbeFWdQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.2.4(@tiptap/pm@2.2.4)
+    dev: false
+
+  /@tiptap/extension-strike@2.2.4(@tiptap/core@2.2.4):
+    resolution: {integrity: sha512-/a2EwQgA+PpG17V2tVRspcrIY0SN3blwcgM7lxdW4aucGkqSKnf7+91dkhQEwCZ//o8kv9mBCyRoCUcGy6S5Xg==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
     dependencies:
@@ -5047,6 +5065,12 @@ packages:
 
   /textr@0.3.0:
     resolution: {integrity: sha512-yQrF3w9ThyNvyJjkpFTwBpsVxRQ4870xHg2fue1xeK1J1EZIx5cV7XPW6Fwi/XNC0du/3t9CNWZvlHUfCxPpPg==}
+    dev: false
+
+  /tippy.js@6.3.7:
+    resolution: {integrity: sha512-E1d3oP2emgJ9dRQZdf3Kkn0qJgI6ZLpyS5z6ZkY1DF3kaQaBsGZsndEpHwx+eC+tYM41HaSNvNtLx8tU57FzTQ==}
+    dependencies:
+      '@popperjs/core': 2.11.8
     dev: false
 
   /to-fast-properties@2.0.0:

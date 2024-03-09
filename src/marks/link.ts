@@ -1,6 +1,8 @@
 import { Link as TLink, LinkOptions as TLinkOptions } from "@tiptap/extension-link";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { MarkMarkdownStorage } from "../extensions/markdown";
+import { FloatMenuView } from "../extensions/float-menu/view";
+import * as icons from "../icons";
 
 export interface LinkOptions extends TLinkOptions {
   dictionary: {
@@ -61,6 +63,52 @@ export const Link = TLink.extend<LinkOptions>({
     return [
       new Plugin({
         key: new PluginKey(`${this.name}-float-menu`),
+        view: () => new FloatMenuView({
+          editor: this.editor,
+          show: ({ editor }) => editor.isEditable && editor.state.selection.empty && editor.isActive(this.name),
+          tippy: ({ options }) => ({ ...options, onMount: i => i.popper.querySelector("input")?.focus() }),
+          onInit: ({ view, editor, element }) => {
+            const href = view.createInput({
+              name: this.options.dictionary.inputLink,
+              onEnter: (value) => {
+                editor.chain()
+                  .extendMarkRange(this.name)
+                  .updateAttributes(this.name, { href: value })
+                  .focus()
+                  .run();
+              },
+            });
+
+            const open = view.createButton({
+              name: this.options.dictionary.openLink,
+              icon: icons.open,
+              onClick: () => {
+                const attrs = editor.getAttributes(this.name);
+                if (attrs.href) {
+                  window.open(attrs.href, attrs.target);
+                }
+              },
+            });
+
+            const remove = view.createButton({
+              name: this.options.dictionary.deleteLink,
+              icon: icons.remove,
+              onClick: () => {
+                editor.chain().unsetLink().run();
+              },
+            });
+
+            element.append(href.input);
+            element.append(open.button);
+            element.append(remove.button);
+          },
+          onUpdate: ({ editor, element }) => {
+            const href = element.querySelector("input") as HTMLInputElement;
+            if (href) {
+              href.value = editor.getAttributes(this.name).href ?? "";
+            }
+          },
+        }),
       }),
     ];
   },
