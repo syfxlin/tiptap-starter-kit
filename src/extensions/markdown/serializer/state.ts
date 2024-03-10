@@ -56,7 +56,7 @@ export class SerializerState {
   private runNode(node: Node) {
     const next = node.marks.every((mark) => {
       const storage = this.matchNode(mark)?.storage as MarkMarkdownStorage | undefined;
-      return storage?.serializer?.apply(this, mark, node) ?? true;
+      return !storage?.serializer?.apply(this, mark, node);
     });
     if (next) {
       const storage = this.matchNode(node)?.storage as NodeMarkdownStorage | undefined;

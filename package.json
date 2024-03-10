@@ -56,10 +56,10 @@
     "@tiptap/extension-text": "^2.2.4",
     "remark": "^15.0.1",
     "remark-directive": "^3.0.0",
-    "remark-flexible-markers": "^1.0.4",
     "remark-gfm": "^4.0.0",
     "tippy.js": "^6.3.7",
-    "unified": "^11.0.4"
+    "unist-builder": "^4.0.0",
+    "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
     "@syfxlin/eslint-config": "^1.0.4",
@@ -69,9 +69,12 @@
     "@types/unist": "^3.0.2",
     "bunchee": "^4.4.8",
     "eslint": "^8.57.0",
+    "mdast-util-from-markdown": "^2.0.0",
+    "mdast-util-to-markdown": "^2.1.0",
     "prosemirror-model": "^1.19.4",
     "prosemirror-state": "^1.4.3",
     "typescript": "^5.3.3",
+    "unified": "^11.0.4",
     "vite": "^5.1.5"
   }
 }

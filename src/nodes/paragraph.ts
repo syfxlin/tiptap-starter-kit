@@ -1,5 +1,6 @@
 import { Paragraph as TParagraph } from "@tiptap/extension-paragraph";
 import { NodeMarkdownStorage } from "../extensions/markdown";
+import { Text } from "./text";
 
 export const Paragraph = TParagraph.extend({
   addStorage() {
@@ -21,7 +22,14 @@ export const Paragraph = TParagraph.extend({
         match: node => node.type.name === this.name,
         apply: (state, node) => {
           state.openNode({ type: "paragraph" });
-          state.next(node.content);
+          if (node.type.name === Text.name) {
+            state.addNode({
+              type: "text",
+              value: node.text,
+            });
+          } else {
+            state.next(node.content);
+          }
           state.closeNode();
         },
       },

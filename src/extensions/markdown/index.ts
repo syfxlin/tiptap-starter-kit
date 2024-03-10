@@ -4,8 +4,9 @@ import { remark } from "remark";
 import { Node } from "@tiptap/pm/model";
 import { Extension } from "@tiptap/core";
 import { Processor } from "unified";
-import { SerializerState } from "./serializer/state";
 import { ParserState } from "./parser/state";
+import { SerializerState } from "./serializer/state";
+import { remarkHighlight } from "./plugins/highlight";
 
 export * from "./types";
 
@@ -26,7 +27,8 @@ export const Markdown = Extension.create<MarkdownOptions, MarkdownStorage>({
     // processor
     this.storage.remark = remark()
       .use(remarkGfm)
-      .use(remarkDirective) as unknown as Processor;
+      .use(remarkDirective)
+      .use(remarkHighlight) as unknown as Processor;
     for (const [key, value] of Object.entries(this.editor.storage)) {
       if (key !== this.name && value.remark) {
         this.storage.remark = this.storage.remark.use(value);
