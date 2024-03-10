@@ -6,7 +6,6 @@ import { Extension } from "@tiptap/core";
 import { Processor } from "unified";
 import { ParserState } from "./parser/state";
 import { SerializerState } from "./serializer/state";
-import { remarkHighlight } from "./plugins/highlight";
 
 export * from "./types";
 
@@ -14,33 +13,30 @@ export interface MarkdownOptions {
 }
 
 export interface MarkdownStorage {
-  remark: Processor;
-  parse: (markdown: string) => Node | null;
-  serialize: (document: Node) => string;
   get: () => string;
   set: (markdown: string, emit?: boolean) => void;
+  parse: (markdown: string) => Node | null;
+  serialize: (document: Node) => string;
+  processor: Processor;
 }
 
 export const Markdown = Extension.create<MarkdownOptions, MarkdownStorage>({
   name: "markdown",
   onBeforeCreate() {
     // processor
-    this.storage.remark = remark()
-      .use(remarkGfm)
-      .use(remarkDirective)
-      .use(remarkHighlight) as unknown as Processor;
+    this.storage.processor = remark().use(remarkGfm).use(remarkDirective) as unknown as Processor;
     for (const [key, value] of Object.entries(this.editor.storage)) {
-      if (key !== this.name && value.remark) {
-        this.storage.remark = this.storage.remark.use(value);
+      if (key !== this.name && value.processor) {
+        this.storage.processor = value.processor(this.storage.processor);
       }
     }
     // parser
     this.storage.parse = (markdown: string) => {
-      return new ParserState(this.editor, this.storage.remark).parse(markdown);
+      return new ParserState(this.editor, this.storage.processor).parse(markdown);
     };
     // serializer
     this.storage.serialize = (document: Node) => {
-      return new SerializerState(this.editor, this.storage.remark).serialize(document);
+      return new SerializerState(this.editor, this.storage.processor).serialize(document);
     };
     // get
     this.storage.get = () => {

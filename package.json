@@ -54,6 +54,7 @@
     "@tiptap/extension-paragraph": "^2.2.4",
     "@tiptap/extension-strike": "^2.2.4",
     "@tiptap/extension-text": "^2.2.4",
+    "@tiptap/extension-underline": "^2.2.4",
     "remark": "^15.0.1",
     "remark-directive": "^3.0.0",
     "remark-gfm": "^4.0.0",

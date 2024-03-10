@@ -14,7 +14,7 @@ export interface MarkdownNode extends UnistNode {
 }
 
 export interface MarkMarkdownStorage {
-  remark?: (processor: Processor) => Processor;
+  processor?: (processor: Processor) => Processor;
   parser?: {
     match: (node: MarkdownNode) => boolean;
     apply: (state: ParserState, node: MarkdownNode, type: MarkType) => void;
@@ -26,7 +26,7 @@ export interface MarkMarkdownStorage {
 }
 
 export interface NodeMarkdownStorage {
-  remark?: (processor: Processor) => Processor;
+  processor?: (processor: Processor) => Processor;
   parser?: {
     match: (node: MarkdownNode) => boolean;
     apply: (state: ParserState, node: MarkdownNode, type: NodeType) => void;

@@ -1,14 +1,14 @@
-import { Highlight as THighlight } from "@tiptap/extension-highlight";
+import { Underline as TUnderline } from "@tiptap/extension-underline";
 import { MarkMarkdownStorage } from "../extensions/markdown";
 import { remarkDecoration } from "../extensions/markdown/plugins/decoration";
 
-export const Highlight = THighlight.extend({
+export const Underline = TUnderline.extend({
   addStorage() {
     return {
       ...this.parent?.(),
-      processor: processor => processor.use(remarkDecoration("highlight", "==")),
+      processor: processor => processor.use(remarkDecoration("underline", "++")),
       parser: {
-        match: node => node.type === "highlight",
+        match: node => node.type === "underline",
         apply: (state, node, type) => {
           state.openMark(type).next(node.children).closeMark(type);
         },
@@ -17,7 +17,7 @@ export const Highlight = THighlight.extend({
         match: mark => mark.type.name === this.name,
         apply: (state, mark) => {
           state.withMark(mark, {
-            type: "highlight",
+            type: "underline",
           });
         },
       },
