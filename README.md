@@ -1,4 +1,4 @@
-# Tiptap StarterKit
+# Tiptap StarterKit 🚧WIP (Remake)
 
 > [Tiptap](https://tiptap.dev/) 编辑器的非官方套件，包含了常见的扩展集合，以及斜杠菜单，浮动菜单，Markdown 解析、序列化等功能。
 
