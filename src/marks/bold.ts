@@ -1,7 +1,23 @@
-import { Bold as TBold } from "@tiptap/extension-bold";
+import { Bold as TBold, BoldOptions as TBoldOptions } from "@tiptap/extension-bold";
 import { MarkMarkdownStorage } from "../extensions/markdown";
+import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { bold } from "../icons";
 
-export const Bold = TBold.extend({
+export interface BoldOptions extends TBoldOptions {
+  dictionary: {
+    name: string;
+  };
+}
+
+export const Bold = TBold.extend<BoldOptions>({
+  addOptions() {
+    return {
+      ...this.parent?.(),
+      dictionary: {
+        name: "Bold",
+      },
+    };
+  },
   addStorage() {
     return {
       ...this.parent?.(),
@@ -19,6 +35,14 @@ export const Bold = TBold.extend({
           });
         },
       },
-    } satisfies MarkMarkdownStorage;
+      floatMenu: {
+        name: this.options.dictionary.name,
+        icon: bold,
+        shortcut: "Mod-B",
+        active: editor => editor.isActive(this.name),
+        disable: editor => !editor.schema.marks[this.name],
+        onClick: editor => editor.chain().toggleBold().focus().run(),
+      },
+    } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },
 });

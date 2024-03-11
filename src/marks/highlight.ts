@@ -1,8 +1,24 @@
-import { Highlight as THighlight } from "@tiptap/extension-highlight";
+import { Highlight as THighlight, HighlightOptions as THighlightOptions } from "@tiptap/extension-highlight";
 import { MarkMarkdownStorage } from "../extensions/markdown";
+import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { remarkDecoration } from "../extensions/markdown/plugins/decoration";
+import { highlight } from "../icons";
 
-export const Highlight = THighlight.extend({
+export interface HighlightOptions extends THighlightOptions {
+  dictionary: {
+    name: string;
+  };
+}
+
+export const Highlight = THighlight.extend<HighlightOptions>({
+  addOptions() {
+    return {
+      ...this.parent?.(),
+      dictionary: {
+        name: "Highlight",
+      },
+    };
+  },
   addStorage() {
     return {
       ...this.parent?.(),
@@ -21,6 +37,14 @@ export const Highlight = THighlight.extend({
           });
         },
       },
-    } satisfies MarkMarkdownStorage;
+      floatMenu: {
+        name: this.options.dictionary.name,
+        icon: highlight,
+        shortcut: "Mod-Shift-H",
+        active: editor => editor.isActive(this.name),
+        disable: editor => !editor.schema.marks[this.name],
+        onClick: editor => editor.chain().toggleHighlight().focus().run(),
+      },
+    } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },
 });

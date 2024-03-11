@@ -15,7 +15,7 @@ export interface FloatMenuInputViewOptions {
 export interface FloatMenuButtonViewOptions {
   id?: string;
   name: string;
-  icon: string | HTMLElement | (() => HTMLElement | string);
+  icon: string;
   shortcut?: string;
   onClick?: (event: MouseEvent) => void;
 }
@@ -126,12 +126,7 @@ export class FloatMenuView {
       button.name = options.id;
     }
     if (options.icon) {
-      const icon = typeof options.icon === "function" ? options.icon() : options.icon;
-      if (typeof icon === "string") {
-        button.innerHTML = icon;
-      } else {
-        button.append(icon);
-      }
+      button.innerHTML = options.icon;
     }
 
     if (options.onClick) {
@@ -146,14 +141,18 @@ export class FloatMenuView {
 
     if (options.shortcut) {
       popover.innerHTML += "&nbsp;·&nbsp;";
-      options.shortcut.split(" ").forEach((value, index) => {
+      options.shortcut.split("-").forEach((value, index) => {
         if (index !== 0) {
           const span = document.createElement("span");
           span.textContent = "+";
           popover.append(span);
         }
         const kbd = document.createElement("kbd");
-        kbd.textContent = value;
+        if (navigator.userAgent.includes("Mac")) {
+          kbd.textContent = value.replace(/mod/i, "Cmd");
+        } else {
+          kbd.textContent = value.replace(/mod/i, "Ctrl");
+        }
         popover.append(kbd);
       });
     }

@@ -1,7 +1,23 @@
-import { Code as TCode } from "@tiptap/extension-code";
+import { Code as TCode, CodeOptions as TCodeOptions } from "@tiptap/extension-code";
 import { MarkMarkdownStorage } from "../extensions/markdown";
+import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { code } from "../icons";
 
-export const Code = TCode.extend({
+export interface CodeOptions extends TCodeOptions {
+  dictionary: {
+    name: string;
+  };
+}
+
+export const Code = TCode.extend<CodeOptions>({
+  addOptions() {
+    return {
+      ...this.parent?.(),
+      dictionary: {
+        name: "Code",
+      },
+    };
+  },
   addStorage() {
     return {
       ...this.parent?.(),
@@ -21,6 +37,14 @@ export const Code = TCode.extend({
           return true;
         },
       },
-    } satisfies MarkMarkdownStorage;
+      floatMenu: {
+        name: this.options.dictionary.name,
+        icon: code,
+        shortcut: "Mod-E",
+        active: editor => editor.isActive(this.name),
+        disable: editor => !editor.schema.marks[this.name],
+        onClick: editor => editor.chain().toggleCode().focus().run(),
+      },
+    } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },
 });

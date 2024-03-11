@@ -3,9 +3,12 @@ import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import * as icons from "../icons";
+import { link } from "../icons";
+import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 
 export interface LinkOptions extends TLinkOptions {
   dictionary: {
+    name: string;
     inputLink: string;
     openLink: string;
     deleteLink: string;
@@ -17,6 +20,7 @@ export const Link = TLink.extend<LinkOptions>({
     return {
       ...this.parent?.(),
       dictionary: {
+        name: "Link",
         inputLink: "Enter or paste link",
         openLink: "Open link",
         deleteLink: "Delete link",
@@ -57,7 +61,15 @@ export const Link = TLink.extend<LinkOptions>({
           });
         },
       },
-    } satisfies MarkMarkdownStorage;
+      floatMenu: {
+        name: this.options.dictionary.name,
+        icon: link,
+        shortcut: "Mod-K",
+        active: editor => editor.isActive(this.name),
+        disable: editor => !editor.schema.marks[this.name],
+        onClick: editor => editor.chain().toggleLink({ href: "" }).setTextSelection(editor.state.selection.to - 1).run(),
+      },
+    } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },
   addProseMirrorPlugins() {
     return [

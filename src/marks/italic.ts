@@ -1,7 +1,23 @@
-import { Italic as TItalic } from "@tiptap/extension-italic";
+import { Italic as TItalic, ItalicOptions as TItalicOptions } from "@tiptap/extension-italic";
 import { MarkMarkdownStorage } from "../extensions/markdown";
+import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { italic } from "../icons";
 
-export const Italic = TItalic.extend({
+export interface ItalicOptions extends TItalicOptions {
+  dictionary: {
+    name: string;
+  };
+}
+
+export const Italic = TItalic.extend<ItalicOptions>({
+  addOptions() {
+    return {
+      ...this.parent?.(),
+      dictionary: {
+        name: "Italic",
+      },
+    };
+  },
   addStorage() {
     return {
       ...this.parent?.(),
@@ -19,6 +35,14 @@ export const Italic = TItalic.extend({
           });
         },
       },
-    } satisfies MarkMarkdownStorage;
+      floatMenu: {
+        name: this.options.dictionary.name,
+        icon: italic,
+        shortcut: "Mod-I",
+        active: editor => editor.isActive(this.name),
+        disable: editor => !editor.schema.marks[this.name],
+        onClick: editor => editor.chain().toggleItalic().focus().run(),
+      },
+    } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },
 });
