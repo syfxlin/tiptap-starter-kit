@@ -11,16 +11,16 @@ export interface Decoration extends Parent {
 }
 
 export function remarkDecoration(type: string, marker: string) {
-  const regexp = marker.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
-  const localRegexp = new RegExp(`${regexp}\\s*([^+]*[^ ])?\\s*${regexp}`);
-  const globalRegexp = new RegExp(`${regexp}\\s*([^+]*[^ ])?\\s*${regexp}`, "g");
+  const REGEXP = marker.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
+  const LOCAL_REGEXP = new RegExp(`${REGEXP}\\s*([^+]*[^ ])?\\s*${REGEXP}`);
+  const GLOBAL_REGEXP = new RegExp(`${REGEXP}\\s*([^+]*[^ ])?\\s*${REGEXP}`, "g");
 
-  const visitor: Visitor<Text> = function (node, index, parent): VisitorResult {
+  const visitor: Visitor<Text> = (node, index, parent): VisitorResult => {
     if (!parent) {
       return;
     }
 
-    if (!localRegexp.test(node.value)) {
+    if (!LOCAL_REGEXP.test(node.value)) {
       return;
     }
 
@@ -30,7 +30,7 @@ export function remarkDecoration(type: string, marker: string) {
     let prevMatchIndex = 0;
     let prevMatchLength = 0;
 
-    const matches = Array.from(value.matchAll(globalRegexp));
+    const matches = Array.from(value.matchAll(GLOBAL_REGEXP));
 
     for (let index = 0; index < matches.length; index++) {
       const match = matches[index];
@@ -69,9 +69,9 @@ export function remarkDecoration(type: string, marker: string) {
     }
   };
 
-  const handler: Handle = function (node, _parent, state, info): string {
+  const handler: Handle = (node, _parent, state, info): string => {
     // @ts-expect-error
-    const exit = state.enter("highlight");
+    const exit = state.enter(type);
     const tracker = state.createTracker(info);
     let value = tracker.move(marker);
     value += tracker.move(state.containerPhrasing(node, {
