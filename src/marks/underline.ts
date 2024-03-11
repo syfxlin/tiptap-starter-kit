@@ -1,8 +1,24 @@
-import { Underline as TUnderline } from "@tiptap/extension-underline";
+import { Underline as TUnderline, UnderlineOptions as TUnderlineOptions } from "@tiptap/extension-underline";
 import { MarkMarkdownStorage } from "../extensions/markdown";
+import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { remarkDecoration } from "../extensions/markdown/plugins/decoration";
+import { underline } from "../icons";
 
-export const Underline = TUnderline.extend({
+export interface UnderlineOptions extends TUnderlineOptions {
+  dictionary: {
+    name: string;
+  };
+}
+
+export const Underline = TUnderline.extend<UnderlineOptions>({
+  addOptions() {
+    return {
+      ...this.parent?.(),
+      dictionary: {
+        name: "Underline",
+      },
+    };
+  },
   addStorage() {
     return {
       ...this.parent?.(),
@@ -21,6 +37,14 @@ export const Underline = TUnderline.extend({
           });
         },
       },
-    } satisfies MarkMarkdownStorage;
+      floatMenu: {
+        name: this.options.dictionary.name,
+        icon: underline,
+        shortcut: "Mod-U",
+        active: editor => editor.isActive(this.name),
+        disable: editor => !editor.schema.marks[this.name],
+        onClick: editor => editor.chain().toggleUnderline().focus().run(),
+      },
+    } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },
 });

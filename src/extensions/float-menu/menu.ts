@@ -1,11 +1,5 @@
 import { Editor, Extension, isMarkActive, isNodeSelection, isTextSelection } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { Bold } from "../../marks/bold";
-import { Italic } from "../../marks/italic";
-import { Code } from "../../marks/code";
-import { Strike } from "../../marks/strike";
-import { Highlight } from "../../marks/highlight";
-import { Link } from "../../marks/link";
 import { FloatMenuView } from "./view";
 
 export interface FloatMenuItem {
@@ -30,12 +24,13 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
   addOptions() {
     return {
       items: [
-        Bold.name,
-        Italic.name,
-        Strike.name,
-        Code.name,
-        Highlight.name,
-        Link.name,
+        "bold",
+        "italic",
+        "underline",
+        "strike",
+        "code",
+        "highlight",
+        "link",
       ],
     };
   },
@@ -96,6 +91,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
                 dom.classList.remove("disable");
                 if (item.active?.(this.editor)) {
                   dom.classList.add("active");
+                  return;
                 }
                 dom.classList.remove("active");
               }
