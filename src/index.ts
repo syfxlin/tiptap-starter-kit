@@ -15,10 +15,12 @@ import "./styles.css";
 import { Strike } from "./marks/strike";
 import { Underline } from "./marks/underline";
 import { Style } from "./marks/style";
+import { Subscript } from "./marks/sub";
+import { Superscript } from "./marks/sup";
 
 // @ts-expect-error
 window.editor = new Editor({
   element: document.querySelector("#editor")!,
-  extensions: [Document, Paragraph, Markdown, Clipboard, Text, Bold, Code, Highlight, Underline, Italic, Link, Strike, Style],
+  extensions: [Document, Paragraph, Markdown, Clipboard, Text, Bold, Code, Highlight, Underline, Italic, Link, Strike, Style, Subscript, Superscript],
   content: `aaa <a href="https://ixk.me">Blog</a>`,
 });
