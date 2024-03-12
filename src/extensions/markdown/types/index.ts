@@ -1,6 +1,7 @@
 import { Node as UnistNode } from "unist";
 import { Processor } from "unified";
 import { Mark, MarkType, Node, NodeType } from "@tiptap/pm/model";
+import { Data } from "mdast";
 import { ParserState } from "../parser/state";
 import { SerializerState } from "../serializer/state";
 
@@ -9,6 +10,7 @@ export interface Attrs {
 }
 
 export interface MarkdownNode extends UnistNode {
+  data?: Data & Record<string, any>;
   children?: Array<MarkdownNode>;
   [key: string]: any;
 }

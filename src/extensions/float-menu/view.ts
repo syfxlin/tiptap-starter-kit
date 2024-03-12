@@ -170,6 +170,12 @@ export class FloatMenuView {
     return { button, popover, instance };
   }
 
+  public createDivider() {
+    const divider = document.createElement("span");
+    divider.classList.add("tiptap-fm-divider");
+    return { divider };
+  }
+
   private _createRect() {
     if (this.options.rect) {
       return this.options.rect;

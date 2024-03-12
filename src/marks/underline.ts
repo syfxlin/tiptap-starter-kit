@@ -22,7 +22,7 @@ export const Underline = TUnderline.extend<UnderlineOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      processor: processor => processor.use(remarkDecoration("underline", "++")),
+      processor: processor => processor.use(remarkDecoration("underline", "+")),
       parser: {
         match: node => node.type === "underline",
         apply: (state, node, type) => {

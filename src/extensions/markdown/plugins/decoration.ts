@@ -4,16 +4,21 @@ import { Visitor, VisitorResult, visit } from "unist-util-visit";
 import { u } from "unist-builder";
 import { Handle } from "mdast-util-to-markdown";
 
+export interface DecorationData extends Data {
+  flags: string;
+}
+
 export interface Decoration extends Parent {
   type: string;
-  data?: Data;
+  data?: DecorationData;
   children: PhrasingContent[];
 }
 
-export function remarkDecoration(type: string, marker: string) {
-  const REGEXP = marker.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
-  const LOCAL_REGEXP = new RegExp(`${REGEXP}\\s*([^+]*[^ ])?\\s*${REGEXP}`);
-  const GLOBAL_REGEXP = new RegExp(`${REGEXP}\\s*([^+]*[^ ])?\\s*${REGEXP}`, "g");
+export function remarkDecoration(type: string, marker: string, flags?: boolean) {
+  const CHARS = marker.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
+  const FLAGS = flags ? `([a-z_]{0,2})` : `()`;
+  const LOCAL_REGEXP = new RegExp(`${CHARS}${FLAGS}${CHARS}\\s*([^${CHARS}]*[^ ])\\s*${CHARS}${CHARS}`);
+  const GLOBAL_REGEXP = new RegExp(`${CHARS}${FLAGS}${CHARS}\\s*([^${CHARS}]*[^ ])\\s*${CHARS}${CHARS}`, "g");
 
   const visitor: Visitor<Text> = (node, index, parent): VisitorResult => {
     if (!parent) {
@@ -52,7 +57,18 @@ export function remarkDecoration(type: string, marker: string) {
         children.push(textNode);
       }
 
-      children.push({ type, children: [{ type: "text", value: match[1] ?? "" }] });
+      children.push({
+        type,
+        data: {
+          flags: match[1] ?? "",
+        },
+        children: [
+          {
+            type: "text",
+            value: match[2] ?? "",
+          },
+        ],
+      });
 
       // control for the last text node if exists after the last match
       tempValue = value.slice(mIndex + mLength);
@@ -73,13 +89,13 @@ export function remarkDecoration(type: string, marker: string) {
     // @ts-expect-error
     const exit = state.enter(type);
     const tracker = state.createTracker(info);
-    let value = tracker.move(marker);
+    let value = tracker.move(marker + (flags && node.data?.flags ? node.data.flags : "") + marker);
     value += tracker.move(state.containerPhrasing(node, {
       before: value,
       after: value,
       ...tracker.current(),
     }));
-    value += tracker.move(marker);
+    value += tracker.move(marker + marker);
     exit();
     return value;
   };
@@ -89,6 +105,7 @@ export function remarkDecoration(type: string, marker: string) {
     (data.fromMarkdownExtensions ?? (data.fromMarkdownExtensions = [])).push({
       transforms: [(tree) => {
         visit(tree, "text", visitor);
+        console.log(tree);
       }],
     });
     (data.toMarkdownExtensions ?? (data.toMarkdownExtensions = [])).push({

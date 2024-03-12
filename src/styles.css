@@ -61,6 +61,13 @@
   padding: 0.5em 0.7em;
 }
 
+.tiptap-fm-divider {
+  background-color: var(--tiptap-color-border);
+  opacity: 0.6;
+  margin: 0.15em 0.2em;
+  width: 1px;
+}
+
 .tiptap-fm-input {
   font-size: 0.9em;
   flex-grow: 1;
@@ -83,7 +90,7 @@
   cursor: pointer;
   outline: none;
   opacity: 0.7;
-  margin-left: 0.8em;
+  margin: 0 0.4em;
   transition: opacity 150ms ease-in-out;
   color: var(--tiptap-color-dark-text);
   background-color: transparent;
@@ -93,7 +100,12 @@
   margin-left: 0;
 }
 
-.tiptap-fm-button.active, .tiptap-fm-button:hover {
+.tiptap-fm-button:last-child {
+  margin-right: 0;
+}
+
+.tiptap-fm-button:hover,
+.tiptap-fm-button.active {
   opacity: 1;
 }
 
@@ -127,6 +139,14 @@
   border-color: var(--tiptap-color-border);
   color: var(--tiptap-color-text);
   background-color: var(--tiptap-color-background-secondly);
+}
+
+.tiptap-fm-input + .tiptap-fm-button {
+  margin-left: 0.8em;
+}
+
+.tiptap-fm-button + .tiptap-fm-input {
+  margin-right: 0.8em;
 }
 
 @media print {

@@ -26,11 +26,15 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
       items: [
         "bold",
         "italic",
-        "underline",
         "strike",
+        "underline",
+        "|",
         "code",
         "highlight",
         "link",
+        "|",
+        "superscript",
+        "subscript",
       ],
     };
   },
@@ -66,34 +70,41 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
           },
           onInit: ({ view, element }) => {
             for (const name of this.options.items) {
-              const item = this.editor.storage[name]?.floatMenu as FloatMenuItem | undefined;
-              if (item) {
-                const button = view.createButton({
-                  id: name,
-                  name: item.name,
-                  icon: item.icon,
-                  shortcut: item.shortcut,
-                  onClick: event => item?.onClick(this.editor, event),
-                });
-                element.append(button.button);
+              if (name !== "|") {
+                const item = this.editor.storage[name]?.floatMenu as FloatMenuItem | undefined;
+                if (item) {
+                  const button = view.createButton({
+                    id: name,
+                    name: item.name,
+                    icon: item.icon,
+                    shortcut: item.shortcut,
+                    onClick: event => item?.onClick(this.editor, event),
+                  });
+                  element.append(button.button);
+                }
+              } else {
+                const divider = view.createDivider();
+                element.append(divider.divider);
               }
             }
           },
           onUpdate: ({ element }) => {
             for (const name of this.options.items) {
-              const dom = element.querySelector(`[name="${name}"]`);
-              const item = this.editor.storage[name]?.floatMenu as FloatMenuItem | undefined;
-              if (dom && item) {
-                if (item.disable?.(this.editor)) {
-                  dom.classList.add("disable");
-                  return;
+              if (name !== "|") {
+                const dom = element.querySelector(`[name="${name}"]`);
+                const item = this.editor.storage[name]?.floatMenu as FloatMenuItem | undefined;
+                if (dom && item) {
+                  if (item.disable?.(this.editor)) {
+                    dom.classList.add("disable");
+                    return;
+                  }
+                  dom.classList.remove("disable");
+                  if (item.active?.(this.editor)) {
+                    dom.classList.add("active");
+                    return;
+                  }
+                  dom.classList.remove("active");
                 }
-                dom.classList.remove("disable");
-                if (item.active?.(this.editor)) {
-                  dom.classList.add("active");
-                  return;
-                }
-                dom.classList.remove("active");
               }
             }
           },
