@@ -4,11 +4,13 @@ import { FloatMenuView } from "./view";
 
 export interface FloatMenuItem {
   name: string;
-  icon: string;
+  view: string;
   shortcut?: string;
-  active?: (editor: Editor) => boolean;
-  disable?: (editor: Editor) => boolean;
-  onClick: (editor: Editor, event: MouseEvent) => void;
+  active?: (editor: Editor, view: FloatMenuView, element: HTMLElement) => boolean;
+  onClick: (editor: Editor, view: FloatMenuView, element: HTMLElement) => void;
+  onInit?: (editor: Editor, view: FloatMenuView, element: HTMLElement) => void;
+  onUpdate?: (editor: Editor, view: FloatMenuView, element: HTMLElement) => void;
+  onDestroy?: (editor: Editor, view: FloatMenuView, element: HTMLElement) => void;
 }
 
 export interface FloatMenuItemStorage {
@@ -76,11 +78,12 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
                   const button = view.createButton({
                     id: name,
                     name: item.name,
-                    icon: item.icon,
+                    view: item.view,
                     shortcut: item.shortcut,
-                    onClick: event => item?.onClick(this.editor, event),
+                    onClick: () => item?.onClick(this.editor, view, button.button),
                   });
                   element.append(button.button);
+                  item.onInit?.(this.editor, view, button.button);
                 }
               } else {
                 const divider = view.createDivider();
@@ -88,22 +91,29 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
               }
             }
           },
-          onUpdate: ({ element }) => {
+          onUpdate: ({ view, element }) => {
             for (const name of this.options.items) {
               if (name !== "|") {
-                const dom = element.querySelector(`[name="${name}"]`);
+                const dom = element.querySelector(`[name="${name}"]`) as HTMLElement | undefined;
                 const item = this.editor.storage[name]?.floatMenu as FloatMenuItem | undefined;
                 if (dom && item) {
-                  if (item.disable?.(this.editor)) {
-                    dom.classList.add("disable");
-                    return;
-                  }
-                  dom.classList.remove("disable");
-                  if (item.active?.(this.editor)) {
+                  item.onUpdate?.(this.editor, view, element);
+                  if (item.active?.(this.editor, view, dom)) {
                     dom.classList.add("active");
-                    return;
+                    continue;
                   }
                   dom.classList.remove("active");
+                }
+              }
+            }
+          },
+          onDestroy: ({ view, element }) => {
+            for (const name of this.options.items) {
+              if (name !== "|") {
+                const dom = element.querySelector(`[name="${name}"]`) as HTMLElement | undefined;
+                const item = this.editor.storage[name]?.floatMenu as FloatMenuItem | undefined;
+                if (dom && item) {
+                  item.onDestroy?.(this.editor, view, element);
                 }
               }
             }

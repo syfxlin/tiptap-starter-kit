@@ -1,7 +1,7 @@
 import { SubscriptExtensionOptions, Subscript as TSubscript } from "@tiptap/extension-subscript";
 import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
-import { subscript } from "../icons";
+import { subscript } from "../utils/icons";
 
 export interface SubscriptOptions extends SubscriptExtensionOptions {
   dictionary: {
@@ -38,10 +38,9 @@ export const Subscript = TSubscript.extend<SubscriptOptions>({
       },
       floatMenu: {
         name: this.options.dictionary.name,
-        icon: subscript,
+        view: subscript,
         shortcut: "Mod-,",
         active: editor => editor.isActive(this.name),
-        disable: editor => !editor.schema.marks[this.name],
         onClick: editor => editor.chain().toggleSubscript().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;

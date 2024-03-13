@@ -1,7 +1,7 @@
 import { Strike as TStrike, StrikeOptions as TStrikeOptions } from "@tiptap/extension-strike";
 import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
-import { strike } from "../icons";
+import { strike } from "../utils/icons";
 
 export interface StrikeOptions extends TStrikeOptions {
   dictionary: {
@@ -37,10 +37,9 @@ export const Strike = TStrike.extend<StrikeOptions>({
       },
       floatMenu: {
         name: this.options.dictionary.name,
-        icon: strike,
+        view: strike,
         shortcut: "Mod-Shift-I",
         active: editor => editor.isActive(this.name),
-        disable: editor => !editor.schema.marks[this.name],
         onClick: editor => editor.chain().toggleStrike().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;

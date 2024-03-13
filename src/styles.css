@@ -20,50 +20,162 @@
   --tiptap-font-weight: 400;
   --tiptap-font-size: 1em;
   --tiptap-line-height: 1.7;
+
+  --tiptap-n-operator-border: rgba(0, 0, 0, 0.08);
+  --tiptap-n-operator-color: rgba(0, 7, 20, 0.62);
+  --tiptap-n-operator-background: rgba(252, 252, 252, 1);
+  --tiptap-n-operator-hover-border: #00000026;
+  --tiptap-n-operator-hover-color: rgba(36, 0, 183, 0.66);
+  --tiptap-n-operator-hover-background: rgba(73, 0, 255, 0.03);
+  --tiptap-n-operator-dark-border: rgba(0, 0, 0, 0.08);
+  --tiptap-n-operator-dark-color: rgba(252, 253, 255, 0.94);
+  --tiptap-n-operator-dark-background: rgba(17, 17, 17, 1);
+  --tiptap-n-operator-dark-hover-color: rgba(134, 104, 255, 0.8);
+  --tiptap-n-operator-dark-hover-background: rgba(68, 34, 255, 0.06);
 }
 
 .tiptap * {
   box-sizing: border-box;
 }
 
-.tippy-box[data-theme~="tiptap"] {
+.tippy-box[data-theme="tiptap"],
+.tippy-box[data-theme="tiptap-nb"] {
   font-size: inherit;
   line-height: inherit;
-  color: var(--tiptap-color-text);
-  background-color: var(--tiptap-color-background);
+  color: var(--tiptap-n-operator-color);
+  background: var(--tiptap-n-operator-background);
+  box-shadow: var(--tiptap-n-operator-border) 0 0 0 1px, var(--tiptap-n-operator-border) 0 2px 4px, var(--tiptap-n-operator-border) 0 4px 8px;
 }
 
-.tippy-box[data-theme~="tiptap"] .tippy-content {
+.tippy-box[data-theme="tiptap-dark"],
+.tippy-box[data-theme="tiptap-dark-nb"] {
+  font-size: inherit;
+  line-height: inherit;
+  color: var(--tiptap-n-operator-dark-color);
+  background: var(--tiptap-n-operator-dark-background);
+  box-shadow: var(--tiptap-n-operator-dark-border) 0 0 0 1px, var(--tiptap-n-operator-dark-border) 0 2px 4px, var(--tiptap-n-operator-dark-border) 0 4px 8px;
+}
+
+.tippy-box[data-theme="tiptap-nb"] .tippy-content,
+.tippy-box[data-theme="tiptap-dark-nb"] .tippy-content {
   padding: 0;
 }
 
-.tippy-box[data-theme~="tiptap"] .tippy-arrow {
-  color: var(--tiptap-color-background);
+.tiptap [data-color="e"],
+.tiptap-popover [data-color="e"] {
+  color: #8D8D8D;
+  fill: #8D8D8D;
+  background: inherit;
 }
 
-.tippy-box[data-theme~="tiptap-dark"] {
-  font-size: inherit;
-  line-height: inherit;
-  color: var(--tiptap-color-dark-text);
-  background-color: var(--tiptap-color-dark-background);
+.tiptap [data-color="f"],
+.tiptap-popover [data-color="f"] {
+  color: #AD7F58;
+  fill: #AD7F58;
+  background: inherit;
 }
 
-.tippy-box[data-theme~="tiptap-dark"] .tippy-content {
-  padding: 0;
+.tiptap [data-color="o"],
+.tiptap-popover [data-color="o"] {
+  color: #F76B15;
+  fill: #F76B15;
+  background: inherit;
 }
 
-.tippy-box[data-theme~="tiptap-dark"] .tippy-arrow {
-  color: var(--tiptap-color-dark-background);
+.tiptap [data-color="y"],
+.tiptap-popover [data-color="y"] {
+  color: #FFE629;
+  fill: #FFE629;
+  background: inherit;
+}
+
+.tiptap [data-color="g"],
+.tiptap-popover [data-color="g"] {
+  color: #30A46C;
+  fill: #30A46C;
+  background: inherit;
+}
+
+.tiptap [data-color="b"],
+.tiptap-popover [data-color="b"] {
+  color: #0090FF;
+  fill: #0090FF;
+  background: inherit;
+}
+
+.tiptap [data-color="p"],
+.tiptap-popover [data-color="p"] {
+  color: #8E4EC6;
+  fill: #8E4EC6;
+  background: inherit;
+}
+
+.tiptap [data-color="q"],
+.tiptap-popover [data-color="q"] {
+  color: #D6409F;
+  fill: #D6409F;
+  background: inherit;
+}
+
+.tiptap [data-color="r"],
+.tiptap-popover [data-color="r"] {
+  color: #E5484D;
+  fill: #E5484D;
+  background: inherit;
+}
+
+.tiptap [data-color="be"],
+.tiptap-popover [data-color="be"] {
+  background: #F0F0F0;
+}
+
+.tiptap [data-color="bf"],
+.tiptap-popover [data-color="bf"] {
+  background: #EFE4DF;
+}
+
+.tiptap [data-color="bo"],
+.tiptap-popover [data-color="bo"] {
+  background: #FFEFD6;
+}
+
+.tiptap [data-color="by"],
+.tiptap-popover [data-color="by"] {
+  background: #FFFAB8;
+}
+
+.tiptap [data-color="bg"],
+.tiptap-popover [data-color="bg"] {
+  background: #E6F6EB;
+}
+
+.tiptap [data-color="bb"],
+.tiptap-popover [data-color="bb"] {
+  background: #E6F4FE;
+}
+
+.tiptap [data-color="bp"],
+.tiptap-popover [data-color="bp"] {
+  background: #F7EDFE;
+}
+
+.tiptap [data-color="bq"],
+.tiptap-popover [data-color="bq"] {
+  background: #FEE9F5;
+}
+
+.tiptap [data-color="br"],
+.tiptap-popover [data-color="br"] {
+  background: #FEEBEC;
 }
 
 .tiptap-fm {
   display: flex;
-  padding: 0.5em 0.7em;
+  padding: 0.3em 0.5em;
 }
 
 .tiptap-fm-divider {
-  background-color: var(--tiptap-color-border);
-  opacity: 0.6;
+  background: var(--tiptap-n-operator-border);
   margin: 0.15em 0.2em;
   width: 1px;
 }
@@ -71,13 +183,21 @@
 .tiptap-fm-input {
   font-size: 0.9em;
   flex-grow: 1;
-  border: 0;
-  margin: 0;
   outline: none;
+  margin: 0.1em 0;
   padding: 0.3em 0.5em;
-  border-radius: 2px;
-  color: var(--tiptap-color-dark-text-secondly);
-  background: var(--tiptap-color-dark-background-secondly);
+  border-radius: 4px;
+  color: var(--tiptap-n-operator-color);
+  background: var(--tiptap-n-operator-background);
+  border: 1px solid var(--tiptap-n-operator-hover-border);
+  transition-duration: 150ms;
+  transition-property: color, border, box-shadow;
+  transition-timing-function: ease-in-out;
+}
+
+.tiptap-fm-input:focus {
+  border: 1px solid var(--tiptap-n-operator-hover-color);
+  box-shadow: 0 0 0 1px var(--tiptap-n-operator-hover-color);
 }
 
 .tiptap-fm-button {
@@ -85,15 +205,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  border: none;
-  cursor: pointer;
+  padding: 0.3em 0.4em;
+  margin: 0 0.2em;
   outline: none;
-  opacity: 0.7;
-  margin: 0 0.4em;
-  transition: opacity 150ms ease-in-out;
-  color: var(--tiptap-color-dark-text);
-  background-color: transparent;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition-duration: 150ms;
+  transition-property: color;
+  transition-timing-function: ease-in-out;
+  color: var(--tiptap-n-operator-color);
+  background: transparent;
 }
 
 .tiptap-fm-button:first-child {
@@ -105,12 +227,11 @@
 }
 
 .tiptap-fm-button:hover,
+.tiptap-fm-button:focus,
+.tiptap-fm-button:active,
 .tiptap-fm-button.active {
-  opacity: 1;
-}
-
-.tiptap-fm-button.disable {
-  display: none;
+  color: var(--tiptap-n-operator-hover-color);
+  background: var(--tiptap-n-operator-hover-background);
 }
 
 .tiptap-fm-button svg {
@@ -123,30 +244,59 @@
   padding: 0.5em 1em;
   font-size: 0.5em;
   border-radius: 4px;
-  color: var(--tiptap-color-dark-text);
-  background-color: var(--tiptap-color-dark-background);
+  color: var(--tiptap-n-operator-dark-color);
+  background: var(--tiptap-n-operator-dark-background);
 }
 
 .tiptap-fm-button-popover kbd {
   font-family: var(--tiptap-font-family-mono);
+  display: inline-block;
   font-size: 0.2em;
   font-weight: 700;
   line-height: 1;
-  padding: 0.05em 0.2em;
+  padding: 0.05em 1em;
   border-radius: 4px;
   border-width: 1px 1px 2px;
   border-style: solid;
-  border-color: var(--tiptap-color-border);
-  color: var(--tiptap-color-text);
-  background-color: var(--tiptap-color-background-secondly);
+  border-color: var(--tiptap-n-operator-border);
+  color: var(--tiptap-n-operator-color);
+  background: var(--tiptap-n-operator-background);
+}
+
+.tiptap-fm-color-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.tiptap-fm-color-picker-section {
+  display: flex;
+  gap: 0.5em;
+}
+
+.tiptap-fm-color-picker-section button {
+  appearance: none;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.35em 0.5em;
+  border-radius: 4px;
+  border: 1px solid var(--tiptap-n-operator-hover-border);
+  transition-duration: 150ms;
+  transition-property: color, border, box-shadow;
+  transition-timing-function: ease-in-out;
+}
+
+.tiptap-fm-color-picker-section button:hover {
+  border: 1px solid var(--tiptap-n-operator-hover-color);
+  box-shadow: 0 0 0 1px var(--tiptap-n-operator-hover-color);
 }
 
 .tiptap-fm-input + .tiptap-fm-button {
-  margin-left: 0.8em;
+  margin-left: 0.6em;
 }
 
 .tiptap-fm-button + .tiptap-fm-input {
-  margin-right: 0.8em;
+  margin-right: 0.6em;
 }
 
 @media print {

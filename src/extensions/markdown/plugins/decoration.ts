@@ -16,7 +16,7 @@ export interface Decoration extends Parent {
 
 export function remarkDecoration(type: string, marker: string, flags?: boolean) {
   const CHARS = marker.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
-  const FLAGS = flags ? `([a-z_]{0,2})` : `()`;
+  const FLAGS = flags ? `([a-z0-9]{0,2})` : `()`;
   const LOCAL_REGEXP = new RegExp(`${CHARS}${FLAGS}${CHARS}\\s*([^${CHARS}]*[^ ])\\s*${CHARS}${CHARS}`);
   const GLOBAL_REGEXP = new RegExp(`${CHARS}${FLAGS}${CHARS}\\s*([^${CHARS}]*[^ ])\\s*${CHARS}${CHARS}`, "g");
 
@@ -105,7 +105,6 @@ export function remarkDecoration(type: string, marker: string, flags?: boolean) 
     (data.fromMarkdownExtensions ?? (data.fromMarkdownExtensions = [])).push({
       transforms: [(tree) => {
         visit(tree, "text", visitor);
-        console.log(tree);
       }],
     });
     (data.toMarkdownExtensions ?? (data.toMarkdownExtensions = [])).push({

@@ -2,7 +2,7 @@ import { Underline as TUnderline, UnderlineOptions as TUnderlineOptions } from "
 import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { remarkDecoration } from "../extensions/markdown/plugins/decoration";
-import { underline } from "../icons";
+import { underline } from "../utils/icons";
 
 export interface UnderlineOptions extends TUnderlineOptions {
   dictionary: {
@@ -39,10 +39,9 @@ export const Underline = TUnderline.extend<UnderlineOptions>({
       },
       floatMenu: {
         name: this.options.dictionary.name,
-        icon: underline,
+        view: underline,
         shortcut: "Mod-U",
         active: editor => editor.isActive(this.name),
-        disable: editor => !editor.schema.marks[this.name],
         onClick: editor => editor.chain().toggleUnderline().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;

@@ -1,7 +1,7 @@
 import { Code as TCode, CodeOptions as TCodeOptions } from "@tiptap/extension-code";
 import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
-import { code } from "../icons";
+import { code } from "../utils/icons";
 
 export interface CodeOptions extends TCodeOptions {
   dictionary: {
@@ -39,10 +39,9 @@ export const Code = TCode.extend<CodeOptions>({
       },
       floatMenu: {
         name: this.options.dictionary.name,
-        icon: code,
+        view: code,
         shortcut: "Mod-E",
         active: editor => editor.isActive(this.name),
-        disable: editor => !editor.schema.marks[this.name],
         onClick: editor => editor.chain().toggleCode().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;

@@ -1,10 +1,9 @@
 import { Link as TLink, LinkOptions as TLinkOptions } from "@tiptap/extension-link";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuView } from "../extensions/float-menu/view";
-import * as icons from "../icons";
-import { link } from "../icons";
+import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import * as icons from "../utils/icons";
 
 export interface LinkOptions extends TLinkOptions {
   dictionary: {
@@ -63,10 +62,9 @@ export const Link = TLink.extend<LinkOptions>({
       },
       floatMenu: {
         name: this.options.dictionary.name,
-        icon: link,
+        view: icons.link,
         shortcut: "Mod-K",
         active: editor => editor.isActive(this.name),
-        disable: editor => !editor.schema.marks[this.name],
         onClick: editor => editor.chain().toggleLink({ href: "" }).setTextSelection(editor.state.selection.to - 1).run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
@@ -93,7 +91,7 @@ export const Link = TLink.extend<LinkOptions>({
 
             const open = view.createButton({
               name: this.options.dictionary.openLink,
-              icon: icons.open,
+              view: icons.open,
               onClick: () => {
                 const attrs = editor.getAttributes(this.name);
                 if (attrs.href) {
@@ -104,7 +102,7 @@ export const Link = TLink.extend<LinkOptions>({
 
             const remove = view.createButton({
               name: this.options.dictionary.deleteLink,
-              icon: icons.remove,
+              view: icons.remove,
               onClick: () => {
                 editor.chain().unsetLink().run();
               },

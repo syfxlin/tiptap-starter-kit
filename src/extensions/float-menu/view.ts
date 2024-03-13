@@ -2,22 +2,35 @@ import tippy, { Instance, Props } from "tippy.js";
 import { EditorView } from "@tiptap/pm/view";
 import { EditorState } from "@tiptap/pm/state";
 import { Editor, Range, isNodeSelection, posToDOMRect } from "@tiptap/core";
+import { popoverAppendTo } from "../../utils/dom";
 
 export interface FloatMenuInputViewOptions {
   id?: string;
   name: string;
   type?: string;
   value?: string;
-  onEnter?: (value: string, event: KeyboardEvent) => void;
-  onChange?: (value: string, event: Event) => void;
+  onEnter?: (value: string, element: HTMLInputElement) => void;
+  onChange?: (value: string, element: HTMLInputElement) => void;
+}
+
+export interface FloatMenuSelectViewOptions {
+  id?: string;
+  name: string;
+  type?: string;
+  value?: string;
+  onChange?: (value: string) => void;
+  options: Array<{
+    name: string;
+    value: string;
+  }>;
 }
 
 export interface FloatMenuButtonViewOptions {
   id?: string;
   name: string;
-  icon: string;
+  view: string;
   shortcut?: string;
-  onClick?: (event: MouseEvent) => void;
+  onClick?: (element: HTMLButtonElement) => void;
 }
 
 export interface FloatMenuViewOptions {
@@ -107,16 +120,21 @@ export class FloatMenuView {
     if (options.onEnter) {
       input.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
-          options.onEnter?.(input.value, e);
+          options.onEnter?.(input.value, input);
         }
       });
     }
     if (options.onChange) {
-      input.addEventListener("change", (e) => {
-        options.onChange?.(input.value, e);
+      input.addEventListener("change", () => {
+        options.onChange?.(input.value, input);
       });
     }
     return { input };
+  }
+
+  public createSelect() {
+    const select = document.createElement("select");
+    return { select };
   }
 
   public createButton(options: FloatMenuButtonViewOptions) {
@@ -125,13 +143,13 @@ export class FloatMenuView {
     if (options.id) {
       button.name = options.id;
     }
-    if (options.icon) {
-      button.innerHTML = options.icon;
+    if (options.view) {
+      button.innerHTML = options.view;
     }
 
     if (options.onClick) {
-      button.addEventListener("click", (e) => {
-        options.onClick?.(e);
+      button.addEventListener("click", () => {
+        options.onClick?.(button);
       });
     }
 
@@ -144,7 +162,7 @@ export class FloatMenuView {
       options.shortcut.split("-").forEach((value, index) => {
         if (index !== 0) {
           const span = document.createElement("span");
-          span.textContent = "+";
+          span.innerHTML = "&nbsp;";
           popover.append(span);
         }
         const kbd = document.createElement("kbd");
@@ -161,7 +179,7 @@ export class FloatMenuView {
       content: popover,
       arrow: false,
       inertia: true,
-      theme: "tiptap-dark",
+      theme: "tiptap-dark-nb",
       placement: "top",
       animation: "shift-away",
       duration: [200, 150],
@@ -232,13 +250,16 @@ export class FloatMenuView {
   private _createPopover() {
     const props = this._createProps();
     const options: Partial<Props> = {
-      appendTo: () => document.body,
+      appendTo: popoverAppendTo,
       getReferenceClientRect: null,
       content: this.element,
+      arrow: false,
       interactive: true,
-      theme: "tiptap-dark",
+      offset: [0, 5],
+      theme: "tiptap-nb",
       trigger: "manual",
       placement: "top",
+      maxWidth: "none",
     };
     return tippy(document.body, this.options.tippy ? this.options.tippy({ ...props, options }) : options);
   }

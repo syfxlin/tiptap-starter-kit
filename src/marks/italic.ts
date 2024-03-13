@@ -1,7 +1,7 @@
 import { Italic as TItalic, ItalicOptions as TItalicOptions } from "@tiptap/extension-italic";
 import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
-import { italic } from "../icons";
+import { italic } from "../utils/icons";
 
 export interface ItalicOptions extends TItalicOptions {
   dictionary: {
@@ -37,10 +37,9 @@ export const Italic = TItalic.extend<ItalicOptions>({
       },
       floatMenu: {
         name: this.options.dictionary.name,
-        icon: italic,
+        view: italic,
         shortcut: "Mod-I",
         active: editor => editor.isActive(this.name),
-        disable: editor => !editor.schema.marks[this.name],
         onClick: editor => editor.chain().toggleItalic().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
