@@ -4,7 +4,6 @@ import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { DecorationData, remarkDecoration } from "../extensions/markdown/plugins/decoration";
 import { highlight } from "../utils/icons";
-import { popoverAppendTo } from "../utils/dom";
 
 export interface HighlightOptions extends Omit<THighlightOptions, "multicolor"> {
   dictionary: {
@@ -87,11 +86,12 @@ export const Highlight = THighlight.extend<HighlightOptions>({
             tippy(button1, {
               content: popover1,
               arrow: false,
-              theme: "tiptap-dark-nb",
+              theme: "tiptap-dark",
               animation: "shift-away",
               duration: [200, 150],
             });
-            button1.addEventListener("click", () => {
+            button1.addEventListener("click", (e) => {
+              e.stopPropagation();
               editor.chain().toggleHighlight({ color: key }).focus().run();
             });
             section1.append(button1);
@@ -105,11 +105,12 @@ export const Highlight = THighlight.extend<HighlightOptions>({
             tippy(button2, {
               content: popover2,
               arrow: false,
-              theme: "tiptap-dark-nb",
+              theme: "tiptap-dark",
               animation: "shift-away",
               duration: [200, 150],
             });
-            button2.addEventListener("click", () => {
+            button2.addEventListener("click", (e) => {
+              e.stopPropagation();
               editor.chain().toggleHighlight({ color: `b${key}` }).focus().run();
             });
             section2.append(button2);
@@ -118,7 +119,7 @@ export const Highlight = THighlight.extend<HighlightOptions>({
           container.append(section1);
           container.append(section2);
           tippy(element, {
-            appendTo: popoverAppendTo,
+            appendTo: () => element,
             content: container,
             arrow: false,
             interactive: true,

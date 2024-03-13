@@ -97,7 +97,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
                 const dom = element.querySelector(`[name="${name}"]`) as HTMLElement | undefined;
                 const item = this.editor.storage[name]?.floatMenu as FloatMenuItem | undefined;
                 if (dom && item) {
-                  item.onUpdate?.(this.editor, view, element);
+                  item.onUpdate?.(this.editor, view, dom);
                   if (item.active?.(this.editor, view, dom)) {
                     dom.classList.add("active");
                     continue;
@@ -113,7 +113,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
                 const dom = element.querySelector(`[name="${name}"]`) as HTMLElement | undefined;
                 const item = this.editor.storage[name]?.floatMenu as FloatMenuItem | undefined;
                 if (dom && item) {
-                  item.onDestroy?.(this.editor, view, element);
+                  item.onDestroy?.(this.editor, view, dom);
                 }
               }
             }
