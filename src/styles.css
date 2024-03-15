@@ -38,6 +38,8 @@
   box-sizing: border-box;
 }
 
+/* region tippy */
+
 .tippy-box[data-theme="tiptap"] {
   font-size: inherit;
   line-height: inherit;
@@ -59,113 +61,273 @@
   padding: 0;
 }
 
-.tiptap [data-color="e"],
-.tiptap-popover [data-color="e"] {
+/* endregion */
+
+/* region data-color */
+
+.tiptap [data-color="gray"] {
   color: #8D8D8D;
   fill: #8D8D8D;
   background: inherit;
 }
 
-.tiptap [data-color="f"],
-.tiptap-popover [data-color="f"] {
-  color: #AD7F58;
-  fill: #AD7F58;
+.tiptap [data-color="slate"] {
+  color: #8E8C99;
+  fill: #8E8C99;
   background: inherit;
 }
 
-.tiptap [data-color="o"],
-.tiptap-popover [data-color="o"] {
-  color: #F76B15;
-  fill: #F76B15;
+.tiptap [data-color="tomato"] {
+  color: #E54D2E;
+  fill: #E54D2E;
   background: inherit;
 }
 
-.tiptap [data-color="y"],
-.tiptap-popover [data-color="y"] {
-  color: #FFE629;
-  fill: #FFE629;
-  background: inherit;
-}
-
-.tiptap [data-color="g"],
-.tiptap-popover [data-color="g"] {
-  color: #30A46C;
-  fill: #30A46C;
-  background: inherit;
-}
-
-.tiptap [data-color="b"],
-.tiptap-popover [data-color="b"] {
-  color: #0090FF;
-  fill: #0090FF;
-  background: inherit;
-}
-
-.tiptap [data-color="p"],
-.tiptap-popover [data-color="p"] {
-  color: #8E4EC6;
-  fill: #8E4EC6;
-  background: inherit;
-}
-
-.tiptap [data-color="q"],
-.tiptap-popover [data-color="q"] {
-  color: #D6409F;
-  fill: #D6409F;
-  background: inherit;
-}
-
-.tiptap [data-color="r"],
-.tiptap-popover [data-color="r"] {
+.tiptap [data-color="red"] {
   color: #E5484D;
   fill: #E5484D;
   background: inherit;
 }
 
-.tiptap [data-color="be"],
-.tiptap-popover [data-color="be"] {
+.tiptap [data-color="ruby"] {
+  color: #E54666;
+  fill: #E54666;
+  background: inherit;
+}
+
+.tiptap [data-color="crimson"] {
+  color: #E93D82;
+  fill: #E93D82;
+  background: inherit;
+}
+
+.tiptap [data-color="pink"] {
+  color: #D6409F;
+  fill: #D6409F;
+  background: inherit;
+}
+
+.tiptap [data-color="plum"] {
+  color: #AB4ABA;
+  fill: #AB4ABA;
+  background: inherit;
+}
+
+.tiptap [data-color="purple"] {
+  color: #8E4EC6;
+  fill: #8E4EC6;
+  background: inherit;
+}
+
+.tiptap [data-color="violet"] {
+  color: #6E56CF;
+  fill: #6E56CF;
+  background: inherit;
+}
+
+.tiptap [data-color="iris"] {
+  color: #5B5BD6;
+  fill: #5B5BD6;
+  background: inherit;
+}
+
+.tiptap [data-color="indigo"] {
+  color: #3E63DD;
+  fill: #3E63DD;
+  background: inherit;
+}
+
+.tiptap [data-color="blue"] {
+  color: #0090FF;
+  fill: #0090FF;
+  background: inherit;
+}
+
+.tiptap [data-color="cyan"] {
+  color: #00A2C7;
+  fill: #00A2C7;
+  background: inherit;
+}
+
+.tiptap [data-color="teal"] {
+  color: #12A594;
+  fill: #12A594;
+  background: inherit;
+}
+
+.tiptap [data-color="jade"] {
+  color: #29A383;
+  fill: #29A383;
+  background: inherit;
+}
+
+.tiptap [data-color="green"] {
+  color: #30A46C;
+  fill: #30A46C;
+  background: inherit;
+}
+
+.tiptap [data-color="bronze"] {
+  color: #A18072;
+  fill: #A18072;
+  background: inherit;
+}
+
+.tiptap [data-color="gold"] {
+  color: #978365;
+  fill: #978365;
+  background: inherit;
+}
+
+.tiptap [data-color="brown"] {
+  color: #AD7F58;
+  fill: #AD7F58;
+  background: inherit;
+}
+
+.tiptap [data-color="orange"] {
+  color: #F76B15;
+  fill: #F76B15;
+  background: inherit;
+}
+
+.tiptap [data-color="amber"] {
+  color: #FFC53D;
+  fill: #FFC53D;
+  background: inherit;
+}
+
+.tiptap [data-color="yellow"] {
+  color: #FFE629;
+  fill: #FFE629;
+  background: inherit;
+}
+
+.tiptap [data-color="lime"] {
+  color: #BDEE63;
+  fill: #BDEE63;
+  background: inherit;
+}
+
+.tiptap [data-color="mint"] {
+  color: #86EAD4;
+  fill: #86EAD4;
+  background: inherit;
+}
+
+.tiptap [data-color="sky"] {
+  color: #7CE2FE;
+  fill: #7CE2FE;
+  background: inherit;
+}
+
+.tiptap [data-color="b-gray"] {
   background: #F0F0F0;
 }
 
-.tiptap [data-color="bf"],
-.tiptap-popover [data-color="bf"] {
-  background: #EFE4DF;
+.tiptap [data-color="b-slate"] {
+  background: #F0F0F3;
 }
 
-.tiptap [data-color="bo"],
-.tiptap-popover [data-color="bo"] {
-  background: #FFEFD6;
+.tiptap [data-color="b-tomato"] {
+  background: #FEEBE7;
 }
 
-.tiptap [data-color="by"],
-.tiptap-popover [data-color="by"] {
-  background: #FFFAB8;
+.tiptap [data-color="b-red"] {
+  background: #FEEBEC;
 }
 
-.tiptap [data-color="bg"],
-.tiptap-popover [data-color="bg"] {
-  background: #E6F6EB;
+.tiptap [data-color="b-ruby"] {
+  background: #FEEAED;
 }
 
-.tiptap [data-color="bb"],
-.tiptap-popover [data-color="bb"] {
-  background: #E6F4FE;
+.tiptap [data-color="b-crimson"] {
+  background: #FFE9F0;
 }
 
-.tiptap [data-color="bp"],
-.tiptap-popover [data-color="bp"] {
-  background: #F7EDFE;
-}
-
-.tiptap [data-color="bq"],
-.tiptap-popover [data-color="bq"] {
+.tiptap [data-color="b-pink"] {
   background: #FEE9F5;
 }
 
-.tiptap [data-color="br"],
-.tiptap-popover [data-color="br"] {
-  background: #FEEBEC;
+.tiptap [data-color="b-plum"] {
+  background: #FBEBFB;
 }
+
+.tiptap [data-color="b-purple"] {
+  background: #F7EDFE;
+}
+
+.tiptap [data-color="b-violet"] {
+  background: #F4F0FE;
+}
+
+.tiptap [data-color="b-iris"] {
+  background: #F0F1FE;
+}
+
+.tiptap [data-color="b-indigo"] {
+  background: #E1E9FF;
+}
+
+.tiptap [data-color="b-blue"] {
+  background: #E6F4FE;
+}
+
+.tiptap [data-color="b-cyan"] {
+  background: #DEF7F9;
+}
+
+.tiptap [data-color="b-teal"] {
+  background: #E0F8F3;
+}
+
+.tiptap [data-color="b-jade"] {
+  background: #E6F7ED;
+}
+
+.tiptap [data-color="b-green"] {
+  background: #E6F6EB;
+}
+
+.tiptap [data-color="b-bronze"] {
+  background: #F6EDEA;
+}
+
+.tiptap [data-color="b-gold"] {
+  background: #F2F0E7;
+}
+
+.tiptap [data-color="b-brown"] {
+  background: #F6EEE7;
+}
+
+.tiptap [data-color="b-orange"] {
+  background: #FFEFD6;
+}
+
+.tiptap [data-color="b-amber"] {
+  background: #FFF7C2;
+}
+
+.tiptap [data-color="b-yellow"] {
+  background: #FFFAB8;
+}
+
+.tiptap [data-color="b-lime"] {
+  background: #EEF6D6;
+}
+
+.tiptap [data-color="b-mint"] {
+  background: #DDF9F2;
+}
+
+.tiptap [data-color="b-sky"] {
+  background: #E1F6FD;
+}
+
+/* endregion */
+
+/* region tiptap float menu */
 
 .tiptap-fm {
   display: flex;
@@ -262,18 +424,13 @@
 }
 
 .tiptap-fm-color-picker {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(13, 1fr);
   gap: 0.5em;
   padding: 0.5em;
 }
 
-.tiptap-fm-color-picker-section {
-  display: flex;
-  gap: 0.5em;
-}
-
-.tiptap-fm-color-picker-section button {
+.tiptap-fm-color-picker button {
   appearance: none;
   cursor: pointer;
   line-height: 1;
@@ -285,10 +442,10 @@
   transition-timing-function: ease-in-out;
 }
 
-.tiptap-fm-color-picker-section button:hover,
-.tiptap-fm-color-picker-section button:focus,
-.tiptap-fm-color-picker-section button:active,
-.tiptap-fm-color-picker-section button.active {
+.tiptap-fm-color-picker button:hover,
+.tiptap-fm-color-picker button:focus,
+.tiptap-fm-color-picker button:active,
+.tiptap-fm-color-picker button.active {
   border: 1px solid var(--tiptap-n-operator-hover-color);
   box-shadow: 0 0 0 1px var(--tiptap-n-operator-hover-color);
 }
@@ -300,6 +457,8 @@
 .tiptap-fm-button + .tiptap-fm-input {
   margin-right: 0.6em;
 }
+
+/* endregion */
 
 @media print {
   .tiptap-fm {

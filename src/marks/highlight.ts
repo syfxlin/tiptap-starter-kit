@@ -4,9 +4,10 @@ import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { DecorationData, remarkDecoration } from "../extensions/markdown/plugins/decoration";
 import { highlight } from "../utils/icons";
+import { colors } from "../utils/colors";
 
 export interface HighlightOptions extends Omit<THighlightOptions, "multicolor"> {
-  dictionary: {
+  dictionary: Record<typeof colors[number][0], string> & {
     name: string;
   };
 }
@@ -17,6 +18,32 @@ export const Highlight = THighlight.extend<HighlightOptions>({
       ...this.parent?.(),
       dictionary: {
         name: "Highlight",
+        gray: "Gray",
+        slate: "Slate",
+        tomato: "Tomato",
+        red: "Red",
+        ruby: "Ruby",
+        crimson: "Crimson",
+        pink: "Pink",
+        plum: "Plum",
+        purple: "Purple",
+        violet: "Violet",
+        iris: "Iris",
+        indigo: "Indigo",
+        blue: "Blue",
+        cyan: "Cyan",
+        teal: "Teal",
+        jade: "Jade",
+        green: "Green",
+        bronze: "Bronze",
+        gold: "Gold",
+        brown: "Brown",
+        orange: "Orange",
+        amber: "Amber",
+        yellow: "Yellow",
+        lime: "Lime",
+        mint: "Mint",
+        sky: "Sky",
       },
     };
   },
@@ -24,40 +51,37 @@ export const Highlight = THighlight.extend<HighlightOptions>({
     return {
       color: {
         default: null,
-        parseHTML: (e) => {
-          const value = e.getAttribute("data-color");
-          return value?.length === 1 ? value : null;
-        },
-        renderHTML: (a) => {
-          if (!a.color) {
-            return {};
-          }
-          return { "data-color": a.color };
-        },
+        parseHTML: e => e.getAttribute("data-color"),
+        renderHTML: a => a.color ? { "data-color": a.color } : {},
       },
     };
   },
   addStorage() {
+    const mapping1 = new Map<string, string>();
+    const mapping2 = new Map<string, string>();
+    for (const [c, k] of colors) {
+      mapping1.set(k, c);
+      mapping1.set(`b${k}`, `b-${c}`);
+      mapping2.set(c, k);
+      mapping2.set(`b-${c}`, `b${k}`);
+    }
     return {
       ...this.parent?.(),
       processor: processor => processor.use(remarkDecoration("highlight", "=", true)),
       parser: {
         match: node => node.type === "highlight",
         apply: (state, node, type) => {
-          const data = node.data as DecorationData;
-          state.openMark(type, { color: data?.flags || undefined });
-          state.next(node.children);
-          state.closeMark(type);
+          const value = (node.data as DecorationData)?.flags ?? "";
+          state.openMark(type, { color: mapping1.get(value) }).next(node.children).closeMark(type);
         },
       },
       serializer: {
         match: mark => mark.type.name === this.name,
         apply: (state, mark) => {
+          const value = mark.attrs.color ?? "";
           state.withMark(mark, {
             type: "highlight",
-            data: {
-              flags: mark.attrs.color,
-            },
+            data: { flags: mapping2.get(value) },
           });
         },
       },
@@ -70,54 +94,32 @@ export const Highlight = THighlight.extend<HighlightOptions>({
         onInit: (editor, _view, element) => {
           const container = document.createElement("div");
           container.classList.add("tiptap-fm-color-picker");
-
-          const section1 = document.createElement("div");
-          const section2 = document.createElement("div");
-          section1.classList.add("tiptap-fm-color-picker-section");
-          section2.classList.add("tiptap-fm-color-picker-section");
-
-          for (const [key, name] of [["e", "Gray"], ["f", "Brown"], ["o", "Orange"], ["y", "Yellow"], ["g", "Green"], ["b", "Blue"], ["p", "Purple"], ["q", "Pink"], ["r", "Red"]]) {
-            const button1 = document.createElement("button");
-            button1.textContent = "A";
-            button1.setAttribute("data-color", key);
-            const popover1 = document.createElement("span");
-            popover1.classList.add("tiptap-fm-button-popover");
-            popover1.textContent = name;
-            tippy(button1, {
-              content: popover1,
+          for (const color of [...colors.map(i => i[0]), ...colors.map(i => `b-${i[0]}`)]) {
+            const button = document.createElement("button");
+            button.textContent = "A";
+            button.setAttribute("data-color", color);
+            const popover = document.createElement("span");
+            popover.classList.add("tiptap-fm-button-popover");
+            if (color.startsWith("b-")) {
+              // @ts-expect-error
+              popover.textContent = `Background ${this.options.dictionary[color.replace("b-", "")]}`;
+            } else {
+              // @ts-expect-error
+              popover.textContent = this.options.dictionary[color];
+            }
+            tippy(button, {
+              content: popover,
               arrow: false,
               theme: "tiptap-dark",
               animation: "shift-away",
               duration: [200, 150],
             });
-            button1.addEventListener("click", (e) => {
+            button.addEventListener("click", (e) => {
               e.stopPropagation();
-              editor.chain().toggleHighlight({ color: key }).focus().run();
+              editor.chain().toggleHighlight({ color }).focus().run();
             });
-            section1.append(button1);
-
-            const button2 = document.createElement("button");
-            button2.textContent = "A";
-            button2.setAttribute("data-color", `b${key}`);
-            const popover2 = document.createElement("span");
-            popover2.classList.add("tiptap-fm-button-popover");
-            popover2.textContent = `Background ${name}`;
-            tippy(button2, {
-              content: popover2,
-              arrow: false,
-              theme: "tiptap-dark",
-              animation: "shift-away",
-              duration: [200, 150],
-            });
-            button2.addEventListener("click", (e) => {
-              e.stopPropagation();
-              editor.chain().toggleHighlight({ color: `b${key}` }).focus().run();
-            });
-            section2.append(button2);
+            container.append(button);
           }
-
-          container.append(section1);
-          container.append(section2);
           tippy(element, {
             appendTo: () => element,
             content: container,
