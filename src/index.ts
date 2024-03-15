@@ -17,10 +17,11 @@ import { Underline } from "./marks/underline";
 import { Subscript } from "./marks/sub";
 import { Superscript } from "./marks/sup";
 import { FloatMenu } from "./extensions/float-menu/menu";
+import { BlockMenu } from "./extensions/block-menu/menu";
 
 // @ts-expect-error
 window.editor = new Editor({
   element: document.querySelector("#editor")!,
-  extensions: [Document, Paragraph, Markdown, Clipboard, Text, Bold, Code, Highlight, Underline, Italic, Link, Strike, Subscript, Superscript, FloatMenu],
+  extensions: [Document, Paragraph, Markdown, Clipboard, Text, Bold, Code, Highlight, Underline, Italic, Link, Strike, Subscript, Superscript, FloatMenu, BlockMenu],
   content: `aaa <a href="https://ixk.me">Blog</a>`,
 });

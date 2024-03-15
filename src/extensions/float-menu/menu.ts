@@ -6,8 +6,8 @@ export interface FloatMenuItem {
   name: string;
   view: string;
   shortcut?: string;
-  active?: (editor: Editor, view: FloatMenuView, element: HTMLElement) => boolean;
-  onClick: (editor: Editor, view: FloatMenuView, element: HTMLElement) => void;
+  active: (editor: Editor, view: FloatMenuView) => boolean;
+  action: (editor: Editor, view: FloatMenuView) => void;
   onInit?: (editor: Editor, view: FloatMenuView, element: HTMLElement) => void;
   onUpdate?: (editor: Editor, view: FloatMenuView, element: HTMLElement) => void;
   onDestroy?: (editor: Editor, view: FloatMenuView, element: HTMLElement) => void;
@@ -49,15 +49,16 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
         key: new PluginKey("float-menu"),
         view: () => new FloatMenuView({
           editor: this.editor,
-          show: ({ editor, range }) => {
-            if (!editor.isEditable) {
+          show: ({ editor }) => {
+            const { state, isEditable } = editor;
+            if (!isEditable) {
               return false;
             }
-            const state = editor.state;
-            if (state.selection.empty) {
+            const { selection, doc } = state;
+            if (selection.empty) {
               return false;
             }
-            const isEmptyTextBlock = !state.doc.textBetween(range.from, range.to).length && isTextSelection(state.selection);
+            const isEmptyTextBlock = !doc.textBetween(selection.from, selection.to).length && isTextSelection(selection);
             if (isEmptyTextBlock) {
               return false;
             }
@@ -67,7 +68,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
               // !isNodeActive(state, "image") &&
               // !isNodeActive(state, "table") &&
               // !isNodeActive(state, "codeBlock") &&
-              !isNodeSelection(state.selection)
+              !isNodeSelection(selection)
             );
           },
           onInit: ({ view, element }) => {
@@ -80,7 +81,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
                     name: item.name,
                     view: item.view,
                     shortcut: item.shortcut,
-                    onClick: () => item?.onClick(this.editor, view, button.button),
+                    onClick: () => item.action(this.editor, view),
                   });
                   element.append(button.button);
                   item.onInit?.(this.editor, view, button.button);
@@ -98,7 +99,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
                 const item = this.editor.storage[name]?.floatMenu as FloatMenuItem | undefined;
                 if (dom && item) {
                   item.onUpdate?.(this.editor, view, dom);
-                  if (item.active?.(this.editor, view, dom)) {
+                  if (item.active(this.editor, view)) {
                     dom.classList.add("active");
                     continue;
                   }

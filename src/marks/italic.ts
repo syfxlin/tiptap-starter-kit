@@ -40,7 +40,7 @@ export const Italic = TItalic.extend<ItalicOptions>({
         view: italic,
         shortcut: "Mod-I",
         active: editor => editor.isActive(this.name),
-        onClick: editor => editor.chain().toggleItalic().focus().run(),
+        action: editor => editor.chain().toggleItalic().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

@@ -41,7 +41,7 @@ export const Superscript = TSuperscript.extend<SuperscriptOptions>({
         view: superscript,
         shortcut: "Mod-.",
         active: editor => editor.isActive(this.name),
-        onClick: editor => editor.chain().toggleSuperscript().focus().run(),
+        action: editor => editor.chain().toggleSuperscript().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

@@ -1,7 +1,7 @@
 import tippy, { Instance, Props } from "tippy.js";
 import { EditorView } from "@tiptap/pm/view";
-import { EditorState } from "@tiptap/pm/state";
-import { Editor, Range, isNodeSelection, posToDOMRect } from "@tiptap/core";
+import { EditorState, PluginView } from "@tiptap/pm/state";
+import { Editor, isNodeSelection, posToDOMRect } from "@tiptap/core";
 import { popoverAppendTo } from "../../utils/dom";
 
 export interface FloatMenuInputViewOptions {
@@ -11,18 +11,6 @@ export interface FloatMenuInputViewOptions {
   value?: string;
   onEnter?: (value: string, element: HTMLInputElement) => void;
   onChange?: (value: string, element: HTMLInputElement) => void;
-}
-
-export interface FloatMenuSelectViewOptions {
-  id?: string;
-  name: string;
-  type?: string;
-  value?: string;
-  onChange?: (value: string) => void;
-  options: Array<{
-    name: string;
-    value: string;
-  }>;
 }
 
 export interface FloatMenuButtonViewOptions {
@@ -37,15 +25,15 @@ export interface FloatMenuViewOptions {
   editor: Editor;
   class?: string | string[];
   style?: CSSStyleDeclaration | CSSStyleDeclaration[];
-  rect?: (props: { view: FloatMenuView; editor: Editor; range: Range }) => DOMRect;
-  show?: (props: { view: FloatMenuView; editor: Editor; range: Range }) => boolean;
-  tippy?: (props: { view: FloatMenuView; editor: Editor; range: Range; options: Partial<Props> }) => Partial<Props>;
-  onInit?: (props: { view: FloatMenuView; editor: Editor; range: Range; element: HTMLElement; show: () => void; hide: () => void }) => void;
-  onUpdate?: (props: { view: FloatMenuView; editor: Editor; range: Range; element: HTMLElement; show: () => void; hide: () => void }) => void;
-  onDestroy?: (props: { view: FloatMenuView; editor: Editor; range: Range; element: HTMLElement; show: () => void; hide: () => void }) => void;
+  rect?: (props: { view: FloatMenuView; editor: Editor }) => DOMRect;
+  show?: (props: { view: FloatMenuView; editor: Editor }) => boolean;
+  tippy?: (props: { view: FloatMenuView; editor: Editor; options: Partial<Props> }) => Partial<Props>;
+  onInit?: (props: { view: FloatMenuView; editor: Editor; element: HTMLElement; show: () => void; hide: () => void }) => void;
+  onUpdate?: (props: { view: FloatMenuView; editor: Editor; element: HTMLElement; show: () => void; hide: () => void; prevState?: EditorState }) => void;
+  onDestroy?: (props: { view: FloatMenuView; editor: Editor; element: HTMLElement; show: () => void; hide: () => void }) => void;
 }
 
-export class FloatMenuView {
+export class FloatMenuView implements PluginView {
   private readonly editor: Editor;
   private readonly popover: Instance;
   private readonly element: HTMLElement;
@@ -54,8 +42,8 @@ export class FloatMenuView {
   constructor(options: FloatMenuViewOptions) {
     this.editor = options.editor;
     this.options = options;
-    this.element = this._createElement();
-    this.popover = this._createPopover();
+    this.element = this._element();
+    this.popover = this._popover();
   }
 
   public show() {
@@ -66,29 +54,33 @@ export class FloatMenuView {
     this.popover.hide();
   }
 
-  public update(view: EditorView, oldState?: EditorState) {
+  public update(view: EditorView, prevState?: EditorState) {
     const state = view.state;
 
     // skip render
-    if (view.composing || (oldState && oldState.doc.eq(state.doc) && oldState.selection.eq(state.selection))) {
+    if (view.composing || (prevState && prevState.doc.eq(state.doc) && prevState.selection.eq(state.selection))) {
       return;
     }
 
-    const props = this._createProps();
-
     // check should show
-    if (!this.options.show?.(props)) {
+    if (!this.options.show?.({ view: this, editor: this.editor })) {
       this.hide();
       return;
     }
 
     // on update
     if (this.options.onUpdate) {
-      this.options.onUpdate({ ...props, element: this.element });
+      this.options.onUpdate({
+        view: this,
+        editor: this.editor,
+        element: this.element,
+        show: this.show.bind(this),
+        hide: this.hide.bind(this),
+      });
     }
 
     // reset client rect
-    this.popover.setProps({ getReferenceClientRect: () => this._createRect()(props) });
+    this.popover.setProps({ getReferenceClientRect: () => this._rect() });
 
     // switch to show
     this.show();
@@ -96,8 +88,13 @@ export class FloatMenuView {
 
   public destroy() {
     if (this.options.onDestroy) {
-      const props = this._createProps();
-      this.options.onDestroy({ ...props, element: this.element });
+      this.options.onDestroy({
+        view: this,
+        editor: this.editor,
+        element: this.element,
+        show: this.show.bind(this),
+        hide: this.hide.bind(this),
+      });
     }
     this.popover.destroy();
   }
@@ -132,11 +129,6 @@ export class FloatMenuView {
     return { input };
   }
 
-  public createSelect() {
-    const select = document.createElement("select");
-    return { select };
-  }
-
   public createButton(options: FloatMenuButtonViewOptions) {
     const button = document.createElement("button");
     button.classList.add("tiptap-fm-button");
@@ -146,7 +138,6 @@ export class FloatMenuView {
     if (options.view) {
       button.innerHTML = options.view;
     }
-
     if (options.onClick) {
       button.addEventListener("click", () => {
         options.onClick?.(button);
@@ -156,7 +147,6 @@ export class FloatMenuView {
     const popover = document.createElement("div");
     popover.classList.add("tiptap-fm-button-popover");
     popover.innerHTML = options.name;
-
     if (options.shortcut) {
       popover.innerHTML += "&nbsp;·&nbsp;";
       options.shortcut.split("-").forEach((value, index) => {
@@ -174,8 +164,8 @@ export class FloatMenuView {
         popover.append(kbd);
       });
     }
-
     const instance = tippy(button, {
+      appendTo: popoverAppendTo,
       content: popover,
       arrow: false,
       inertia: true,
@@ -194,37 +184,21 @@ export class FloatMenuView {
     return { divider };
   }
 
-  private _createRect() {
+  private _rect() {
     if (this.options.rect) {
-      return this.options.rect;
+      return this.options.rect({ view: this, editor: this.editor });
     }
-    return ({ editor, range }: { editor: Editor; range: Range }) => {
-      const { view, state } = editor;
-      if (isNodeSelection(state.selection)) {
-        const node = view.nodeDOM(range.from) as HTMLElement;
-
-        if (node) {
-          return node.getBoundingClientRect();
-        }
+    const { view, state } = this.editor;
+    if (isNodeSelection(state.selection)) {
+      const node = view.nodeDOM(state.selection.from) as HTMLElement;
+      if (node) {
+        return node.getBoundingClientRect();
       }
-      return posToDOMRect(view, range.from, range.to);
-    };
+    }
+    return posToDOMRect(view, state.selection.from, state.selection.to);
   }
 
-  private _createProps() {
-    const ranges = this.editor.view.state.selection.ranges;
-    const from = Math.min(...ranges.map(r => r.$from.pos));
-    const to = Math.max(...ranges.map(r => r.$to.pos));
-    return {
-      range: { from, to },
-      editor: this.editor,
-      view: this,
-      show: this.show.bind(this),
-      hide: this.hide.bind(this),
-    };
-  }
-
-  private _createElement() {
+  private _element() {
     const element = document.createElement("div");
     element.classList.add("tiptap-fm");
     if (this.options.class) {
@@ -241,14 +215,18 @@ export class FloatMenuView {
       }
     }
     if (this.options.onInit) {
-      const props = this._createProps();
-      this.options.onInit({ ...props, element });
+      this.options.onInit({
+        element,
+        view: this,
+        editor: this.editor,
+        show: this.show.bind(this),
+        hide: this.hide.bind(this),
+      });
     }
     return element;
   }
 
-  private _createPopover() {
-    const props = this._createProps();
+  private _popover() {
     const options: Partial<Props> = {
       appendTo: popoverAppendTo,
       getReferenceClientRect: null,
@@ -261,6 +239,6 @@ export class FloatMenuView {
       placement: "top",
       maxWidth: "none",
     };
-    return tippy(document.body, this.options.tippy ? this.options.tippy({ ...props, options }) : options);
+    return tippy(document.body, this.options.tippy ? this.options.tippy({ options, view: this, editor: this.editor }) : options);
   }
 }

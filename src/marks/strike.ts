@@ -40,7 +40,7 @@ export const Strike = TStrike.extend<StrikeOptions>({
         view: strike,
         shortcut: "Mod-Shift-I",
         active: editor => editor.isActive(this.name),
-        onClick: editor => editor.chain().toggleStrike().focus().run(),
+        action: editor => editor.chain().toggleStrike().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

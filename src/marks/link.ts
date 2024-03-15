@@ -65,7 +65,7 @@ export const Link = TLink.extend<LinkOptions>({
         view: icons.link,
         shortcut: "Mod-K",
         active: editor => editor.isActive(this.name),
-        onClick: editor => editor.chain().toggleLink({ href: "" }).setTextSelection(editor.state.selection.to - 1).run(),
+        action: editor => editor.chain().toggleLink({ href: "" }).setTextSelection(editor.state.selection.to - 1).run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

@@ -42,7 +42,7 @@ export const Code = TCode.extend<CodeOptions>({
         view: code,
         shortcut: "Mod-E",
         active: editor => editor.isActive(this.name),
-        onClick: editor => editor.chain().toggleCode().focus().run(),
+        action: editor => editor.chain().toggleCode().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

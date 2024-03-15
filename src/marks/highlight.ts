@@ -5,6 +5,7 @@ import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { DecorationData, remarkDecoration } from "../extensions/markdown/plugins/decoration";
 import { highlight } from "../utils/icons";
 import { colors } from "../utils/colors";
+import { popoverAppendTo } from "../utils/dom";
 
 export interface HighlightOptions extends Omit<THighlightOptions, "multicolor"> {
   dictionary: Record<typeof colors[number][0], string> & {
@@ -90,7 +91,7 @@ export const Highlight = THighlight.extend<HighlightOptions>({
         view: highlight,
         shortcut: "Mod-Shift-H",
         active: editor => editor.isActive(this.name),
-        onClick: editor => editor.chain().toggleHighlight().focus().run(),
+        action: editor => editor.chain().toggleHighlight().focus().run(),
         onInit: (editor, _view, element) => {
           const container = document.createElement("div");
           container.classList.add("tiptap-fm-color-picker");
@@ -108,6 +109,7 @@ export const Highlight = THighlight.extend<HighlightOptions>({
               popover.textContent = this.options.dictionary[color];
             }
             tippy(button, {
+              appendTo: popoverAppendTo,
               content: popover,
               arrow: false,
               theme: "tiptap-dark",

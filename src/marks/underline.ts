@@ -42,7 +42,7 @@ export const Underline = TUnderline.extend<UnderlineOptions>({
         view: underline,
         shortcut: "Mod-U",
         active: editor => editor.isActive(this.name),
-        onClick: editor => editor.chain().toggleUnderline().focus().run(),
+        action: editor => editor.chain().toggleUnderline().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

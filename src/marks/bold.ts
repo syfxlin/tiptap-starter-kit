@@ -2,6 +2,7 @@ import { Bold as TBold, BoldOptions as TBoldOptions } from "@tiptap/extension-bo
 import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { bold } from "../utils/icons";
+import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 
 export interface BoldOptions extends TBoldOptions {
   dictionary: {
@@ -40,8 +41,15 @@ export const Bold = TBold.extend<BoldOptions>({
         view: bold,
         shortcut: "Mod-B",
         active: editor => editor.isActive(this.name),
-        onClick: editor => editor.chain().toggleBold().focus().run(),
+        action: editor => editor.chain().toggleBold().focus().run(),
       },
-    } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
+      blockMenu: {
+        name: this.options.dictionary.name,
+        icon: bold,
+        shortcut: "Mod-B",
+        keywords: "bold,ct",
+        action: editor => editor.chain().toggleBold().focus().run(),
+      },
+    } satisfies MarkMarkdownStorage & FloatMenuItemStorage & BlockMenuItemStorage;
   },
 });
