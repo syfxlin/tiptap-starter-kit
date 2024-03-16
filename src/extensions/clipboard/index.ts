@@ -1,10 +1,10 @@
-import { Extension, isMarkActive, isNodeActive } from "@tiptap/core";
+import { Extension, isActive } from "@tiptap/core";
 import { Slice } from "@tiptap/pm/model";
 import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 
 export function isInCode(state: EditorState): boolean {
   try {
-    return isNodeActive(state, "codeBlock") || isMarkActive(state, "code");
+    return isActive(state, "codeBlock") || isActive(state, "code");
   } catch (e) {
     return false;
   }

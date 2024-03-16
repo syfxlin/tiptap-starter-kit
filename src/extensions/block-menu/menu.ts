@@ -1,6 +1,7 @@
-import { Editor, Extension } from "@tiptap/core";
+import { Editor, Extension, findParentNode } from "@tiptap/core";
 import { Suggestion } from "@tiptap/suggestion";
-import { PluginKey } from "@tiptap/pm/state";
+import { Plugin, PluginKey } from "@tiptap/pm/state";
+import { Decoration, DecorationSet } from "@tiptap/pm/view";
 import { BlockMenuView, BlockMenuViewItem } from "./view";
 
 export interface BlockMenuItem {
@@ -96,6 +97,40 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
               empty: this.options.dictionary.queryEmpty,
             },
           });
+        },
+      }),
+      new Plugin({
+        key: new PluginKey("block-menu-placeholder"),
+        props: {
+          decorations: (state) => {
+            const parent = findParentNode(node => node.type.name === "paragraph")(state.selection);
+            if (!parent) {
+              return;
+            }
+
+            const decorations: Array<Decoration> = [];
+            const isEmpty = parent && parent.node.content.size === 0;
+            const isSlash = parent && parent.node.textContent === "/";
+            const isTopLevel = state.selection.$from.depth === 1;
+
+            if (isTopLevel) {
+              if (isEmpty) {
+                decorations.push(Decoration.node(parent.pos, parent.pos + parent.node.nodeSize, {
+                  "class": "tiptap-bm-placeholder",
+                  "data-empty": this.options.dictionary.lineEmpty,
+                }));
+              }
+              if (isSlash) {
+                decorations.push(Decoration.node(parent.pos, parent.pos + parent.node.nodeSize, {
+                  "class": "tiptap-bm-placeholder",
+                  "data-empty": this.options.dictionary.lineSlash,
+                }));
+              }
+              return DecorationSet.create(state.doc, decorations);
+            }
+
+            return null;
+          },
         },
       }),
     ];

@@ -1,4 +1,4 @@
-import { Editor, Extension, isMarkActive, isNodeSelection, isTextSelection } from "@tiptap/core";
+import { Editor, Extension, isActive, isNodeSelection, isTextSelection } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { FloatMenuView } from "./view";
 
@@ -63,11 +63,10 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
               return false;
             }
             return (
-              !isMarkActive(state, "link") &&
-              // TODO: remove comments
-              // !isNodeActive(state, "image") &&
-              // !isNodeActive(state, "table") &&
-              // !isNodeActive(state, "codeBlock") &&
+              !isActive(state, "link") &&
+              !isActive(state, "image") &&
+              !isActive(state, "table") &&
+              !isActive(state, "codeBlock") &&
               !isNodeSelection(selection)
             );
           },

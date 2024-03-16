@@ -460,6 +460,20 @@
   color: var(--tiptap-n-color);
 }
 
+.tiptap-bm-placeholder::before {
+  content: attr(data-empty);
+  display: block;
+  opacity: 0;
+  transition: opacity 150ms ease-in-out;
+  pointer-events: none;
+  height: 0;
+  color: var(--tiptap-n-operator-color);
+}
+
+.ProseMirror-focused .tiptap-bm-placeholder::before {
+  opacity: 1;
+}
+
 .tiptap-bm-empty {
   display: flex;
   align-items: center;
