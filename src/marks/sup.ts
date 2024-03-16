@@ -24,7 +24,9 @@ export const Superscript = TSuperscript.extend<SuperscriptOptions>({
       parser: {
         match: node => node.type === "textDirective" && node.name === "sup",
         apply: (state, node, type) => {
-          state.openMark(type).next(node.children).closeMark(type);
+          state.openMark(type);
+          state.next(node.children);
+          state.closeMark(type);
         },
       },
       serializer: {

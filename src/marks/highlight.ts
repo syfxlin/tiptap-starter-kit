@@ -73,7 +73,9 @@ export const Highlight = THighlight.extend<HighlightOptions>({
         match: node => node.type === "highlight",
         apply: (state, node, type) => {
           const value = (node.data as DecorationData)?.flags ?? "";
-          state.openMark(type, { color: mapping1.get(value) }).next(node.children).closeMark(type);
+          state.openMark(type, { color: mapping1.get(value) });
+          state.next(node.children);
+          state.closeMark(type);
         },
       },
       serializer: {

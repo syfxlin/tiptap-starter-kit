@@ -24,7 +24,9 @@ export const Code = TCode.extend<CodeOptions>({
       parser: {
         match: node => node.type === "inlineCode",
         apply: (state, node, type) => {
-          state.openMark(type).addText(node.value).closeMark(type);
+          state.openMark(type);
+          state.addText(node.value);
+          state.closeMark(type);
         },
       },
       serializer: {

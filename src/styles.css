@@ -22,6 +22,9 @@
   --tiptap-line-height: 1.7;
 
   --tiptap-n-color: rgba(0, 0, 0, 1);
+  --tiptap-n-background: rgba(255, 255, 255, 1);
+  --tiptap-n-card-color: rgba(0, 0, 0, 1);
+  --tiptap-n-card-background: rgba(0, 0, 0, 0.02);
   --tiptap-n-operator-border: rgba(0, 0, 0, 0.08);
   --tiptap-n-operator-color: rgba(0, 7, 20, 0.62);
   --tiptap-n-operator-background: rgba(255, 255, 255, 1);
@@ -329,7 +332,7 @@
 
 /* endregion */
 
-/* region tiptap float menu */
+/* region float-menu */
 
 .tiptap-fm {
   display: flex;
@@ -447,7 +450,7 @@
 
 /* endregion */
 
-/* region tiptap block menu */
+/* region block-menu */
 
 .tiptap-bm {
   overflow-x: hidden;
@@ -530,7 +533,7 @@
 
 /* endregion */
 
-/* region tiptap menu common */
+/* region menu-common */
 
 .tiptap-fm-button kbd,
 .tiptap-bm-button kbd,
@@ -548,6 +551,161 @@
   border-color: var(--tiptap-n-operator-hover-border);
   color: var(--tiptap-n-operator-color);
   background: var(--tiptap-n-operator-background);
+}
+
+/* endregion */
+
+/* region code-block */
+
+.tiptap-code-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0.75em 1em;
+  gap: 0.5em;
+  border-radius: 4px;
+  border: 1px solid var(--tiptap-n-operator-border);
+  background: var(--tiptap-n-card-background);
+}
+
+.tiptap-code-block-toolbar {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  display: flex;
+  gap: 0.5em;
+  opacity: 0;
+  transition-duration: 150ms;
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+}
+
+.tiptap-code-block:hover .tiptap-code-block-toolbar {
+  opacity: 1;
+}
+
+.tiptap-code-block-toolbar select {
+  display: inline-block;
+  font-size: 0.8em;
+  padding: 0.125em;
+  border-radius: 4px;
+  outline: 0;
+  border: 1px solid var(--tiptap-n-operator-hover-border);
+  background: var(--tiptap-n-operator-background);
+  transition-duration: 150ms;
+  transition-property: color, border, box-shadow;
+  transition-timing-function: ease-in-out;
+}
+
+.tiptap-code-block-toolbar select:hover,
+.tiptap-code-block-toolbar select:focus,
+.tiptap-code-block-toolbar select:active,
+.tiptap-code-block-toolbar select.active {
+  border: 1px solid var(--tiptap-n-operator-hover-color);
+  box-shadow: 0 0 0 1px var(--tiptap-n-operator-hover-color);
+}
+
+.tiptap-code-block-toolbar button {
+  appearance: none;
+  display: inline-block;
+  font-size: 0.8em;
+  padding: 0.125em 0.25em;
+  border-radius: 4px;
+  outline: 0;
+  border: 1px solid var(--tiptap-n-operator-hover-border);
+  background: var(--tiptap-n-operator-background);
+  transition-duration: 150ms;
+  transition-property: color, border, box-shadow;
+  transition-timing-function: ease-in-out;
+}
+
+.tiptap-code-block-toolbar button:hover,
+.tiptap-code-block-toolbar button:focus,
+.tiptap-code-block-toolbar button:active,
+.tiptap-code-block-toolbar button.active {
+  border: 1px solid var(--tiptap-n-operator-hover-color);
+  box-shadow: 0 0 0 1px var(--tiptap-n-operator-hover-color);
+}
+
+.tiptap-code-block-content {
+  white-space: pre;
+  line-height: 1.5;
+}
+
+.tiptap-code-block-content code {
+  background: none !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+.tiptap-code-block .hljs-comment,
+.tiptap-code-block .hljs-quote {
+  color: #a0a1a7;
+  font-style: italic;
+}
+
+.tiptap-code-block .hljs-doctag,
+.tiptap-code-block .hljs-keyword,
+.tiptap-code-block .hljs-formula {
+  color: #a626a4;
+}
+
+.tiptap-code-block .hljs-section,
+.tiptap-code-block .hljs-name,
+.tiptap-code-block .hljs-selector-tag,
+.tiptap-code-block .hljs-deletion,
+.tiptap-code-block .hljs-subst {
+  color: #e45649;
+}
+
+.tiptap-code-block .hljs-literal {
+  color: #0184bb;
+}
+
+.tiptap-code-block .hljs-string,
+.tiptap-code-block .hljs-regexp,
+.tiptap-code-block .hljs-addition,
+.tiptap-code-block .hljs-attribute,
+.tiptap-code-block .hljs-meta .hljs-string {
+  color: #50a14f;
+}
+
+.tiptap-code-block .hljs-attr,
+.tiptap-code-block .hljs-variable,
+.tiptap-code-block .hljs-template-variable,
+.tiptap-code-block .hljs-type,
+.tiptap-code-block .hljs-selector-class,
+.tiptap-code-block .hljs-selector-attr,
+.tiptap-code-block .hljs-selector-pseudo,
+.tiptap-code-block .hljs-number {
+  color: #986801;
+}
+
+.tiptap-code-block .hljs-symbol,
+.tiptap-code-block .hljs-bullet,
+.tiptap-code-block .hljs-link,
+.tiptap-code-block .hljs-meta,
+.tiptap-code-block .hljs-selector-id,
+.tiptap-code-block .hljs-title {
+  color: #4078f2;
+}
+
+.tiptap-code-block .hljs-built_in,
+.tiptap-code-block .hljs-title.class_,
+.tiptap-code-block .hljs-class .hljs-title {
+  color: #c18401;
+}
+
+.tiptap-code-block .hljs-emphasis {
+  font-style: italic;
+}
+
+.tiptap-code-block .hljs-strong {
+  font-weight: bold;
+}
+
+.tiptap-code-block .hljs-link {
+  text-decoration: underline;
 }
 
 /* endregion */

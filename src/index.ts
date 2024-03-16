@@ -18,10 +18,29 @@ import { Subscript } from "./marks/sub";
 import { Superscript } from "./marks/sup";
 import { FloatMenu } from "./extensions/float-menu/menu";
 import { BlockMenu } from "./extensions/block-menu/menu";
+import { CodeBlock } from "./nodes/code-block";
 
 // @ts-expect-error
 window.editor = new Editor({
   element: document.querySelector("#editor")!,
-  extensions: [Document, Paragraph, Markdown, Clipboard, Text, Bold, Code, Highlight, Underline, Italic, Link, Strike, Subscript, Superscript, FloatMenu, BlockMenu],
-  content: `aaa <a href="https://ixk.me">Blog</a>`,
+  extensions: [
+    Document,
+    Paragraph,
+    Markdown,
+    Clipboard,
+    Text,
+    Bold,
+    Code,
+    Highlight,
+    Underline,
+    Italic,
+    Link,
+    Strike,
+    Subscript,
+    Superscript,
+    FloatMenu,
+    BlockMenu,
+    CodeBlock,
+  ],
+  content: `aaa <a href="https://ixk.me">Blog</a> <pre language="javascript"><code>console.log("123");</code></pre> aaa`,
 });

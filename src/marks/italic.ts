@@ -24,7 +24,9 @@ export const Italic = TItalic.extend<ItalicOptions>({
       parser: {
         match: node => node.type === "emphasis",
         apply: (state, node, type) => {
-          state.openMark(type).next(node.children).closeMark(type);
+          state.openMark(type);
+          state.next(node.children);
+          state.closeMark(type);
         },
       },
       serializer: {

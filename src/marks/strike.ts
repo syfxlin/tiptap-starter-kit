@@ -24,7 +24,9 @@ export const Strike = TStrike.extend<StrikeOptions>({
       parser: {
         match: node => node.type === "delete",
         apply: (state, node, type) => {
-          state.openMark(type).next(node.children).closeMark(type);
+          state.openMark(type);
+          state.next(node.children);
+          state.closeMark(type);
         },
       },
       serializer: {

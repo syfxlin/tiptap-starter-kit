@@ -8,13 +8,15 @@ export const Document = TDocument.extend({
       parser: {
         match: node => node.type === "root",
         apply: (state, node, type) => {
-          state.openNode(type).next(node.children);
+          state.openNode(type);
+          state.next(node.children);
         },
       },
       serializer: {
         match: node => node.type.name === this.name,
         apply: (state, node) => {
-          state.openNode({ type: "root" }).next(node.content);
+          state.openNode({ type: "root" });
+          state.next(node.content);
         },
       },
     } satisfies NodeMarkdownStorage;
