@@ -38,6 +38,7 @@ export const Blockquote = IBlockquote.extend<BlockquoteOptions>({
         },
       },
       blockMenu: {
+        id: this.name,
         name: this.options.dictionary.name,
         icon: blockquote,
         shortcut: "Mod-Shift-B",

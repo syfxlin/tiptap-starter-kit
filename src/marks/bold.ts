@@ -38,6 +38,7 @@ export const Bold = TBold.extend<BoldOptions>({
         },
       },
       floatMenu: {
+        id: this.name,
         name: this.options.dictionary.name,
         view: bold,
         shortcut: "Mod-B",

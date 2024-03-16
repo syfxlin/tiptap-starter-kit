@@ -61,6 +61,7 @@ export const Link = TLink.extend<LinkOptions>({
         },
       },
       floatMenu: {
+        id: this.name,
         name: this.options.dictionary.name,
         view: icons.link,
         shortcut: "Mod-K",

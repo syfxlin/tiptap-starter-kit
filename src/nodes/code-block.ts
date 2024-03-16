@@ -90,13 +90,14 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
         },
       },
       blockMenu: {
+        id: this.name,
         name: this.options.dictionary.name,
         icon: code,
         shortcut: "Mod-Alt-C",
         keywords: "codeblock,cb,dmk,",
         action: editor => editor.chain().toggleCodeBlock().focus().run(),
       },
-    } as NodeMarkdownStorage & BlockMenuItemStorage;
+    } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },
   addKeyboardShortcuts() {
     return {

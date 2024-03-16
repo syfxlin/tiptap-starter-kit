@@ -39,6 +39,7 @@ export const Superscript = TSuperscript.extend<SuperscriptOptions>({
         },
       },
       floatMenu: {
+        id: this.name,
         name: this.options.dictionary.name,
         view: superscript,
         shortcut: "Mod-.",

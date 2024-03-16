@@ -38,6 +38,7 @@ export const Strike = TStrike.extend<StrikeOptions>({
         },
       },
       floatMenu: {
+        id: this.name,
         name: this.options.dictionary.name,
         view: strike,
         shortcut: "Mod-Shift-I",

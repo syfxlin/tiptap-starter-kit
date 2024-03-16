@@ -39,6 +39,7 @@ export const Subscript = TSubscript.extend<SubscriptOptions>({
         },
       },
       floatMenu: {
+        id: this.name,
         name: this.options.dictionary.name,
         view: subscript,
         shortcut: "Mod-,",

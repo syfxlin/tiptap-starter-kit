@@ -5,6 +5,7 @@ import { Decoration, DecorationSet } from "@tiptap/pm/view";
 import { BlockMenuView, BlockMenuViewItem } from "./view";
 
 export interface BlockMenuItem {
+  id: string;
   name: string;
   icon: string;
   keywords: string;
@@ -13,7 +14,7 @@ export interface BlockMenuItem {
 }
 
 export interface BlockMenuItemStorage {
-  blockMenu: BlockMenuItem;
+  blockMenu: BlockMenuItem | Array<BlockMenuItem>;
 }
 
 export interface BlockMenuOptions {
@@ -29,7 +30,7 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
   name: "blockMenu",
   addOptions() {
     return {
-      items: ["codeBlock"],
+      items: ["orderedList", "taskList"],
       dictionary: {
         lineEmpty: "Enter '/' to insert block...",
         lineSlash: "Continue typing to filter...",
@@ -38,6 +39,18 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
     };
   },
   addProseMirrorPlugins() {
+    const mappings = new Map<string, BlockMenuItem>();
+    for (const storage of Object.values(this.editor.storage)) {
+      if (storage?.blockMenu) {
+        const menus = Array.isArray(storage.blockMenu) ? storage.blockMenu : [storage.blockMenu];
+        for (const menu of menus) {
+          mappings.set(menu.id, menu);
+        }
+      }
+    }
+    if (!mappings.size || !this.options.items.length) {
+      return [];
+    }
     return [
       Suggestion({
         editor: this.editor,
@@ -50,7 +63,7 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
               items.push(name);
               continue;
             }
-            const item = this.editor.storage[name]?.blockMenu as BlockMenuItem | undefined;
+            const item = mappings.get(name);
             if (!item) {
               continue;
             }

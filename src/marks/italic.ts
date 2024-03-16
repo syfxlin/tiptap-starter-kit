@@ -38,6 +38,7 @@ export const Italic = TItalic.extend<ItalicOptions>({
         },
       },
       floatMenu: {
+        id: this.name,
         name: this.options.dictionary.name,
         view: italic,
         shortcut: "Mod-I",

@@ -1,20 +1,20 @@
-import { BulletList as TBulletList, BulletListOptions as TBulletListOptions } from "@tiptap/extension-bullet-list";
+import { TaskList as TTaskList, TaskListOptions as TTaskListOptions } from "@tiptap/extension-task-list";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { bulletlist } from "../utils/icons";
+import { tasklist } from "../utils/icons";
 
-export interface BulletListOptions extends TBulletListOptions {
+export interface TaskListOptions extends TTaskListOptions {
   dictionary: {
     name: string;
   };
 }
 
-export const BulletList = TBulletList.extend<BulletListOptions>({
+export const TaskList = TTaskList.extend<TaskListOptions>({
   addOptions() {
     return {
       ...this.parent?.(),
       dictionary: {
-        name: "BulletList",
+        name: "TaskList",
       },
     };
   },
@@ -22,7 +22,7 @@ export const BulletList = TBulletList.extend<BulletListOptions>({
     return {
       ...this.parent?.(),
       parser: {
-        match: node => node.type === "list" && !node.ordered && !node.children?.find(item => item.checked !== null),
+        match: node => node.type === "list" && !node.ordered && node.children?.find(item => item.checked !== null),
         apply: (state, node, type) => {
           state.openNode(type);
           state.next(node.children);
@@ -35,18 +35,18 @@ export const BulletList = TBulletList.extend<BulletListOptions>({
           state.openNode({
             type: "list",
             ordered: false,
-          });
-          state.next(node.content);
-          state.closeNode();
+          })
+            .next(node.content)
+            .closeNode();
         },
       },
       blockMenu: {
         id: this.name,
         name: this.options.dictionary.name,
-        icon: bulletlist,
-        shortcut: "Mod-Shift-8",
-        keywords: "bulletlist,bl,ul,wxlb",
-        action: editor => editor.chain().toggleBulletList().focus().run(),
+        icon: tasklist,
+        shortcut: "Mod-Shift-9",
+        keywords: "tasklist,tl,rwlb",
+        action: editor => editor.chain().toggleTaskList().focus().run(),
       },
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },

@@ -3,6 +3,7 @@ import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { FloatMenuView } from "./view";
 
 export interface FloatMenuItem {
+  id: string;
   name: string;
   view: string;
   shortcut?: string;
@@ -14,7 +15,7 @@ export interface FloatMenuItem {
 }
 
 export interface FloatMenuItemStorage {
-  floatMenu: FloatMenuItem;
+  floatMenu: FloatMenuItem | Array<FloatMenuItem>;
 }
 
 export interface FloatMenuOptions {
@@ -41,7 +42,16 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
     };
   },
   addProseMirrorPlugins() {
-    if (!this.options.items.length) {
+    const mappings = new Map<string, FloatMenuItem>();
+    for (const storage of Object.values(this.editor.storage)) {
+      if (storage?.floatMenu) {
+        const menus = Array.isArray(storage.floatMenu) ? storage.floatMenu : [storage.floatMenu];
+        for (const menu of menus) {
+          mappings.set(menu.id, menu);
+        }
+      }
+    }
+    if (!mappings.size || !this.options.items.length) {
       return [];
     }
     return [
@@ -73,7 +83,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
           onInit: ({ view, element }) => {
             for (const name of this.options.items) {
               if (name !== "|") {
-                const item = this.editor.storage[name]?.floatMenu as FloatMenuItem | undefined;
+                const item = mappings.get(name);
                 if (item) {
                   const button = view.createButton({
                     id: name,
@@ -95,7 +105,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
             for (const name of this.options.items) {
               if (name !== "|") {
                 const dom = element.querySelector(`[name="${name}"]`) as HTMLElement | undefined;
-                const item = this.editor.storage[name]?.floatMenu as FloatMenuItem | undefined;
+                const item = mappings.get(name);
                 if (dom && item) {
                   item.onUpdate?.(this.editor, view, dom);
                   if (item.active(this.editor, view)) {
@@ -111,7 +121,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
             for (const name of this.options.items) {
               if (name !== "|") {
                 const dom = element.querySelector(`[name="${name}"]`) as HTMLElement | undefined;
-                const item = this.editor.storage[name]?.floatMenu as FloatMenuItem | undefined;
+                const item = mappings.get(name);
                 if (dom && item) {
                   item.onDestroy?.(this.editor, view, dom);
                 }

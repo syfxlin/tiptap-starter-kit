@@ -40,6 +40,7 @@ export const Underline = TUnderline.extend<UnderlineOptions>({
         },
       },
       floatMenu: {
+        id: this.name,
         name: this.options.dictionary.name,
         view: underline,
         shortcut: "Mod-U",

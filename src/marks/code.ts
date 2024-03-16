@@ -40,6 +40,7 @@ export const Code = TCode.extend<CodeOptions>({
         },
       },
       floatMenu: {
+        id: this.name,
         name: this.options.dictionary.name,
         view: code,
         shortcut: "Mod-E",

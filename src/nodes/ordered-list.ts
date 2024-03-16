@@ -1,20 +1,20 @@
-import { BulletList as TBulletList, BulletListOptions as TBulletListOptions } from "@tiptap/extension-bullet-list";
+import { OrderedList as TOrderedList, OrderedListOptions as TOrderedListOptions } from "@tiptap/extension-ordered-list";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { bulletlist } from "../utils/icons";
+import { orderedlist } from "../utils/icons";
 
-export interface BulletListOptions extends TBulletListOptions {
+export interface OrderedListOptions extends TOrderedListOptions {
   dictionary: {
     name: string;
   };
 }
 
-export const BulletList = TBulletList.extend<BulletListOptions>({
+export const OrderedList = TOrderedList.extend<OrderedListOptions>({
   addOptions() {
     return {
       ...this.parent?.(),
       dictionary: {
-        name: "BulletList",
+        name: "OrderedList",
       },
     };
   },
@@ -22,7 +22,7 @@ export const BulletList = TBulletList.extend<BulletListOptions>({
     return {
       ...this.parent?.(),
       parser: {
-        match: node => node.type === "list" && !node.ordered && !node.children?.find(item => item.checked !== null),
+        match: node => node.type === "list" && !!node.ordered,
         apply: (state, node, type) => {
           state.openNode(type);
           state.next(node.children);
@@ -34,7 +34,8 @@ export const BulletList = TBulletList.extend<BulletListOptions>({
         apply: (state, node) => {
           state.openNode({
             type: "list",
-            ordered: false,
+            ordered: true,
+            start: 1,
           });
           state.next(node.content);
           state.closeNode();
@@ -43,10 +44,10 @@ export const BulletList = TBulletList.extend<BulletListOptions>({
       blockMenu: {
         id: this.name,
         name: this.options.dictionary.name,
-        icon: bulletlist,
-        shortcut: "Mod-Shift-8",
-        keywords: "bulletlist,bl,ul,wxlb",
-        action: editor => editor.chain().toggleBulletList().focus().run(),
+        icon: orderedlist,
+        shortcut: "Mod-Shift-7",
+        keywords: "orderedlist,ol,yxlb",
+        action: editor => editor.chain().toggleOrderedList().focus().run(),
       },
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },

@@ -89,6 +89,7 @@ export const Highlight = THighlight.extend<HighlightOptions>({
         },
       },
       floatMenu: {
+        id: this.name,
         name: this.options.dictionary.name,
         view: highlight,
         shortcut: "Mod-Shift-H",
