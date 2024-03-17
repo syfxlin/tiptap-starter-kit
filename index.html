@@ -1,12 +1,22 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tiptap</title>
+  <style>
+    #container {
+      width: 80%;
+      margin: auto;
+    }
+  </style>
 </head>
 <body>
-<div id="editor"></div>
-<script type="module" src="/src/index.ts"></script>
+  <div id="container">
+    <h1>Tiptap StarterKit</h1>
+    <button id="editable">Set Editable: <span>true</span></button>
+    <div id="editor"></div>
+  </div>
+  <script type="module" src="/src/index.ts"></script>
 </body>
 </html>

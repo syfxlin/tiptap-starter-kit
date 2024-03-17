@@ -1,0 +1,543 @@
+@import "tippy.js/dist/tippy.css";
+@import "tippy.js/animations/shift-away.css";
+
+:root {
+  --tiptap-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --tiptap-font-family-mono: "Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --tiptap-font-weight: 400;
+  --tiptap-font-size: 1em;
+  --tiptap-line-height: 1.7;
+  --tiptap-color: rgba(0, 0, 0, 1);
+  --tiptap-background: rgba(255, 255, 255, 1);
+  --tiptap-card-color: rgba(0, 0, 0, 1);
+  --tiptap-card-background: rgba(0, 0, 0, 0.02);
+  --tiptap-operator-border: rgba(0, 0, 0, 0.08);
+  --tiptap-operator-color: rgba(0, 7, 20, 0.62);
+  --tiptap-operator-background: rgba(255, 255, 255, 1);
+  --tiptap-operator-hover-border: rgba(0, 0, 0, 0.19);
+  --tiptap-operator-hover-color: rgba(36, 0, 183, 0.66);
+  --tiptap-operator-hover-background: rgba(0, 0, 51, 0.06);
+  --tiptap-operator-dark-border: rgba(0, 0, 0, 0.08);
+  --tiptap-operator-dark-color: rgba(252, 253, 255, 0.94);
+  --tiptap-operator-dark-background: rgba(17, 17, 17, 1);
+  --tiptap-operator-dark-hover-border: rgba(255, 255, 255, 0.23);
+  --tiptap-operator-dark-hover-color: rgba(134, 104, 255, 0.8);
+  --tiptap-operator-dark-hover-background: rgba(221, 234, 248, 0.08);
+}
+
+.tiptap,
+.ProseMirror {
+  position: relative;
+  width: 100%;
+  outline: none;
+  word-wrap: break-word;
+  white-space: break-spaces;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0;
+  color: var(--tiptap-color);
+  background: var(--tiptap-background);
+  font-family: var(--tiptap-font-family);
+  font-weight: var(--tiptap-font-weight);
+  font-size: var(--tiptap-font-size);
+  line-height: var(--tiptap-line-height);
+
+  * {
+    box-sizing: border-box;
+  }
+
+  > * {
+    margin: 0.5em 0;
+  }
+}
+
+.tippy-box[data-theme="tiptap"],
+.tippy-box[data-theme="tiptap-dark"] {
+  font-size: inherit;
+  line-height: inherit;
+  box-shadow: var(--tiptap-operator-border) 0 0 0 1px, var(--tiptap-operator-border) 0 2px 4px, var(--tiptap-operator-border) 0 4px 8px;
+
+  .tippy-content {
+    padding: 0;
+  }
+}
+
+.tippy-box[data-theme="tiptap"] {
+  color: var(--tiptap-operator-color);
+  background: var(--tiptap-operator-background);
+}
+
+.tippy-box[data-theme="tiptap-dark"] {
+  color: var(--tiptap-operator-dark-color);
+  background: var(--tiptap-operator-dark-background);
+}
+
+// region data-color
+
+.tiptap,
+.ProseMirror,
+.tippy-box[data-theme="tiptap"],
+.tippy-box[data-theme="tiptap-dark"] {
+  @colors: {
+    gray: #8D8D8D;
+    slate: #8E8C99;
+    tomato: #E54D2E;
+    red: #E5484D;
+    ruby: #E54666;
+    crimson: #E93D82;
+    pink: #D6409F;
+    plum: #AB4ABA;
+    purple: #8E4EC6;
+    violet: #6E56CF;
+    iris: #5B5BD6;
+    indigo: #3E63DD;
+    blue: #0090FF;
+    cyan: #00A2C7;
+    teal: #12A594;
+    jade: #29A383;
+    green: #30A46C;
+    bronze: #A18072;
+    gold: #978365;
+    brown: #AD7F58;
+    orange: #F76B15;
+    amber: #FFC53D;
+    yellow: #FFE629;
+    lime: #BDEE63;
+    mint: #86EAD4;
+    sky: #7CE2FE;
+  };
+
+  @backgrounds: {
+    gray: #F0F0F0;
+    slate: #F0F0F3;
+    tomato: #FEEBE7;
+    red: #FEEBEC;
+    ruby: #FEEAED;
+    crimson: #FFE9F0;
+    pink: #FEE9F5;
+    plum: #FBEBFB;
+    purple: #F7EDFE;
+    violet: #F4F0FE;
+    iris: #F0F1FE;
+    indigo: #E1E9FF;
+    blue: #E6F4FE;
+    cyan: #DEF7F9;
+    teal: #E0F8F3;
+    jade: #E6F7ED;
+    green: #E6F6EB;
+    bronze: #F6EDEA;
+    gold: #F2F0E7;
+    brown: #F6EEE7;
+    orange: #FFEFD6;
+    amber: #FFF7C2;
+    yellow: #FFFAB8;
+    lime: #EEF6D6;
+    mint: #DDF9F2;
+    sky: #E1F6FD;
+  };
+
+  each(@colors, .(@v, @k) {
+    [data-color="@{k}"] {
+      color: @v;
+      fill: @v;
+      background: inherit;
+    }
+  });
+
+  each(@backgrounds, .(@v, @k) {
+    [data-color="b-@{k}"] {
+      background: @v;
+    }
+  });
+}
+
+// endregion
+
+// region float menu
+
+.tiptap-fm {
+  display: flex;
+  padding: 0.3em 0.5em;
+
+  &-divider {
+    background: var(--tiptap-operator-border);
+    margin: 0.15em 0.2em;
+    width: 1px;
+  }
+
+  &-input {
+    font-size: 0.9em;
+    flex-grow: 1;
+    outline: none;
+    margin: 0.1em 0;
+    padding: 0.3em 0.5em;
+    border-radius: 4px;
+    color: var(--tiptap-operator-color);
+    background: var(--tiptap-operator-background);
+    border: 1px solid var(--tiptap-operator-hover-border);
+    transition-duration: 150ms;
+    transition-property: color, border, box-shadow;
+    transition-timing-function: ease-in-out;
+
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      border: 1px solid var(--tiptap-operator-hover-color);
+      box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
+    }
+  }
+
+  &-button {
+    appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3em 0.4em;
+    margin: 0 0.2em;
+    outline: none;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    transition-duration: 150ms;
+    transition-property: color;
+    transition-timing-function: ease-in-out;
+    color: var(--tiptap-operator-color);
+    background: transparent;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      color: var(--tiptap-operator-hover-color);
+      background: var(--tiptap-operator-hover-background);
+    }
+
+    svg {
+      width: 1.6em;
+      height: 1.6em;
+    }
+
+    &-popover {
+      display: flex;
+      padding: 0.5em 1em;
+      font-size: 0.5em;
+      border-radius: 4px;
+      color: var(--tiptap-operator-dark-color);
+      background: var(--tiptap-operator-dark-background);
+    }
+  }
+
+  &-color-picker {
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    gap: 0.5em;
+    padding: 0.5em;
+
+    button {
+      appearance: none;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0.35em 0.5em;
+      border-radius: 4px;
+      border: 1px solid var(--tiptap-operator-hover-border);
+      transition-duration: 150ms;
+      transition-property: color, border, box-shadow;
+      transition-timing-function: ease-in-out;
+
+      &:hover,
+      &:focus,
+      &:active,
+      &.active {
+        border: 1px solid var(--tiptap-operator-hover-color);
+        box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
+      }
+    }
+  }
+
+  &-input + &-button {
+    margin-left: 0.6em;
+  }
+
+  &-button + &-input {
+    margin-right: 0.6em;
+  }
+}
+
+// endregion
+
+// region block menu
+
+.tiptap-bm {
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0.5em 0;
+  width: 20em;
+  max-height: 15em;
+  white-space: nowrap;
+  pointer-events: all;
+  color: var(--tiptap-color);
+
+  &-empty {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 0.8em;
+    height: 2.8em;
+    padding: 0 1em;
+  }
+
+  &-divider {
+    border-top: 1px solid var(--tiptap-operator-border);
+    margin: 0.5em 0;
+  }
+
+  &-button {
+    appearance: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: 500;
+    font-size: 0.8em;
+    line-height: 1;
+    width: 100%;
+    border: none;
+    outline: none;
+    height: 2.8em;
+    padding: 0 1em;
+    background: transparent;
+
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      background: var(--tiptap-operator-hover-background);
+    }
+
+    &-icon {
+      margin-right: 1em;
+      width: 1.2em;
+      height: 1.2em;
+
+      svg {
+        width: 1.2em;
+        height: 1.2em;
+      }
+    }
+
+    &-name {
+      flex-grow: 1;
+      text-align: start;
+    }
+  }
+
+  &-placeholder::before {
+    content: attr(data-empty);
+    display: block;
+    opacity: 0;
+    transition: opacity 150ms ease-in-out;
+    pointer-events: none;
+    height: 0;
+    color: var(--tiptap-operator-color);
+  }
+
+  .ProseMirror-focused &-placeholder::before {
+    opacity: 1;
+  }
+}
+
+// endregion
+
+// region menu common
+
+.tiptap-fm-button,
+.tiptap-bm-button,
+.tiptap-fm-button-popover,
+.tiptap-bm-button-popover {
+  kbd {
+    font-family: var(--tiptap-font-family-mono);
+    display: inline-block;
+    font-size: 0.2em;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0.05em 1em;
+    border-radius: 4px;
+    border-width: 1px 1px 3px;
+    border-style: solid;
+    border-color: var(--tiptap-operator-hover-border);
+    color: var(--tiptap-operator-color);
+    background: var(--tiptap-operator-background);
+  }
+}
+
+@media print {
+  .tiptap-fm,
+  .tiptap-bm {
+    display: none;
+  }
+}
+
+// endregion
+
+// region code block
+
+.tiptap-code-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0.75em 1em;
+  gap: 0.5em;
+  border-radius: 4px;
+  border: 1px solid var(--tiptap-operator-border);
+  background: var(--tiptap-card-background);
+
+  &-toolbar {
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+    display: flex;
+    gap: 0.5em;
+    opacity: 0;
+    transition-duration: 150ms;
+    transition-property: opacity;
+    transition-timing-function: ease-in-out;
+
+    select {
+      display: inline-block;
+      font-size: 0.8em;
+      padding: 0.125em;
+      border-radius: 4px;
+      outline: 0;
+      border: 1px solid var(--tiptap-operator-hover-border);
+      background: var(--tiptap-operator-background);
+      transition-duration: 150ms;
+      transition-property: color, border, box-shadow;
+      transition-timing-function: ease-in-out;
+
+      &:hover,
+      &:focus,
+      &:active,
+      &.active {
+        border: 1px solid var(--tiptap-operator-hover-color);
+        box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
+      }
+    }
+
+    button {
+      appearance: none;
+      display: inline-block;
+      font-size: 0.8em;
+      padding: 0.125em 0.25em;
+      border-radius: 4px;
+      outline: 0;
+      border: 1px solid var(--tiptap-operator-hover-border);
+      background: var(--tiptap-operator-background);
+      transition-duration: 150ms;
+      transition-property: color, border, box-shadow;
+      transition-timing-function: ease-in-out;
+
+      &:hover,
+      &:focus,
+      &:active,
+      &.active {
+        border: 1px solid var(--tiptap-operator-hover-color);
+        box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
+      }
+    }
+  }
+
+  &:hover &-toolbar {
+    opacity: 1;
+  }
+
+  &-content {
+    white-space: pre;
+    line-height: 1.5;
+
+    code {
+      background: none !important;
+      padding: 0 !important;
+      border: 0 !important;
+    }
+  }
+
+  .hljs-comment,
+  .hljs-quote {
+    color: #a0a1a7;
+    font-style: italic;
+  }
+
+  .hljs-doctag,
+  .hljs-keyword,
+  .hljs-formula {
+    color: #a626a4;
+  }
+
+  .hljs-section,
+  .hljs-name,
+  .hljs-selector-tag,
+  .hljs-deletion,
+  .hljs-subst {
+    color: #e45649;
+  }
+
+  .hljs-literal {
+    color: #0184bb;
+  }
+
+  .hljs-string,
+  .hljs-regexp,
+  .hljs-addition,
+  .hljs-attribute,
+  .hljs-meta .hljs-string {
+    color: #50a14f;
+  }
+
+  .hljs-attr,
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-type,
+  .hljs-selector-class,
+  .hljs-selector-attr,
+  .hljs-selector-pseudo,
+  .hljs-number {
+    color: #986801;
+  }
+
+  .hljs-symbol,
+  .hljs-bullet,
+  .hljs-link,
+  .hljs-meta,
+  .hljs-selector-id,
+  .hljs-title {
+    color: #4078f2;
+  }
+
+  .hljs-built_in,
+  .hljs-title.class_,
+  .hljs-class .hljs-title {
+    color: #c18401;
+  }
+
+  .hljs-emphasis {
+    font-style: italic;
+  }
+
+  .hljs-strong {
+    font-weight: bold;
+  }
+
+  .hljs-link {
+    text-decoration: underline;
+  }
+}
+
+// endregion

@@ -29,8 +29,7 @@ import { OrderedList } from "./nodes/ordered-list";
 import { TaskList } from "./nodes/task-list";
 import { TaskItem } from "./nodes/task-item";
 
-// @ts-expect-error
-window.editor = new Editor({
+const editor = new Editor({
   element: document.querySelector("#editor")!,
   extensions: [
     Document,
@@ -61,4 +60,13 @@ window.editor = new Editor({
     TaskList,
   ],
   content: `aaa <a href="https://ixk.me">Blog</a> <pre language="javascript"><code>console.log("123");</code></pre> aaa`,
+});
+
+// @ts-expect-error
+window.editor = editor;
+document.querySelector("#editable")?.addEventListener("click", () => {
+  const value = document.querySelector("#editable span")!;
+  const editable = value.textContent === "true";
+  value.textContent = !editable ? "true" : "false";
+  editor.setEditable(!editable);
 });

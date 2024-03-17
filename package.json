@@ -85,6 +85,7 @@
     "@types/unist": "^3.0.2",
     "bunchee": "^4.4.8",
     "eslint": "^8.57.0",
+    "less": "^4.2.0",
     "mdast-util-from-markdown": "^2.0.0",
     "mdast-util-to-markdown": "^2.1.0",
     "prosemirror-model": "^1.19.4",
