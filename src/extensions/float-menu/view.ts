@@ -20,6 +20,10 @@ export interface FloatMenuButtonViewOptions {
   onClick?: (element: HTMLButtonElement) => void;
 }
 
+export interface FloatMenuUploadViewOptions extends Omit<FloatMenuButtonViewOptions, "onClick"> {
+  onUpload?: (element: HTMLInputElement) => void;
+}
+
 export interface FloatMenuViewOptions {
   editor: Editor;
   class?: string | string[];
@@ -175,6 +179,23 @@ export class FloatMenuView implements PluginView {
     });
 
     return { button, popover, instance };
+  }
+
+  public createUpload(options: FloatMenuUploadViewOptions) {
+    const file = document.createElement("input");
+    file.type = "file";
+    file.addEventListener("change", () => {
+      options.onUpload?.(file);
+    });
+    const button = this.createButton({ ...options, onClick: () => file.click() });
+    return { ...button, file };
+  }
+
+  public createGroup(direction: "column" | "row") {
+    const element = document.createElement("div");
+    element.classList.add("ProseMirror-fm-group");
+    element.style.flexDirection = direction;
+    return element;
   }
 
   public createDivider() {

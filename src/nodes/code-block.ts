@@ -118,6 +118,9 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
       parent.classList.add("ProseMirror-code-block");
       toolbar.classList.add("ProseMirror-code-block-toolbar");
       content.classList.add("ProseMirror-code-block-content");
+      for (const [key, value] of Object.entries(this.options.HTMLAttributes)) {
+        parent.setAttribute(key, value);
+      }
 
       // language list
       const language = document.createElement("select");

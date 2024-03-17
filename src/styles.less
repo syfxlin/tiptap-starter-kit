@@ -358,6 +358,55 @@
     }
   }
 
+  // image
+  &-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--tiptap-card-color);
+    background-color: var(--tiptap-card-background);
+    border: 1px solid var(--tiptap-operator-border);
+    margin: 0.5em 0;
+    padding: 0.5em 0.5em;
+    border-radius: 4px;
+
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100vh;
+    }
+
+    &[data-loading] {
+      resize: none;
+
+      img {
+        display: none;
+      }
+
+      &::before {
+        content: attr(data-loading);
+      }
+    }
+  }
+
+  audio,
+  video {
+    display: block;
+    max-width: 100%;
+    max-height: 50vh;
+    color: var(--tiptap-card-color);
+    background-color: var(--tiptap-card-background);
+    border: 1px solid var(--tiptap-operator-border);
+    margin: 0.5em 0;
+    padding: 0.5em 0.5em;
+    border-radius: 4px;
+  }
+
+  // prosemirror
+  &-separator&-separator {
+    display: none !important;
+  }
+
   &-hideselection {
     caret-color: transparent;
 
@@ -367,23 +416,22 @@
   }
 
   &:not([contenteditable="false"]) &-selectednode {
-    //background: var(--tiptap-background-selected);
     position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: -4px;
+      right: -4px;
+      top: -4px;
+      bottom: -4px;
+      border-radius: 4px;
+      pointer-events: none;
+      background: var(--tiptap-background-selected);
+    }
   }
 
-  &:not([contenteditable="false"]) &-selectednode::after {
-    content: "";
-    position: absolute;
-    left: -4px;
-    right: -4px;
-    top: -4px;
-    bottom: -4px;
-    border-radius: 4px;
-    pointer-events: none;
-    background: var(--tiptap-background-selected);
-  }
-
-  &-gapcursor {
+  &:not([contenteditable="false"]) &-gapcursor {
     display: none;
     pointer-events: none;
     position: absolute;
@@ -399,7 +447,7 @@
     }
   }
 
-  &-focused {
+  &-focused:not([contenteditable="false"]) {
     &-gapcursor {
       display: block;
     }
@@ -521,6 +569,8 @@
 
 .ProseMirror-fm {
   display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 0.3em 0.5em;
 
   &-divider {
@@ -529,8 +579,14 @@
     width: 1px;
   }
 
+  &-group {
+    display: flex;
+    gap: 0.5em;
+  }
+
   &-input {
     font-size: 0.9em;
+    line-height: 1;
     flex-grow: 1;
     outline: none;
     margin: 0.1em 0;
@@ -550,6 +606,10 @@
       border: 1px solid var(--tiptap-operator-hover-color);
       box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
     }
+
+    &::placeholder {
+      color: var(--tiptap-color-secondly);
+    }
   }
 
   &-button {
@@ -557,7 +617,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.3em 0.4em;
+    width: 2.4em;
+    height: 2.4em;
     margin: 0 0.2em;
     outline: none;
     cursor: pointer;
@@ -627,11 +688,13 @@
     }
   }
 
-  &-input + &-button {
+  &-input + &-button,
+  &-group + &-button {
     margin-left: 0.6em;
   }
 
-  &-button + &-input {
+  &-button + &-input,
+  &-button + &-group {
     margin-right: 0.6em;
   }
 }

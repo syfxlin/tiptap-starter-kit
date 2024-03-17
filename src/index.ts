@@ -1,4 +1,6 @@
 import { Editor } from "@tiptap/core";
+import { Gapcursor } from "@tiptap/extension-gapcursor";
+import { Dropcursor } from "@tiptap/extension-dropcursor";
 import { Text } from "./nodes/text";
 import { Bold } from "./marks/bold";
 import { Markdown } from "./extensions/markdown";
@@ -28,8 +30,7 @@ import { BulletList } from "./nodes/bullet-list";
 import { OrderedList } from "./nodes/ordered-list";
 import { TaskList } from "./nodes/task-list";
 import { TaskItem } from "./nodes/task-item";
-import { Gapcursor } from "@tiptap/extension-gapcursor";
-import { Dropcursor } from "@tiptap/extension-dropcursor";
+import { Image } from "./nodes/image";
 
 const editor = new Editor({
   element: document.querySelector("#editor")!,
@@ -60,13 +61,14 @@ const editor = new Editor({
     BulletList,
     OrderedList,
     TaskList,
+    Image,
     Gapcursor,
     Dropcursor.configure({
       color: "var(--tiptap-color-primary)",
       width: 2,
     }),
   ],
-  content: `aaa <a href="https://ixk.me">Blog</a> <pre language="javascript"><code>console.log("123");</code></pre> aaa`,
+  content: `aaa <a href="https://ixk.me">Blog</a> <pre language="javascript"><code>console.log("123");</code></pre> aaa <img src="https://source.unsplash.com/random" alt="Unsplash"> <img src=""> <img src="https://ixk.me/bg.jpg">`,
 });
 
 // @ts-expect-error
