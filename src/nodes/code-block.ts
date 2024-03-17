@@ -4,7 +4,6 @@ import tippy from "tippy.js";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { code } from "../utils/icons";
-import { popoverAppendTo } from "../utils/dom";
 
 export interface CodeBlockOptions extends CodeBlockLowlightOptions {
   dictionary: Record<string, string>;
@@ -116,9 +115,9 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
       const toolbar = document.createElement("div");
       const content = document.createElement("code");
 
-      parent.classList.add("tiptap-code-block");
-      toolbar.classList.add("tiptap-code-block-toolbar");
-      content.classList.add("tiptap-code-block-content");
+      parent.classList.add("ProseMirror-code-block");
+      toolbar.classList.add("ProseMirror-code-block-toolbar");
+      content.classList.add("ProseMirror-code-block-content");
 
       // language list
       const language = document.createElement("select");
@@ -147,12 +146,12 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
       copy.textContent = this.options.dictionary.copy;
       const copied = document.createElement("span");
       copied.textContent = this.options.dictionary.copied;
-      copied.classList.add("tiptap-fm-button-popover");
+      copied.classList.add("ProseMirror-fm-button-popover");
       const instance = tippy(copy, {
-        appendTo: popoverAppendTo,
+        appendTo: () => document.body,
         content: copied,
         arrow: false,
-        theme: "tiptap-dark",
+        theme: "ProseMirror-dark",
         animation: "shift-away",
         duration: [200, 150],
         trigger: "manual",

@@ -11,7 +11,7 @@ import { Italic } from "./marks/italic";
 import { Link } from "./marks/link";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
-import "./styles.css";
+import "./styles.less";
 import { Strike } from "./marks/strike";
 import { Underline } from "./marks/underline";
 import { Subscript } from "./marks/sub";
@@ -28,6 +28,8 @@ import { BulletList } from "./nodes/bullet-list";
 import { OrderedList } from "./nodes/ordered-list";
 import { TaskList } from "./nodes/task-list";
 import { TaskItem } from "./nodes/task-item";
+import { Gapcursor } from "@tiptap/extension-gapcursor";
+import { Dropcursor } from "@tiptap/extension-dropcursor";
 
 const editor = new Editor({
   element: document.querySelector("#editor")!,
@@ -58,6 +60,11 @@ const editor = new Editor({
     BulletList,
     OrderedList,
     TaskList,
+    Gapcursor,
+    Dropcursor.configure({
+      color: "var(--tiptap-color-primary)",
+      width: 2,
+    }),
   ],
   content: `aaa <a href="https://ixk.me">Blog</a> <pre language="javascript"><code>console.log("123");</code></pre> aaa`,
 });

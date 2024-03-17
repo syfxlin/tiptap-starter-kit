@@ -26,7 +26,7 @@ export const Markdown = Extension.create<MarkdownOptions, MarkdownStorage>({
     // processor
     this.storage.processor = remark().use(remarkGfm).use(remarkDirective) as unknown as Processor;
     for (const [key, value] of Object.entries(this.editor.storage)) {
-      if (key !== this.name && value.processor) {
+      if (key !== this.name && value?.processor) {
         this.storage.processor = value.processor(this.storage.processor);
       }
     }

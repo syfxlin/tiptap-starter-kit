@@ -129,13 +129,13 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
             if (isTopLevel) {
               if (isEmpty) {
                 decorations.push(Decoration.node(parent.pos, parent.pos + parent.node.nodeSize, {
-                  "class": "tiptap-bm-placeholder",
+                  "class": "ProseMirror-bm-placeholder",
                   "data-empty": this.options.dictionary.lineEmpty,
                 }));
               }
               if (isSlash) {
                 decorations.push(Decoration.node(parent.pos, parent.pos + parent.node.nodeSize, {
-                  "class": "tiptap-bm-placeholder",
+                  "class": "ProseMirror-bm-placeholder",
                   "data-empty": this.options.dictionary.lineSlash,
                 }));
               }

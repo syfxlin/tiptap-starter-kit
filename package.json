@@ -37,8 +37,9 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "bunchee",
-    "watch": "bunchee --watch"
+    "style": "lessc ./src/styles.less ./src/styles.css",
+    "build": "pnpm style && bunchee",
+    "watch": "pnpm style && bunchee --watch"
   },
   "peerDependencies": {
     "@tiptap/core": "^2.2.4",
@@ -51,6 +52,8 @@
     "@tiptap/extension-code": "^2.2.4",
     "@tiptap/extension-code-block-lowlight": "^2.2.4",
     "@tiptap/extension-document": "^2.2.4",
+    "@tiptap/extension-dropcursor": "^2.2.4",
+    "@tiptap/extension-gapcursor": "^2.2.4",
     "@tiptap/extension-hard-break": "^2.2.4",
     "@tiptap/extension-heading": "^2.2.4",
     "@tiptap/extension-highlight": "^2.2.4",

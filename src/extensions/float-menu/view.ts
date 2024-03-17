@@ -2,7 +2,6 @@ import tippy, { Instance, Props } from "tippy.js";
 import { EditorView } from "@tiptap/pm/view";
 import { EditorState, PluginView } from "@tiptap/pm/state";
 import { Editor, isNodeSelection, posToDOMRect } from "@tiptap/core";
-import { popoverAppendTo } from "../../utils/dom";
 
 export interface FloatMenuInputViewOptions {
   id?: string;
@@ -101,7 +100,7 @@ export class FloatMenuView implements PluginView {
 
   public createInput(options: FloatMenuInputViewOptions) {
     const input = document.createElement("input");
-    input.classList.add("tiptap-fm-input");
+    input.classList.add("ProseMirror-fm-input");
     if (options.id) {
       input.name = options.id;
     }
@@ -131,7 +130,7 @@ export class FloatMenuView implements PluginView {
 
   public createButton(options: FloatMenuButtonViewOptions) {
     const button = document.createElement("button");
-    button.classList.add("tiptap-fm-button");
+    button.classList.add("ProseMirror-fm-button");
     if (options.id) {
       button.name = options.id;
     }
@@ -145,7 +144,7 @@ export class FloatMenuView implements PluginView {
     }
 
     const popover = document.createElement("div");
-    popover.classList.add("tiptap-fm-button-popover");
+    popover.classList.add("ProseMirror-fm-button-popover");
     popover.innerHTML = options.name;
     if (options.shortcut) {
       popover.innerHTML += "&nbsp;·&nbsp;";
@@ -165,11 +164,11 @@ export class FloatMenuView implements PluginView {
       });
     }
     const instance = tippy(button, {
-      appendTo: popoverAppendTo,
+      appendTo: () => document.body,
       content: popover,
       arrow: false,
       inertia: true,
-      theme: "tiptap-dark",
+      theme: "ProseMirror-dark",
       placement: "top",
       animation: "shift-away",
       duration: [200, 150],
@@ -180,7 +179,7 @@ export class FloatMenuView implements PluginView {
 
   public createDivider() {
     const divider = document.createElement("span");
-    divider.classList.add("tiptap-fm-divider");
+    divider.classList.add("ProseMirror-fm-divider");
     return { divider };
   }
 
@@ -200,7 +199,7 @@ export class FloatMenuView implements PluginView {
 
   private _element() {
     const element = document.createElement("div");
-    element.classList.add("tiptap-fm");
+    element.classList.add("ProseMirror-fm");
     if (this.options.class) {
       for (const item of Array.isArray(this.options.class) ? this.options.class : [this.options.class]) {
         element.classList.add(item);
@@ -228,13 +227,12 @@ export class FloatMenuView implements PluginView {
 
   private _popover() {
     const options: Partial<Props> = {
-      appendTo: popoverAppendTo,
+      appendTo: () => document.body,
       getReferenceClientRect: null,
       content: this.element,
       arrow: false,
       interactive: true,
-      offset: [0, 5],
-      theme: "tiptap",
+      theme: "ProseMirror",
       trigger: "manual",
       placement: "top",
       maxWidth: "none",

@@ -5,7 +5,6 @@ import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { DecorationData, remarkDecoration } from "../extensions/markdown/plugins/decoration";
 import { highlight } from "../utils/icons";
 import { colors } from "../utils/colors";
-import { popoverAppendTo } from "../utils/dom";
 
 export interface HighlightOptions extends Omit<THighlightOptions, "multicolor"> {
   dictionary: Record<typeof colors[number][0], string> & {
@@ -97,13 +96,13 @@ export const Highlight = THighlight.extend<HighlightOptions>({
         action: editor => editor.chain().toggleHighlight().focus().run(),
         onInit: (editor, _view, element) => {
           const container = document.createElement("div");
-          container.classList.add("tiptap-fm-color-picker");
+          container.classList.add("ProseMirror-fm-color-picker");
           for (const color of [...colors.map(i => i[0]), ...colors.map(i => `b-${i[0]}`)]) {
             const button = document.createElement("button");
             button.textContent = "A";
             button.setAttribute("data-color", color);
             const popover = document.createElement("span");
-            popover.classList.add("tiptap-fm-button-popover");
+            popover.classList.add("ProseMirror-fm-button-popover");
             if (color.startsWith("b-")) {
               // @ts-expect-error
               popover.textContent = `Background ${this.options.dictionary[color.replace("b-", "")]}`;
@@ -112,10 +111,10 @@ export const Highlight = THighlight.extend<HighlightOptions>({
               popover.textContent = this.options.dictionary[color];
             }
             tippy(button, {
-              appendTo: popoverAppendTo,
+              appendTo: () => document.body,
               content: popover,
               arrow: false,
-              theme: "tiptap-dark",
+              theme: "ProseMirror-dark",
               animation: "shift-away",
               duration: [200, 150],
             });
@@ -130,7 +129,7 @@ export const Highlight = THighlight.extend<HighlightOptions>({
             content: container,
             arrow: false,
             interactive: true,
-            theme: "tiptap",
+            theme: "ProseMirror",
             placement: "bottom",
             maxWidth: "none",
             animation: "shift-away",

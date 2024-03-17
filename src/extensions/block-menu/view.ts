@@ -2,7 +2,6 @@ import { Editor } from "@tiptap/core";
 import tippy, { Instance, Props } from "tippy.js";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
 import { SuggestionKeyDownProps, SuggestionProps } from "@tiptap/suggestion";
-import { popoverAppendTo } from "../../utils/dom";
 
 export type BlockMenuViewItem = "|" | {
   action: (editor: Editor, view: BlockMenuView) => void;
@@ -145,12 +144,12 @@ export class BlockMenuView {
   public createButton(element: HTMLElement, options: BlockMenuButtonViewOptions) {
     // icon
     const icon = document.createElement("div");
-    icon.classList.add("tiptap-bm-button-icon");
+    icon.classList.add("ProseMirror-bm-button-icon");
     icon.innerHTML = options.icon;
     element.append(icon);
     // name
     const name = document.createElement("div");
-    name.classList.add("tiptap-bm-button-name");
+    name.classList.add("ProseMirror-bm-button-name");
     name.textContent = options.name;
     element.append(name);
     // shortcut
@@ -181,11 +180,11 @@ export class BlockMenuView {
         const item = this._items[i];
         if (item === "|") {
           const view = document.createElement("div");
-          view.classList.add("tiptap-bm-divider");
+          view.classList.add("ProseMirror-bm-divider");
           nodes.push(view);
         } else {
           const view = document.createElement("button");
-          view.classList.add("tiptap-bm-button");
+          view.classList.add("ProseMirror-bm-button");
           if (i === this._index) {
             view.classList.add("active");
           }
@@ -204,7 +203,7 @@ export class BlockMenuView {
       });
     } else {
       const view = document.createElement("div");
-      view.classList.add("tiptap-bm-empty");
+      view.classList.add("ProseMirror-bm-empty");
       view.textContent = this.options.dictionary.empty;
       this.element.append(view);
     }
@@ -213,7 +212,7 @@ export class BlockMenuView {
 
   private _element() {
     const element = document.createElement("div");
-    element.classList.add("tiptap-bm");
+    element.classList.add("ProseMirror-bm");
     if (this.options.class) {
       for (const item of Array.isArray(this.options.class) ? this.options.class : [this.options.class]) {
         element.classList.add(item);
@@ -241,13 +240,12 @@ export class BlockMenuView {
 
   private _popover() {
     const options: Partial<Props> = {
-      appendTo: popoverAppendTo,
+      appendTo: () => document.body,
       getReferenceClientRect: null,
       content: this.element,
       arrow: false,
       interactive: true,
-      offset: [0, 5],
-      theme: "tiptap",
+      theme: "ProseMirror",
       trigger: "manual",
       placement: "top-start",
       maxWidth: "none",

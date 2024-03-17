@@ -1,31 +1,35 @@
-@import "tippy.js/dist/tippy.css";
-@import "tippy.js/animations/shift-away.css";
-
 :root {
   --tiptap-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   --tiptap-font-family-mono: "Fira Code", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --tiptap-font-weight: 400;
   --tiptap-font-size: 1em;
   --tiptap-line-height: 1.7;
-  --tiptap-color: rgba(0, 0, 0, 1);
-  --tiptap-background: rgba(255, 255, 255, 1);
-  --tiptap-card-color: rgba(0, 0, 0, 1);
-  --tiptap-card-background: rgba(0, 0, 0, 0.02);
-  --tiptap-operator-border: rgba(0, 0, 0, 0.08);
-  --tiptap-operator-color: rgba(0, 7, 20, 0.62);
-  --tiptap-operator-background: rgba(255, 255, 255, 1);
-  --tiptap-operator-hover-border: rgba(0, 0, 0, 0.19);
-  --tiptap-operator-hover-color: rgba(36, 0, 183, 0.66);
-  --tiptap-operator-hover-background: rgba(0, 0, 51, 0.06);
-  --tiptap-operator-dark-border: rgba(0, 0, 0, 0.08);
-  --tiptap-operator-dark-color: rgba(252, 253, 255, 0.94);
-  --tiptap-operator-dark-background: rgba(17, 17, 17, 1);
-  --tiptap-operator-dark-hover-border: rgba(255, 255, 255, 0.23);
-  --tiptap-operator-dark-hover-color: rgba(134, 104, 255, 0.8);
-  --tiptap-operator-dark-hover-background: rgba(221, 234, 248, 0.08);
+  --tiptap-color: #000000;
+  --tiptap-color-primary: #6E56CF;
+  --tiptap-color-secondly: #CDCED6;
+  --tiptap-background: #FFFFFF;
+  --tiptap-background-selected: #008FF519;
+  --tiptap-card-color: #000000;
+  --tiptap-card-background: #F9F9F9;
+  --tiptap-code-color: #E5484D;
+  --tiptap-code-background: #FEEBEC;
+  --tiptap-mark-color: #000000;
+  --tiptap-mark-background: #FFFAB8;
+  --tiptap-operator-shadow: rgba(0, 0, 0, 0.08);
+  --tiptap-operator-border: #E8E8E8;
+  --tiptap-operator-color: #60646C;
+  --tiptap-operator-background: #FFFFFF;
+  --tiptap-operator-hover-border: #CECECE;
+  --tiptap-operator-hover-color: #6E56CF;
+  --tiptap-operator-hover-background: #F0F0F3;
+  --tiptap-operator-dark-border: #E8E8E8;
+  --tiptap-operator-dark-color: #EDEEF0;
+  --tiptap-operator-dark-background: #111111;
+  --tiptap-operator-dark-hover-border: #484848;
+  --tiptap-operator-dark-hover-color: #6E56CF;
+  --tiptap-operator-dark-hover-background: #212225;
 }
 
-.tiptap,
 .ProseMirror {
   position: relative;
   width: 100%;
@@ -48,35 +52,396 @@
   > * {
     margin: 0.5em 0;
   }
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    color: var(--tiptap-color-primary);
+    cursor: pointer;
+  }
+
+  b,
+  strong {
+    font-weight: 600;
+  }
+
+  code {
+    border-radius: 0.25em;
+    padding: 0.2em 0.25em;
+    font-family: var(--tiptap-font-family-mono);
+    font-size: 85%;
+    tab-size: 4;
+    color: var(--tiptap-code-color);
+    background: var(--tiptap-code-background);
+  }
+
+  mark {
+    color: var(--tiptap-mark-color);
+    background: var(--tiptap-mark-background);
+  }
+
+  // heading
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0.5em 0;
+    font-weight: 500;
+    cursor: text;
+
+    &::before {
+      display: inline-block;
+      width: 1.5rem;
+      margin-left: -1.5rem;
+      font-family: var(--tiptap-font-family-mono);
+      font-size: 0.8rem;
+      line-height: 0;
+      color: var(--tiptap-color-secondly);
+    }
+  }
+
+  h1::before {
+    content: "H1";
+  }
+
+  h2::before {
+    content: "H2";
+  }
+
+  h3::before {
+    content: "H3";
+  }
+
+  h4::before {
+    content: "H4";
+  }
+
+  h5::before {
+    content: "H5";
+  }
+
+  h6::before {
+    content: "H6";
+  }
+
+  // blockquote
+  blockquote {
+    margin: 0.5em 0;
+    padding-left: 1em;
+    font-style: italic;
+    overflow: hidden;
+    position: relative;
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 3px;
+      border-radius: 1px;
+      position: absolute;
+      margin-left: -1em;
+      top: 0;
+      bottom: 0;
+      background: var(--tiptap-color-primary);
+    }
+  }
+
+  // list
+  ul,
+  ol {
+    margin: 0;
+    padding: 0 0 0 1.2em;
+  }
+
+  ol {
+    ol {
+      list-style: lower-alpha;
+
+      ol {
+        list-style: lower-roman;
+      }
+    }
+  }
+
+  ul[data-type="taskList"] {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    input {
+      accent-color: var(--tiptap-color-primary);
+    }
+
+    li {
+      display: flex;
+
+      label {
+        padding-right: 0.15em;
+        padding-top: 0.09em;
+
+        input {
+          width: 1em;
+          height: 1em;
+        }
+      }
+    }
+  }
+
+  // code block
+  pre {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0.75em 1em;
+    gap: 0.5em;
+    border-radius: 4px;
+    border: 1px solid var(--tiptap-operator-border);
+    background: var(--tiptap-card-background);
+
+    // toolbar
+    > div {
+      position: absolute;
+      top: 0.5em;
+      right: 0.5em;
+      display: flex;
+      gap: 0.5em;
+      opacity: 0;
+      transition-duration: 150ms;
+      transition-property: opacity;
+      transition-timing-function: ease-in-out;
+
+      select {
+        display: inline-block;
+        font-size: 0.8em;
+        padding: 0.125em;
+        border-radius: 4px;
+        outline: 0;
+        border: 1px solid var(--tiptap-operator-hover-border);
+        background: var(--tiptap-operator-background);
+        transition-duration: 150ms;
+        transition-property: color, border, box-shadow;
+        transition-timing-function: ease-in-out;
+
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+          border: 1px solid var(--tiptap-operator-hover-color);
+          box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
+        }
+      }
+
+      button {
+        appearance: none;
+        display: inline-block;
+        font-size: 0.8em;
+        padding: 0.125em 0.25em;
+        border-radius: 4px;
+        outline: 0;
+        border: 1px solid var(--tiptap-operator-hover-border);
+        background: var(--tiptap-operator-background);
+        transition-duration: 150ms;
+        transition-property: color, border, box-shadow;
+        transition-timing-function: ease-in-out;
+
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+          border: 1px solid var(--tiptap-operator-hover-color);
+          box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
+        }
+      }
+    }
+
+    &:hover > div {
+      opacity: 1;
+    }
+
+    // content
+    > code {
+      white-space: pre;
+      line-height: 1.5;
+      background: none !important;
+      padding: 0 !important;
+      border: 0 !important;
+    }
+
+    .hljs-comment,
+    .hljs-quote {
+      color: #a0a1a7;
+      font-style: italic;
+    }
+
+    .hljs-doctag,
+    .hljs-keyword,
+    .hljs-formula {
+      color: #a626a4;
+    }
+
+    .hljs-section,
+    .hljs-name,
+    .hljs-selector-tag,
+    .hljs-deletion,
+    .hljs-subst {
+      color: #e45649;
+    }
+
+    .hljs-literal {
+      color: #0184bb;
+    }
+
+    .hljs-string,
+    .hljs-regexp,
+    .hljs-addition,
+    .hljs-attribute,
+    .hljs-meta .hljs-string {
+      color: #50a14f;
+    }
+
+    .hljs-attr,
+    .hljs-variable,
+    .hljs-template-variable,
+    .hljs-type,
+    .hljs-selector-class,
+    .hljs-selector-attr,
+    .hljs-selector-pseudo,
+    .hljs-number {
+      color: #986801;
+    }
+
+    .hljs-symbol,
+    .hljs-bullet,
+    .hljs-link,
+    .hljs-meta,
+    .hljs-selector-id,
+    .hljs-title {
+      color: #4078f2;
+    }
+
+    .hljs-built_in,
+    .hljs-title.class_,
+    .hljs-class .hljs-title {
+      color: #c18401;
+    }
+
+    .hljs-emphasis {
+      font-style: italic;
+    }
+
+    .hljs-strong {
+      font-weight: bold;
+    }
+
+    .hljs-link {
+      text-decoration: underline;
+    }
+  }
+
+  // hr
+  hr {
+    position: relative;
+    height: 1em;
+    border: 0;
+
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      border-top: 1px solid var(--tiptap-color-primary);
+      top: 0.5em;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  &-hideselection {
+    caret-color: transparent;
+
+    *::selection {
+      background: transparent;
+    }
+  }
+
+  &:not([contenteditable="false"]) &-selectednode {
+    //background: var(--tiptap-background-selected);
+    position: relative;
+  }
+
+  &:not([contenteditable="false"]) &-selectednode::after {
+    content: "";
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    top: -4px;
+    bottom: -4px;
+    border-radius: 4px;
+    pointer-events: none;
+    background: var(--tiptap-background-selected);
+  }
+
+  &-gapcursor {
+    display: none;
+    pointer-events: none;
+    position: absolute;
+
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      top: -3px;
+      width: 20px;
+      border-top: 2px solid var(--tiptap-color-primary);
+      animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+    }
+  }
+
+  &-focused {
+    &-gapcursor {
+      display: block;
+    }
+  }
+
+  @keyframes ProseMirror-cursor-blink {
+    to {
+      visibility: hidden;
+    }
+  }
 }
 
-.tippy-box[data-theme="tiptap"],
-.tippy-box[data-theme="tiptap-dark"] {
+// region tippy
+
+.tippy-box[data-theme="ProseMirror"],
+.tippy-box[data-theme="ProseMirror-dark"] {
   font-size: inherit;
   line-height: inherit;
-  box-shadow: var(--tiptap-operator-border) 0 0 0 1px, var(--tiptap-operator-border) 0 2px 4px, var(--tiptap-operator-border) 0 4px 8px;
+  box-shadow: var(--tiptap-operator-shadow) 0 0 0 1px, var(--tiptap-operator-shadow) 0 2px 4px, var(--tiptap-operator-shadow) 0 4px 8px;
 
   .tippy-content {
     padding: 0;
   }
 }
 
-.tippy-box[data-theme="tiptap"] {
+.tippy-box[data-theme="ProseMirror"] {
   color: var(--tiptap-operator-color);
   background: var(--tiptap-operator-background);
 }
 
-.tippy-box[data-theme="tiptap-dark"] {
+.tippy-box[data-theme="ProseMirror-dark"] {
   color: var(--tiptap-operator-dark-color);
   background: var(--tiptap-operator-dark-background);
 }
 
-// region data-color
+// endregion
 
-.tiptap,
+// region color
+
 .ProseMirror,
-.tippy-box[data-theme="tiptap"],
-.tippy-box[data-theme="tiptap-dark"] {
+.tippy-box[data-theme="ProseMirror"],
+.tippy-box[data-theme="ProseMirror-dark"] {
   @colors: {
     gray: #8D8D8D;
     slate: #8E8C99;
@@ -152,9 +517,9 @@
 
 // endregion
 
-// region float menu
+// region menu
 
-.tiptap-fm {
+.ProseMirror-fm {
   display: flex;
   padding: 0.3em 0.5em;
 
@@ -271,11 +636,7 @@
   }
 }
 
-// endregion
-
-// region block menu
-
-.tiptap-bm {
+.ProseMirror-bm {
   overflow-x: hidden;
   overflow-y: auto;
   padding: 0.5em 0;
@@ -352,16 +713,16 @@
   .ProseMirror-focused &-placeholder::before {
     opacity: 1;
   }
+
+  .ProseMirror[contenteditable="false"] &-placeholder::before {
+    opacity: 0;
+  }
 }
 
-// endregion
-
-// region menu common
-
-.tiptap-fm-button,
-.tiptap-bm-button,
-.tiptap-fm-button-popover,
-.tiptap-bm-button-popover {
+.ProseMirror-fm-button,
+.ProseMirror-bm-button,
+.ProseMirror-fm-button-popover,
+.ProseMirror-bm-button-popover {
   kbd {
     font-family: var(--tiptap-font-family-mono);
     display: inline-block;
@@ -379,164 +740,9 @@
 }
 
 @media print {
-  .tiptap-fm,
-  .tiptap-bm {
+  .ProseMirror-fm,
+  .ProseMirror-bm {
     display: none;
-  }
-}
-
-// endregion
-
-// region code block
-
-.tiptap-code-block {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: 0.75em 1em;
-  gap: 0.5em;
-  border-radius: 4px;
-  border: 1px solid var(--tiptap-operator-border);
-  background: var(--tiptap-card-background);
-
-  &-toolbar {
-    position: absolute;
-    top: 0.5em;
-    right: 0.5em;
-    display: flex;
-    gap: 0.5em;
-    opacity: 0;
-    transition-duration: 150ms;
-    transition-property: opacity;
-    transition-timing-function: ease-in-out;
-
-    select {
-      display: inline-block;
-      font-size: 0.8em;
-      padding: 0.125em;
-      border-radius: 4px;
-      outline: 0;
-      border: 1px solid var(--tiptap-operator-hover-border);
-      background: var(--tiptap-operator-background);
-      transition-duration: 150ms;
-      transition-property: color, border, box-shadow;
-      transition-timing-function: ease-in-out;
-
-      &:hover,
-      &:focus,
-      &:active,
-      &.active {
-        border: 1px solid var(--tiptap-operator-hover-color);
-        box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
-      }
-    }
-
-    button {
-      appearance: none;
-      display: inline-block;
-      font-size: 0.8em;
-      padding: 0.125em 0.25em;
-      border-radius: 4px;
-      outline: 0;
-      border: 1px solid var(--tiptap-operator-hover-border);
-      background: var(--tiptap-operator-background);
-      transition-duration: 150ms;
-      transition-property: color, border, box-shadow;
-      transition-timing-function: ease-in-out;
-
-      &:hover,
-      &:focus,
-      &:active,
-      &.active {
-        border: 1px solid var(--tiptap-operator-hover-color);
-        box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
-      }
-    }
-  }
-
-  &:hover &-toolbar {
-    opacity: 1;
-  }
-
-  &-content {
-    white-space: pre;
-    line-height: 1.5;
-
-    code {
-      background: none !important;
-      padding: 0 !important;
-      border: 0 !important;
-    }
-  }
-
-  .hljs-comment,
-  .hljs-quote {
-    color: #a0a1a7;
-    font-style: italic;
-  }
-
-  .hljs-doctag,
-  .hljs-keyword,
-  .hljs-formula {
-    color: #a626a4;
-  }
-
-  .hljs-section,
-  .hljs-name,
-  .hljs-selector-tag,
-  .hljs-deletion,
-  .hljs-subst {
-    color: #e45649;
-  }
-
-  .hljs-literal {
-    color: #0184bb;
-  }
-
-  .hljs-string,
-  .hljs-regexp,
-  .hljs-addition,
-  .hljs-attribute,
-  .hljs-meta .hljs-string {
-    color: #50a14f;
-  }
-
-  .hljs-attr,
-  .hljs-variable,
-  .hljs-template-variable,
-  .hljs-type,
-  .hljs-selector-class,
-  .hljs-selector-attr,
-  .hljs-selector-pseudo,
-  .hljs-number {
-    color: #986801;
-  }
-
-  .hljs-symbol,
-  .hljs-bullet,
-  .hljs-link,
-  .hljs-meta,
-  .hljs-selector-id,
-  .hljs-title {
-    color: #4078f2;
-  }
-
-  .hljs-built_in,
-  .hljs-title.class_,
-  .hljs-class .hljs-title {
-    color: #c18401;
-  }
-
-  .hljs-emphasis {
-    font-style: italic;
-  }
-
-  .hljs-strong {
-    font-weight: bold;
-  }
-
-  .hljs-link {
-    text-decoration: underline;
   }
 }
 
