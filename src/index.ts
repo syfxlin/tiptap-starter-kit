@@ -31,6 +31,7 @@ import { OrderedList } from "./nodes/ordered-list";
 import { TaskList } from "./nodes/task-list";
 import { TaskItem } from "./nodes/task-item";
 import { Image } from "./nodes/image";
+import { ClickMenu } from "./extensions/click-menu/menu";
 
 const editor = new Editor({
   element: document.querySelector("#editor")!,
@@ -67,6 +68,7 @@ const editor = new Editor({
       color: "var(--tiptap-color-primary)",
       width: 2,
     }),
+    ClickMenu,
   ],
   content: `aaa <a href="https://ixk.me">Blog</a> <pre language="javascript"><code>console.log("123");</code></pre> aaa <img src="https://source.unsplash.com/random" alt="Unsplash"> <img src=""> <img src="https://ixk.me/bg.jpg">`,
 });
