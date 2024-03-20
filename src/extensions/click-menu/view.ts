@@ -1,16 +1,27 @@
 import tippy, { Instance, Props } from "tippy.js";
 import { Editor } from "@tiptap/core";
+import { NodeSelection } from "@tiptap/pm/state";
 import { Node, ResolvedPos } from "@tiptap/pm/model";
-import { EditorView } from "@tiptap/pm/view";
+import { serializeForClipboard } from "../../utils/serialize";
+
+export interface ClickMenuItem {
+  id: string;
+  name: string;
+  icon: string;
+  keywords: string;
+  shortcut?: string;
+  action: (editor: Editor, view: ClickMenuView) => void;
+}
+
+export interface ClickMenuItemStorage {
+  clickMenu: false | ClickMenuItem | Array<ClickMenuItem>;
+}
 
 export interface ClickMenuViewOptions {
   editor: Editor;
   class?: string | string[];
   style?: CSSStyleDeclaration | CSSStyleDeclaration[];
   tippy?: (props: { view: ClickMenuView; editor: Editor; options: Partial<Props> }) => Partial<Props>;
-  onInit?: (props: { view: ClickMenuView; editor: Editor; element: HTMLElement }) => void;
-  onUpdate?: (props: { view: ClickMenuView; editor: Editor; element: HTMLElement }) => void;
-  onDestroy?: (props: { view: ClickMenuView; editor: Editor; element: HTMLElement }) => void;
 }
 
 export interface ClickMenuActiveOptions {
@@ -27,6 +38,8 @@ export class ClickMenuView {
 
   private _timer: number | undefined;
   private _active: ClickMenuActiveOptions | undefined;
+  private _dragging: boolean | undefined;
+  private _selection: NodeSelection | undefined;
 
   constructor(options: ClickMenuViewOptions) {
     this.editor = options.editor;
@@ -45,15 +58,81 @@ export class ClickMenuView {
     this.popover.hide();
   }
 
-  public drop(event: HTMLElementEventMap["drop"]) {}
+  public keydown(_event: HTMLElementEventMap["keydown"]) {
+    this.hide();
+  }
 
-  public keydown(event: HTMLElementEventMap["keydown"]) {}
+  public drop(_event: HTMLElementEventMap["drop"]) {
+    this._dragging = false;
+  }
 
-  public dragover(event: HTMLElementEventMap["dragover"]) {}
+  public dragstart(event: HTMLElementEventMap["dragstart"]) {
+    this._dragging = true;
+    const view = this.editor.view;
+    const selection = this._selection;
+    if (event.dataTransfer && selection) {
+      const slice = selection.content();
+      view.dragging = { slice, move: true };
+      const { dom, text } = serializeForClipboard(view, slice);
+      event.dataTransfer.effectAllowed = "copyMove";
+      event.dataTransfer.clearData();
+      event.dataTransfer.setData("text/html", dom.innerHTML);
+      event.dataTransfer.setData("text/plain", text);
+    }
+  }
 
-  public dragleave(event: HTMLElementEventMap["dragleave"]) {}
+  public dragover(event: HTMLElementEventMap["dragover"]) {
+    if (this._dragging) {
+      const view = this.editor.view;
+      const root = view.dom.parentElement;
 
-  public dragenter(event: HTMLElementEventMap["dragenter"]) {}
+      if (!root) {
+        return;
+      }
+
+      const rect = root.getBoundingClientRect();
+
+      if (root.scrollHeight > root.clientHeight) {
+        if (root.scrollTop > 0 && Math.abs(event.y - rect.y) < 20) {
+          root.scrollTop = root.scrollTop > 10 ? root.scrollTop - 10 : 0;
+          return;
+        }
+        if (Math.round(root.scrollTop + rect.height) < Math.round(view.dom.getBoundingClientRect().height) && Math.abs(event.y - (rect.height + rect.y)) < 20) {
+          root.scrollTop = root.scrollTop + 10;
+        }
+      }
+    }
+  }
+
+  public dragenter(_event: HTMLElementEventMap["dragenter"]) {
+    this._dragging = true;
+  }
+
+  public dragleave(_event: HTMLElementEventMap["dragleave"]) {
+    this._dragging = false;
+  }
+
+  public mouseup(_event: HTMLElementEventMap["mouseup"]) {
+    if (!this._dragging) {
+      requestAnimationFrame(() => {
+        this.editor.view.focus();
+      });
+      return;
+    }
+    this._dragging = false;
+    this._selection = undefined;
+  }
+
+  public mousedown(_event: HTMLElementEventMap["mousedown"]) {
+    const { state, view } = this.editor;
+    const active = this._active;
+    if (active && NodeSelection.isSelectable(active.node)) {
+      const selection = NodeSelection.create(state.doc, active.pos.pos - (active.node.isLeaf ? 0 : 1));
+      view.dispatch(state.tr.setSelection(selection));
+      view.focus();
+      this._selection = selection;
+    }
+  }
 
   public mousemove(event: HTMLElementEventMap["mousemove"]) {
     const { view } = this.editor;
@@ -62,7 +141,7 @@ export class ClickMenuView {
     }
     clearTimeout(this._timer);
     this._timer = setTimeout(() => {
-      const active = this._select(event.target as HTMLElement, view);
+      const active = this._find(event.target as HTMLElement);
       if (active) {
         this.show(active);
       } else {
@@ -76,6 +155,10 @@ export class ClickMenuView {
     const element = document.createElement("div");
     element.classList.add("ProseMirror-cm");
     element.textContent = "click menu";
+    element.draggable = true;
+    element.addEventListener("mouseup", this.mouseup.bind(this));
+    element.addEventListener("mousedown", this.mousedown.bind(this));
+    element.addEventListener("dragstart", this.dragstart.bind(this));
     if (this.options.class) {
       for (const item of Array.isArray(this.options.class) ? this.options.class : [this.options.class]) {
         element.classList.add(item);
@@ -88,13 +171,6 @@ export class ClickMenuView {
           element.style[key] = val;
         }
       }
-    }
-    if (this.options.onInit) {
-      this.options.onInit({
-        element,
-        view: this,
-        editor: this.editor,
-      });
     }
     return element;
   }
@@ -114,7 +190,8 @@ export class ClickMenuView {
     return tippy(document.body, this.options.tippy ? this.options.tippy({ options, view: this, editor: this.editor }) : options);
   }
 
-  private _select(target: HTMLElement, view: EditorView) {
+  private _find(target: HTMLElement) {
+    const { view } = this.editor;
     if (view.composing || !view.editable || !target || !view.dom.parentElement || target === view.dom) {
       return undefined;
     }
@@ -135,7 +212,7 @@ export class ClickMenuView {
       _node = node;
     }
 
-    while (_node && (this._nodeIsNotBlock(_node) || this._nodeIsFirstChild(_pos))) {
+    while (_node && (!this._nodeIsBlock(_node) || !this._nodeIsEnabled(_node))) {
       _pos = view.state.doc.resolve(_pos.before());
       _node = _pos.node();
     }
@@ -158,19 +235,11 @@ export class ClickMenuView {
     return { node: _node, pos: _pos, dom: _dom };
   }
 
-  private _nodeIsNotBlock(node: Node) {
-    return !node.type.isBlock;
+  private _nodeIsBlock(node: Node) {
+    return node.type.isBlock && node.type.name !== "doc";
   }
 
-  private _nodeIsFirstChild(pos: ResolvedPos) {
-    let parent = pos.parent;
-    const target = pos.node();
-    if (parent === target) {
-      parent = pos.node(pos.depth - 1);
-    }
-    if (!parent || parent.type.name === "doc") {
-      return false;
-    }
-    return parent.firstChild === target;
+  private _nodeIsEnabled(node: Node) {
+    return this.editor.storage[node.type.name]?.clickMenu !== false;
   }
 }
