@@ -3,6 +3,7 @@ import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { ClickMenuView } from "./view";
 
 export interface ClickMenuOptions {
+  dictionary: {};
 }
 
 export const ClickMenu = Extension.create<ClickMenuOptions>({

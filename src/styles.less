@@ -463,10 +463,12 @@
 // region tippy
 
 .tippy-box[data-theme="ProseMirror"],
-.tippy-box[data-theme="ProseMirror-dark"] {
+.tippy-box[data-theme="ProseMirror-dark"],
+.tippy-box[data-theme="ProseMirror-none"] {
   font-size: inherit;
   line-height: inherit;
-  box-shadow: var(--tiptap-operator-shadow) 0 0 0 1px, var(--tiptap-operator-shadow) 0 2px 4px, var(--tiptap-operator-shadow) 0 4px 8px;
+  color: var(--tiptap-operator-color);
+  background: transparent;
 
   .tippy-content {
     padding: 0;
@@ -476,11 +478,13 @@
 .tippy-box[data-theme="ProseMirror"] {
   color: var(--tiptap-operator-color);
   background: var(--tiptap-operator-background);
+  box-shadow: var(--tiptap-operator-shadow) 0 0 0 1px, var(--tiptap-operator-shadow) 0 2px 4px, var(--tiptap-operator-shadow) 0 4px 8px;
 }
 
 .tippy-box[data-theme="ProseMirror-dark"] {
   color: var(--tiptap-operator-dark-color);
   background: var(--tiptap-operator-dark-background);
+  box-shadow: var(--tiptap-operator-shadow) 0 0 0 1px, var(--tiptap-operator-shadow) 0 2px 4px, var(--tiptap-operator-shadow) 0 4px 8px;
 }
 
 // endregion
@@ -779,6 +783,44 @@
 
   .ProseMirror[contenteditable="false"] &-placeholder::before {
     opacity: 0;
+  }
+}
+
+.ProseMirror-cm {
+  display: flex;
+  gap: 0.25em;
+
+  &-plus,
+  &-drag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    width: 1.2em;
+    height: 1.2em;
+    padding: 0.25em 0;
+    transition: background 150ms ease-in-out;
+    border-radius: 4px;
+
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      background: var(--tiptap-operator-hover-background);
+    }
+  }
+
+  &-plus {
+    cursor: pointer;
+  }
+
+  &-drag {
+    cursor: grab;
+
+    &:focus,
+    &:active {
+      cursor: grabbing;
+    }
   }
 }
 

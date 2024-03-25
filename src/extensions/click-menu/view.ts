@@ -3,6 +3,7 @@ import { Editor } from "@tiptap/core";
 import { NodeSelection } from "@tiptap/pm/state";
 import { Node, ResolvedPos } from "@tiptap/pm/model";
 import { serializeForClipboard } from "../../utils/serialize";
+import { add, draggable } from "../../utils/icons";
 
 export interface ClickMenuItem {
   id: string;
@@ -49,8 +50,11 @@ export class ClickMenuView {
   }
 
   public show(active: ClickMenuActiveOptions) {
-    this._active = active;
     this.popover.setProps({ getReferenceClientRect: () => active.dom.getBoundingClientRect() });
+    if (this._active?.dom !== active.dom) {
+      this.popover.hide();
+    }
+    this._active = active;
     this.popover.show();
   }
 
@@ -147,18 +151,24 @@ export class ClickMenuView {
       } else {
         this.hide();
       }
-    }, 16);
+    }, 8);
     return false;
+  }
+
+  public plus() {
+    if (this._active) {
+      const { pos, node } = this._active;
+      this.editor.chain()
+        .insertContentAt(pos.pos + node.nodeSize, { type: "paragraph" })
+        .setTextSelection(pos.pos + node.nodeSize)
+        .focus()
+        .run();
+    }
   }
 
   private _element() {
     const element = document.createElement("div");
     element.classList.add("ProseMirror-cm");
-    element.textContent = "click menu";
-    element.draggable = true;
-    element.addEventListener("mouseup", this.mouseup.bind(this));
-    element.addEventListener("mousedown", this.mousedown.bind(this));
-    element.addEventListener("dragstart", this.dragstart.bind(this));
     if (this.options.class) {
       for (const item of Array.isArray(this.options.class) ? this.options.class : [this.options.class]) {
         element.classList.add(item);
@@ -172,6 +182,19 @@ export class ClickMenuView {
         }
       }
     }
+    const plus = document.createElement("div");
+    plus.innerHTML = add;
+    plus.classList.add("ProseMirror-cm-plus");
+    plus.addEventListener("click", this.plus.bind(this));
+    const drag = document.createElement("div");
+    drag.innerHTML = draggable;
+    drag.classList.add("ProseMirror-cm-drag");
+    drag.draggable = true;
+    drag.addEventListener("mouseup", this.mouseup.bind(this));
+    drag.addEventListener("mousedown", this.mousedown.bind(this));
+    drag.addEventListener("dragstart", this.dragstart.bind(this));
+    element.append(plus);
+    element.append(drag);
     return element;
   }
 
@@ -182,7 +205,8 @@ export class ClickMenuView {
       content: this.element,
       arrow: false,
       interactive: true,
-      theme: "ProseMirror",
+      theme: "ProseMirror-none",
+      animation: "shift-away",
       trigger: "manual",
       placement: "left-start",
       maxWidth: "none",
