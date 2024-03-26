@@ -4,7 +4,7 @@ import {
 } from "@tiptap/extension-horizontal-rule";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { horizontalrule } from "../utils/icons";
+import { icon } from "../utils/icons";
 
 export interface HorizontalRuleOptions extends THorizontalRuleOptions {
   dictionary: {
@@ -41,7 +41,7 @@ export const HorizontalRule = THorizontalRule.extend<HorizontalRuleOptions>({
       blockMenu: {
         id: this.name,
         name: this.options.dictionary.name,
-        icon: horizontalrule,
+        icon: icon("hr"),
         keywords: "horizontalrule,hr,hx,fgx",
         action: editor => editor.chain().setHorizontalRule().focus().run(),
       },

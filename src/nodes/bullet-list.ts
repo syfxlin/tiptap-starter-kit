@@ -1,7 +1,7 @@
 import { BulletList as TBulletList, BulletListOptions as TBulletListOptions } from "@tiptap/extension-bullet-list";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { bulletlist } from "../utils/icons";
+import { icon } from "../utils/icons";
 
 export interface BulletListOptions extends TBulletListOptions {
   dictionary: {
@@ -43,7 +43,7 @@ export const BulletList = TBulletList.extend<BulletListOptions>({
       blockMenu: {
         id: this.name,
         name: this.options.dictionary.name,
-        icon: bulletlist,
+        icon: icon("ul"),
         shortcut: "Mod-Shift-8",
         keywords: "bulletlist,bl,ul,wxlb",
         action: editor => editor.chain().toggleBulletList().focus().run(),

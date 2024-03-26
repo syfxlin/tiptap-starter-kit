@@ -1,7 +1,7 @@
 import { Heading as THeading, HeadingOptions as THeadingOptions } from "@tiptap/extension-heading";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { heading1, heading2, heading3, heading4, heading5, heading6 } from "../utils/icons";
+import { icon } from "../utils/icons";
 
 export interface HeadingOptions extends THeadingOptions {
   dictionary: {
@@ -41,20 +41,13 @@ export const Heading = THeading.extend<HeadingOptions>({
           state.closeNode();
         },
       },
-      blockMenu: ([
-        { id: 1, icon: heading1 },
-        { id: 2, icon: heading2 },
-        { id: 3, icon: heading3 },
-        { id: 4, icon: heading4 },
-        { id: 5, icon: heading5 },
-        { id: 6, icon: heading6 },
-      ] as const).map(item => ({
-        id: `${this.name}${item.id}`,
-        name: `${this.options.dictionary.name} ${item.id}`,
-        icon: item.icon,
-        shortcut: `Mod-Alt-${item.id}`,
-        keywords: `heading${item.id},title${item.id},bt${item.id}`,
-        action: editor => editor.chain().toggleHeading({ level: item.id }).focus().run(),
+      blockMenu: ([1, 2, 3, 4, 5, 6] as const).map(level => ({
+        id: `${this.name}${level}`,
+        name: `${this.options.dictionary.name} ${level}`,
+        icon: icon(`h${level}`),
+        shortcut: `Mod-Alt-${level}`,
+        keywords: `heading${level},title${level},bt${level}`,
+        action: editor => editor.chain().toggleHeading({ level }).focus().run(),
       })),
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },

@@ -3,7 +3,7 @@ import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
-import * as icons from "../utils/icons";
+import { icon } from "../utils/icons";
 
 export interface LinkOptions extends TLinkOptions {
   dictionary: {
@@ -63,7 +63,7 @@ export const Link = TLink.extend<LinkOptions>({
       floatMenu: {
         id: this.name,
         name: this.options.dictionary.name,
-        view: icons.link,
+        view: icon("link"),
         shortcut: "Mod-K",
         active: editor => editor.isActive(this.name),
         action: editor => editor.chain().toggleLink({ href: "" }).setTextSelection(editor.state.selection.to - 1).run(),
@@ -92,7 +92,7 @@ export const Link = TLink.extend<LinkOptions>({
 
             const open = view.createButton({
               name: this.options.dictionary.openLink,
-              view: icons.open,
+              view: icon("open"),
               onClick: () => {
                 const attrs = editor.getAttributes(this.name);
                 if (attrs.href) {
@@ -103,7 +103,7 @@ export const Link = TLink.extend<LinkOptions>({
 
             const remove = view.createButton({
               name: this.options.dictionary.deleteLink,
-              view: icons.remove,
+              view: icon("remove"),
               onClick: () => {
                 editor.chain().unsetLink().run();
               },

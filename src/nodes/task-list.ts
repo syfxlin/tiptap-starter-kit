@@ -1,7 +1,7 @@
 import { TaskList as TTaskList, TaskListOptions as TTaskListOptions } from "@tiptap/extension-task-list";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { tasklist } from "../utils/icons";
+import { icon } from "../utils/icons";
 
 export interface TaskListOptions extends TTaskListOptions {
   dictionary: {
@@ -43,7 +43,7 @@ export const TaskList = TTaskList.extend<TaskListOptions>({
       blockMenu: {
         id: this.name,
         name: this.options.dictionary.name,
-        icon: tasklist,
+        icon: icon("tl"),
         shortcut: "Mod-Shift-9",
         keywords: "tasklist,tl,rwlb",
         action: editor => editor.chain().toggleTaskList().focus().run(),

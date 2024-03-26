@@ -37,7 +37,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "style": "lessc ./src/styles.less ./src/styles.css",
+    "style": "lessc ./src/styles.less ./src/styles.css --autoprefix=\"defaults\"",
     "build": "pnpm style && bunchee",
     "watch": "pnpm style && bunchee --watch"
   },
@@ -89,7 +89,9 @@
     "@types/unist": "^3.0.2",
     "bunchee": "^4.4.8",
     "eslint": "^8.57.0",
+    "eslint-plugin-format": "^0.1.0",
     "less": "^4.2.0",
+    "less-plugin-autoprefix": "^2.0.0",
     "mdast-util-from-markdown": "^2.0.0",
     "mdast-util-to-markdown": "^2.1.0",
     "prosemirror-model": "^1.19.4",

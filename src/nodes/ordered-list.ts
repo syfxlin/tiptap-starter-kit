@@ -1,7 +1,7 @@
 import { OrderedList as TOrderedList, OrderedListOptions as TOrderedListOptions } from "@tiptap/extension-ordered-list";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { orderedlist } from "../utils/icons";
+import { icon } from "../utils/icons";
 
 export interface OrderedListOptions extends TOrderedListOptions {
   dictionary: {
@@ -44,7 +44,7 @@ export const OrderedList = TOrderedList.extend<OrderedListOptions>({
       blockMenu: {
         id: this.name,
         name: this.options.dictionary.name,
-        icon: orderedlist,
+        icon: icon("ol"),
         shortcut: "Mod-Shift-7",
         keywords: "orderedlist,ol,yxlb",
         action: editor => editor.chain().toggleOrderedList().focus().run(),

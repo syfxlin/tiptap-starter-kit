@@ -3,7 +3,7 @@ import { Editor } from "@tiptap/core";
 import { NodeSelection } from "@tiptap/pm/state";
 import { Node, ResolvedPos } from "@tiptap/pm/model";
 import { serializeForClipboard } from "../../utils/serialize";
-import { add, draggable } from "../../utils/icons";
+import { icon } from "../../utils/icons";
 
 export interface ClickMenuItem {
   id: string;
@@ -183,11 +183,11 @@ export class ClickMenuView {
       }
     }
     const plus = document.createElement("div");
-    plus.innerHTML = add;
+    plus.innerHTML = icon("plus");
     plus.classList.add("ProseMirror-cm-plus");
     plus.addEventListener("click", this.plus.bind(this));
     const drag = document.createElement("div");
-    drag.innerHTML = draggable;
+    drag.innerHTML = icon("drag");
     drag.classList.add("ProseMirror-cm-drag");
     drag.draggable = true;
     drag.addEventListener("mouseup", this.mouseup.bind(this));

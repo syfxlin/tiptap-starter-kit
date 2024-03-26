@@ -3,7 +3,7 @@ import { CodeBlockLowlight, CodeBlockLowlightOptions } from "@tiptap/extension-c
 import tippy from "tippy.js";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { code } from "../utils/icons";
+import { icon } from "../utils/icons";
 
 export interface CodeBlockOptions extends CodeBlockLowlightOptions {
   dictionary: Record<string, string>;
@@ -91,7 +91,7 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
       blockMenu: {
         id: this.name,
         name: this.options.dictionary.name,
-        icon: code,
+        icon: icon("code"),
         shortcut: "Mod-Alt-C",
         keywords: "codeblock,cb,dmk,",
         action: editor => editor.chain().toggleCodeBlock().focus().run(),

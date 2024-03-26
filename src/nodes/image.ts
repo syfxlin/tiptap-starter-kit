@@ -3,7 +3,7 @@ import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { FloatMenuView } from "../extensions/float-menu/view";
-import * as icons from "../utils/icons";
+import { icon } from "../utils/icons";
 
 export interface ImageOptions extends TImageOptions {
   dictionary: {
@@ -76,7 +76,7 @@ export const Image = TImage.extend<ImageOptions>({
       blockMenu: {
         id: this.name,
         name: this.options.dictionary.name,
-        icon: icons.image,
+        icon: icon("image"),
         keywords: "image,picture,tp,zp",
         action: editor => editor.chain().setImage({ src: "" }).focus().run(),
       },
@@ -149,7 +149,7 @@ export const Image = TImage.extend<ImageOptions>({
             const open = view.createButton({
               id: "open",
               name: this.options.dictionary.image.open,
-              view: icons.open,
+              view: icon("open"),
               onClick: () => {
                 const attrs = editor.getAttributes(this.name);
                 if (attrs.src) {
@@ -160,7 +160,7 @@ export const Image = TImage.extend<ImageOptions>({
             const upload = view.createUpload({
               id: "upload",
               name: this.options.dictionary.image.upload,
-              view: icons.upload,
+              view: icon("upload"),
               onUpload: () => {
                 console.log("upload");
                 // TODO: upload
@@ -169,7 +169,7 @@ export const Image = TImage.extend<ImageOptions>({
             const remove = view.createButton({
               id: "remove",
               name: this.options.dictionary.image.delete,
-              view: icons.remove,
+              view: icon("remove"),
               onClick: () => {
                 editor.chain().deleteSelection().run();
               },

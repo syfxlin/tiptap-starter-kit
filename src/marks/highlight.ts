@@ -3,7 +3,7 @@ import tippy from "tippy.js";
 import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { DecorationData, remarkDecoration } from "../extensions/markdown/plugins/decoration";
-import { highlight } from "../utils/icons";
+import { icon } from "../utils/icons";
 import { colors } from "../utils/colors";
 
 export interface HighlightOptions extends Omit<THighlightOptions, "multicolor"> {
@@ -90,7 +90,7 @@ export const Highlight = THighlight.extend<HighlightOptions>({
       floatMenu: {
         id: this.name,
         name: this.options.dictionary.name,
-        view: highlight,
+        view: icon("highlight"),
         shortcut: "Mod-Shift-H",
         active: editor => editor.isActive(this.name),
         action: editor => editor.chain().toggleHighlight().focus().run(),

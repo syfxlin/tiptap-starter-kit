@@ -1,7 +1,7 @@
 import { Blockquote as IBlockquote, BlockquoteOptions as TBlockquoteOptions } from "@tiptap/extension-blockquote";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { blockquote } from "../utils/icons";
+import { icon } from "../utils/icons";
 
 export interface BlockquoteOptions extends TBlockquoteOptions {
   dictionary: {
@@ -40,7 +40,7 @@ export const Blockquote = IBlockquote.extend<BlockquoteOptions>({
       blockMenu: {
         id: this.name,
         name: this.options.dictionary.name,
-        icon: blockquote,
+        icon: icon("blockquote"),
         shortcut: "Mod-Shift-B",
         keywords: "blockquote,bq,yyk",
         action: editor => editor.chain().toggleBlockquote().focus().run(),
