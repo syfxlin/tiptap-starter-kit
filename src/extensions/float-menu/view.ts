@@ -21,6 +21,7 @@ export interface FloatMenuButtonViewOptions {
 }
 
 export interface FloatMenuUploadViewOptions extends Omit<FloatMenuButtonViewOptions, "onClick"> {
+  accept?: string;
   onUpload?: (element: HTMLInputElement) => void;
 }
 
@@ -184,6 +185,9 @@ export class FloatMenuView implements PluginView {
   public createUpload(options: FloatMenuUploadViewOptions) {
     const file = document.createElement("input");
     file.type = "file";
+    if (options.accept) {
+      file.accept = options.accept;
+    }
     file.addEventListener("change", () => {
       options.onUpload?.(file);
     });

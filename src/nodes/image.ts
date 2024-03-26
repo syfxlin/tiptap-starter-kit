@@ -4,6 +4,7 @@ import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { icon } from "../utils/icons";
+import { UploaderItemStorage, UploaderStorage } from "../extensions/uploader";
 
 export interface ImageOptions extends TImageOptions {
   dictionary: {
@@ -73,6 +74,10 @@ export const Image = TImage.extend<ImageOptions>({
           });
         },
       },
+      uploader: {
+        match: (_editor, data) => data.type.startsWith("image"),
+        apply: (editor, data) => editor.chain().setImage({ src: data.url, alt: data.name }).run(),
+      },
       blockMenu: {
         id: this.name,
         name: this.options.dictionary.name,
@@ -80,7 +85,7 @@ export const Image = TImage.extend<ImageOptions>({
         keywords: "image,picture,tp,zp",
         action: editor => editor.chain().setImage({ src: "" }).focus().run(),
       },
-    } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
+    } satisfies NodeMarkdownStorage & UploaderItemStorage & BlockMenuItemStorage;
   },
   addNodeView() {
     return ({ node }) => {
@@ -161,9 +166,16 @@ export const Image = TImage.extend<ImageOptions>({
               id: "upload",
               name: this.options.dictionary.image.upload,
               view: icon("upload"),
-              onUpload: () => {
-                console.log("upload");
-                // TODO: upload
+              accept: "image/*",
+              onUpload: (element) => {
+                const uploader = this.editor.storage.uploader as UploaderStorage;
+                if (element.files && uploader) {
+                  uploader.upload(element.files).then(items => items.forEach((item) => {
+                    if (item.type.startsWith("image")) {
+                      editor.chain().setImage({ src: item.url, alt: item.name }).run();
+                    }
+                  }));
+                }
               },
             });
             const remove = view.createButton({

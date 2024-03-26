@@ -32,6 +32,7 @@ import { TaskList } from "./nodes/task-list";
 import { TaskItem } from "./nodes/task-item";
 import { Image } from "./nodes/image";
 import { ClickMenu } from "./extensions/click-menu/menu";
+import { Uploader } from "./extensions/uploader";
 
 const editor = new Editor({
   element: document.querySelector("#editor")!,
@@ -69,6 +70,7 @@ const editor = new Editor({
       width: 2,
     }),
     ClickMenu,
+    Uploader,
   ],
   content: `aaa <a href="https://ixk.me">Blog</a> <pre language="javascript"><code>console.log("123");</code></pre> aaa <img src="https://source.unsplash.com/random" alt="Unsplash"> <img src=""> <img src="https://ixk.me/bg.jpg">`,
 });
