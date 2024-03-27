@@ -210,6 +210,7 @@ export class ClickMenuView {
       trigger: "manual",
       placement: "left-start",
       maxWidth: "none",
+      zIndex: 998,
     };
     return tippy(document.body, this.options.tippy ? this.options.tippy({ options, view: this, editor: this.editor }) : options);
   }
@@ -236,7 +237,7 @@ export class ClickMenuView {
       _node = node;
     }
 
-    while (_node && (!this._nodeIsBlock(_node) || !this._nodeIsEnabled(_node))) {
+    while (_node && (this._nodeIsNotBlock(_node) || this._nodeIsDisabled(_node) || this._nodeIsFirstChild(_pos))) {
       _pos = view.state.doc.resolve(_pos.before());
       _node = _pos.node();
     }
@@ -259,11 +260,23 @@ export class ClickMenuView {
     return { node: _node, pos: _pos, dom: _dom };
   }
 
-  private _nodeIsBlock(node: Node) {
-    return node.type.isBlock && node.type.name !== "doc";
+  private _nodeIsDisabled(node: Node) {
+    return this.editor.storage[node.type.name]?.clickMenu === false;
   }
 
-  private _nodeIsEnabled(node: Node) {
-    return this.editor.storage[node.type.name]?.clickMenu !== false;
+  private _nodeIsNotBlock(node: Node) {
+    return !node.type.isBlock || node.type.name === "doc";
+  }
+
+  private _nodeIsFirstChild(pos: ResolvedPos) {
+    let parent = pos.parent;
+    const node = pos.node();
+    if (parent === node) {
+      parent = pos.node(pos.depth - 1);
+    }
+    if (!parent || parent.type.name === "doc") {
+      return false;
+    }
+    return parent.firstChild === node;
   }
 }

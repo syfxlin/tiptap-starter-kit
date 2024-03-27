@@ -11,7 +11,7 @@
   --tiptap-color-primary: #6e56cf;
   --tiptap-color-secondly: #cdced6;
   --tiptap-background: #ffffff;
-  --tiptap-background-selected: #008ff519;
+  --tiptap-background-selected: #008CFF0E;
   --tiptap-card-color: #000000;
   --tiptap-card-background: #f9f9f9;
   --tiptap-code-color: #e5484d;
@@ -392,6 +392,96 @@
     }
   }
 
+  // table
+  table,
+  &-table {
+    border-collapse: collapse;
+    box-sizing: border-box;
+    border-radius: 4px;
+    margin-top: 1em;
+    width: 100%;
+
+    tr {
+      position: relative;
+      border: 1px solid var(--tiptap-operator-border);
+    }
+
+    th,
+    td {
+      position: relative;
+      min-width: 50px;
+      padding: 0.25em 0.5em;
+      border: 1px solid var(--tiptap-operator-border);
+    }
+
+    .selectedCell {
+      background: var(--tiptap-background-selected);
+      background-clip: padding-box;
+    }
+
+    &-grip-drag {
+      cursor: grab;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      line-height: 1;
+      width: 0.3em;
+      height: 1.7em;
+      border-radius: 2px;
+      transition-property: width, height, border-radius;
+      transition-duration: 150ms;
+      transition-timing-function: ease-in-out;
+      border: 1px solid var(--tiptap-operator-border);
+      background: var(--tiptap-operator-hover-background);
+
+      .ProseMirror-icon {
+        opacity: 0;
+        transition-property: opacity;
+        transition-duration: 150ms;
+        transition-timing-function: ease-in-out;
+      }
+    }
+
+    &-grip-col,
+    &-grip-row {
+      position: absolute;
+      width: 1em;
+      height: 1.7em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover,
+      &:focus,
+      &:active,
+      &.active {
+        .ProseMirror-table-grip-drag {
+          width: 1em;
+          border-radius: 4px;
+          color: var(--tiptap-operator-hover-background);
+          background: var(--tiptap-operator-hover-color);
+          border: 1px solid var(--tiptap-operator-hover-color);
+
+          .ProseMirror-icon {
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    &-grip-col {
+      top: 0;
+      left: 50%;
+      transform: rotate(90deg) translateX(-0.85em) translateY(50%);
+    }
+
+    &-grip-row {
+      left: 0;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+    }
+  }
+
   audio,
   video {
     display: block;
@@ -693,6 +783,22 @@
   &-drag {
     --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M8.5 7a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m0 6.5a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m1.5 5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 0 1 3 0M15.5 7a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3m1.5 5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 0 1 3 0m-1.5 8a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3'/%3E%3C/svg%3E");
   }
+
+  &-left {
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m4.836 12l6.207 6.207l1.414-1.414L7.664 12l4.793-4.793l-1.414-1.414zm5.65 0l6.207 6.207l1.414-1.414L13.314 12l4.793-4.793l-1.414-1.414z'/%3E%3C/svg%3E");
+  }
+
+  &-right {
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m19.164 12l-6.207-6.207l-1.414 1.414L16.336 12l-4.793 4.793l1.414 1.414zm-5.65 0L7.307 5.793L5.893 7.207L10.686 12l-4.793 4.793l1.414 1.414z'/%3E%3C/svg%3E");
+  }
+
+  &-up {
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m12 4.836l-6.207 6.207l1.414 1.414L12 7.664l4.793 4.793l1.414-1.414zm0 5.65l-6.207 6.207l1.414 1.414L12 13.314l4.793 4.793l1.414-1.414z'/%3E%3C/svg%3E");
+  }
+
+  &-down {
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m12 19.164l6.207-6.207l-1.414-1.414L12 16.336l-4.793-4.793l-1.414 1.414zm0-5.65l6.207-6.207l-1.414-1.414L12 10.686L7.207 5.893L5.793 7.307z'/%3E%3C/svg%3E");
+  }
 }
 
 // endregion
@@ -732,8 +838,6 @@
     transition-timing-function: ease-in-out;
 
     &:hover,
-    &:focus,
-    &:active,
     &.active {
       border: 1px solid var(--tiptap-operator-hover-color);
       box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
@@ -771,8 +875,6 @@
     }
 
     &:hover,
-    &:focus,
-    &:active,
     &.active {
       color: var(--tiptap-operator-hover-color);
       background: var(--tiptap-operator-hover-background);
@@ -811,8 +913,6 @@
       transition-timing-function: ease-in-out;
 
       &:hover,
-      &:focus,
-      &:active,
       &.active {
         border: 1px solid var(--tiptap-operator-hover-color);
         box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
@@ -872,8 +972,6 @@
     background: transparent;
 
     &:hover,
-    &:focus,
-    &:active,
     &.active {
       background: var(--tiptap-operator-hover-background);
     }
@@ -931,8 +1029,6 @@
     border-radius: 4px;
 
     &:hover,
-    &:focus,
-    &:active,
     &.active {
       background: var(--tiptap-operator-hover-background);
     }
