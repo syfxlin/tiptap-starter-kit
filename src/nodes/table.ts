@@ -1,7 +1,23 @@
-import { Table as TTable } from "@tiptap/extension-table";
+import { Table as TTable, TableOptions as TTableOptions } from "@tiptap/extension-table";
 import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
+import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
+import { icon } from "../utils/icons";
 
-export const Table = TTable.extend({
+export interface TableOptions extends TTableOptions {
+  dictionary: {
+    name: string;
+  };
+}
+
+export const Table = TTable.extend<TableOptions>({
+  addOptions() {
+    return {
+      ...this.parent?.(),
+      dictionary: {
+        name: "Table",
+      },
+    };
+  },
   addStorage() {
     return {
       ...this.parent?.(),
@@ -31,6 +47,13 @@ export const Table = TTable.extend({
           state.closeNode();
         },
       },
-    } satisfies NodeMarkdownStorage;
+      blockMenu: {
+        id: this.name,
+        name: this.options.dictionary.name,
+        icon: icon("table"),
+        keywords: "table,bg",
+        action: editor => editor.chain().insertTable({ rows: 3, cols: 3 }).focus().run(),
+      },
+    } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },
 });
