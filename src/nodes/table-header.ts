@@ -160,8 +160,7 @@ export const TableHeader = TTableHeader.extend<TableHeaderOptions>({
                     const drag = document.createElement("div");
                     drag.classList.add("ProseMirror-table-grip-drag");
                     drag.innerHTML = icon("drag");
-                    drag.draggable = true;
-                    drag.addEventListener("click", (event) => {
+                    drag.addEventListener("mousedown", (event) => {
                       event.preventDefault();
                       event.stopImmediatePropagation();
                       this.editor.view.dispatch(selectColumn(tr, index));
