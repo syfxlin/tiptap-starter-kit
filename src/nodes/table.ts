@@ -2,7 +2,7 @@ import { Table as TTable, TableOptions as TTableOptions } from "@tiptap/extensio
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { posToDOMRect } from "@tiptap/core";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
-import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
+import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { icon } from "../utils/icons";
 import { FloatMenuView } from "../extensions/float-menu/view";
@@ -44,13 +44,11 @@ export const Table = TTable.extend<TableOptions>({
       parser: {
         match: node => node.type === "table",
         apply: (state, node, type) => {
-          const align = node.align as (string | null)[];
-          const children = (node.children as MarkdownNode[]).map((x, i) => ({
-            ...x,
-            align,
-            isHeader: i === 0,
-          }));
-          state.openNode(type).next(children).closeNode();
+          state.openNode(type);
+          if (node.children) {
+            state.next(node.children.map((a, i) => ({ ...a, align: node.align[i], isHeader: i === 0 })));
+          }
+          state.closeNode();
         },
       },
       serializer: {

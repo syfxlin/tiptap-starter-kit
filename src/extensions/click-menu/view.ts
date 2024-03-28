@@ -50,7 +50,11 @@ export class ClickMenuView {
   }
 
   public show(active: ClickMenuActiveOptions) {
-    this.popover.setProps({ getReferenceClientRect: () => active.dom.getBoundingClientRect() });
+    if (active.node.type.name === "listItem") {
+      this.popover.setProps({ getReferenceClientRect: () => active.dom.getBoundingClientRect(), offset: [0, 30] });
+    } else {
+      this.popover.setProps({ getReferenceClientRect: () => active.dom.getBoundingClientRect(), offset: [0, 10] });
+    }
     if (this._active?.dom !== active.dom) {
       this.popover.hide();
     }
@@ -210,6 +214,7 @@ export class ClickMenuView {
       trigger: "manual",
       placement: "left-start",
       maxWidth: "none",
+      offset: [0, 10],
       zIndex: 998,
     };
     return tippy(document.body, this.options.tippy ? this.options.tippy({ options, view: this, editor: this.editor }) : options);

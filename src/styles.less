@@ -191,6 +191,23 @@
         }
       }
     }
+
+    div {
+      width: 100%;
+    }
+  }
+
+  li {
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: -3em;
+      width: 3em;
+      top: 0;
+      bottom: 0;
+    }
   }
 
   // code block
@@ -533,11 +550,11 @@
   }
 
   // prosemirror
-  &-separator&-separator {
+  .ProseMirror-separator.ProseMirror-separator {
     display: none !important;
   }
 
-  &-hideselection {
+  .ProseMirror-hideselection {
     caret-color: transparent;
 
     *::selection {
@@ -545,40 +562,54 @@
     }
   }
 
-  &:not([contenteditable="false"]) &-selectednode {
-    position: relative;
+  &:not([contenteditable="false"]) {
+    .ProseMirror-selectednode {
+      position: relative;
 
-    &::after {
-      content: "";
-      position: absolute;
-      left: -4px;
-      right: -4px;
-      top: -4px;
-      bottom: -4px;
-      border-radius: 4px;
-      pointer-events: none;
-      background: var(--tiptap-background-selected);
+      &::after {
+        content: "";
+        position: absolute;
+        left: -4px;
+        right: -4px;
+        top: -4px;
+        bottom: -4px;
+        border-radius: 4px;
+        pointer-events: none;
+        background: var(--tiptap-background-selected);
+      }
     }
-  }
 
-  &:not([contenteditable="false"]) &-gapcursor {
-    display: none;
-    pointer-events: none;
-    position: absolute;
+    li.ProseMirror-selectednode {
+      &::after {
+        left: -24px;
+      }
+    }
 
-    &::after {
-      content: "";
-      display: block;
+    ul[data-type="taskList"] li.ProseMirror-selectednode {
+      &::after {
+        left: -4px;
+      }
+    }
+
+    .ProseMirror-gapcursor {
+      display: none;
+      pointer-events: none;
       position: absolute;
-      top: -3px;
-      width: 20px;
-      border-top: 2px solid var(--tiptap-color-primary);
-      animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: -3px;
+        width: 20px;
+        border-top: 2px solid var(--tiptap-color-primary);
+        animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+      }
     }
   }
 
   &-focused:not([contenteditable="false"]) {
-    &-gapcursor {
+    .ProseMirror-gapcursor {
       display: block;
     }
   }
