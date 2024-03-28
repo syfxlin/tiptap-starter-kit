@@ -55,6 +55,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
       return [];
     }
     return [
+      ...this.parent?.() ?? [],
       new Plugin({
         key: new PluginKey("float-menu"),
         view: () => new FloatMenuView({

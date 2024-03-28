@@ -1,7 +1,7 @@
 import { TableHeader as TTableHeader, TableHeaderOptions as TTableHeaderOptions } from "@tiptap/extension-table-header";
+import { posToDOMRect } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
-import { posToDOMRect } from "@tiptap/core";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { icon } from "../utils/icons";
@@ -12,6 +12,9 @@ export interface TableHeaderOptions extends TTableHeaderOptions {
   dictionary: {
     insertLeft: string;
     insertRight: string;
+    alignLeft: string;
+    alignCenter: string;
+    alignRight: string;
     deleteCol: string;
   };
 }
@@ -23,7 +26,18 @@ export const TableHeader = TTableHeader.extend<TableHeaderOptions>({
       dictionary: {
         insertLeft: "Insert column on the left",
         insertRight: "Insert column on the right",
+        alignLeft: "Left alignment",
+        alignCenter: "Center alignment",
+        alignRight: "Right alignment",
         deleteCol: "Delete column",
+      },
+    };
+  },
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      align: {
+        default: null,
       },
     };
   },
@@ -34,8 +48,7 @@ export const TableHeader = TTableHeader.extend<TableHeaderOptions>({
       parser: {
         match: node => node.type === "tableCell" && !!node.isHeader,
         apply: (state, node, type) => {
-          const align = node.align as string;
-          state.openNode(type, { alignment: align });
+          state.openNode(type, { alignment: node.align });
           state.openNode(state.editor.schema.nodes.paragraph);
           state.next(node.children);
           state.closeNode();
@@ -54,6 +67,7 @@ export const TableHeader = TTableHeader.extend<TableHeaderOptions>({
   },
   addProseMirrorPlugins() {
     return [
+      ...this.parent?.() ?? [],
       new Plugin({
         key: new PluginKey(`${this.name}-float-menu`),
         view: () => new FloatMenuView({
@@ -85,25 +99,43 @@ export const TableHeader = TTableHeader.extend<TableHeaderOptions>({
             return posToDOMRect(view, state.selection.from, state.selection.to);
           },
           onInit: ({ view, editor, element }) => {
-            const left = view.createButton({
+            const insertLeft = view.createButton({
               name: this.options.dictionary.insertLeft,
               view: icon("left"),
               onClick: () => editor.chain().addColumnBefore().run(),
             });
-            const right = view.createButton({
+            const insertRight = view.createButton({
               name: this.options.dictionary.insertRight,
               view: icon("right"),
               onClick: () => editor.chain().addColumnAfter().run(),
             });
-            const remove = view.createButton({
+            const alignLeft = view.createButton({
+              name: this.options.dictionary.alignLeft,
+              view: icon("align-left"),
+              onClick: () => editor.chain().setCellAttribute("align", "left").run(),
+            });
+            const alignCenter = view.createButton({
+              name: this.options.dictionary.alignCenter,
+              view: icon("align-center"),
+              onClick: () => editor.chain().setCellAttribute("align", "center").run(),
+            });
+            const alignRight = view.createButton({
+              name: this.options.dictionary.alignRight,
+              view: icon("align-right"),
+              onClick: () => editor.chain().setCellAttribute("align", "right").run(),
+            });
+            const deleteCol = view.createButton({
               name: this.options.dictionary.deleteCol,
               view: icon("remove"),
               onClick: () => editor.chain().deleteColumn().run(),
             });
 
-            element.append(left.button);
-            element.append(right.button);
-            element.append(remove.button);
+            element.append(insertLeft.button);
+            element.append(insertRight.button);
+            element.append(alignLeft.button);
+            element.append(alignCenter.button);
+            element.append(alignRight.button);
+            element.append(deleteCol.button);
           },
         }),
         props: {
@@ -128,7 +160,8 @@ export const TableHeader = TTableHeader.extend<TableHeaderOptions>({
                     const drag = document.createElement("div");
                     drag.classList.add("ProseMirror-table-grip-drag");
                     drag.innerHTML = icon("drag");
-                    drag.addEventListener("mousedown", (event) => {
+                    drag.draggable = true;
+                    drag.addEventListener("click", (event) => {
                       event.preventDefault();
                       event.stopImmediatePropagation();
                       this.editor.view.dispatch(selectColumn(tr, index));

@@ -75,6 +75,7 @@ export const Uploader = Extension.create<UploaderOptions, UploaderStorage>({
       }));
     };
     return [
+      ...this.parent?.() ?? [],
       new Plugin({
         key: new PluginKey("uploader"),
         props: {

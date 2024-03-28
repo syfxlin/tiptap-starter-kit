@@ -52,6 +52,7 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
       return [];
     }
     return [
+      ...this.parent?.() ?? [],
       Suggestion({
         editor: this.editor,
         pluginKey: new PluginKey("block-menu"),

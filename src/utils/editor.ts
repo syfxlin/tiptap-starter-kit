@@ -121,6 +121,25 @@ export function getCellsInRow(selection: Selection, index: number | number[]) {
   }
 }
 
+export function getCellInTable(selection: Selection, row: number, col: number) {
+  const table = findTable(selection);
+  if (table) {
+    const map = TableMap.get(table.node);
+    const cells = map.cellsInRect({
+      left: row,
+      right: row + 1,
+      top: col,
+      bottom: col + 1,
+    });
+    if (cells.length) {
+      const node = table.node.nodeAt(cells[0]);
+      const pos = table.start + cells[0];
+      return { pos, node, start: pos + 1 };
+    }
+  }
+  return undefined;
+}
+
 export function selectRowOrColumn(type: "row" | "column", tr: Transaction, index: number) {
   const table = findTable(tr.selection);
   const isRowSelection = type === "row";

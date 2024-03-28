@@ -3,7 +3,7 @@ import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
 import { posToDOMRect } from "@tiptap/core";
 import { FloatMenuView } from "../extensions/float-menu/view";
-import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
+import { NodeMarkdownStorage } from "../extensions/markdown";
 import { getCellsInColumn, isCellSelection, isRowSelected, isTableSelected, selectRow } from "../utils/editor";
 import { icon } from "../utils/icons";
 import { ClickMenuItemStorage } from "../extensions/click-menu/view";
@@ -12,6 +12,9 @@ export interface TableRowOptions extends TTableRowOptions {
   dictionary: {
     insertTop: string;
     insertBottom: string;
+    alignLeft: string;
+    alignCenter: string;
+    alignRight: string;
     deleteRow: string;
   };
 }
@@ -23,6 +26,9 @@ export const TableRow = TTableRow.extend<TableRowOptions>({
       dictionary: {
         insertTop: "Insert column on the top",
         insertBottom: "Insert column on the bottom",
+        alignLeft: "Left alignment",
+        alignCenter: "Center alignment",
+        alignRight: "Right alignment",
         deleteRow: "Delete row",
       },
     };
@@ -34,9 +40,11 @@ export const TableRow = TTableRow.extend<TableRowOptions>({
       parser: {
         match: node => node.type === "tableRow",
         apply: (state, node, type) => {
-          const align = node.align as (string | null)[];
-          const children = (node.children as MarkdownNode[]).map((x, i) => ({ ...x, align: align[i], isHeader: node.isHeader }));
-          state.openNode(type).next(children).closeNode();
+          state.openNode(type);
+          if (node.children) {
+            state.next(node.children.map((a, i) => ({ ...a, align: node.align[i], isHeader: node.isHeader })));
+          }
+          state.closeNode();
         },
       },
       serializer: {
@@ -51,6 +59,7 @@ export const TableRow = TTableRow.extend<TableRowOptions>({
   },
   addProseMirrorPlugins() {
     return [
+      ...this.parent?.() ?? [],
       new Plugin({
         key: new PluginKey(`${this.name}-float-menu`),
         view: () => new FloatMenuView({
@@ -60,6 +69,9 @@ export const TableRow = TTableRow.extend<TableRowOptions>({
               return false;
             }
             const selection = editor.state.selection;
+            if (isTableSelected(selection)) {
+              return false;
+            }
             const cells = getCellsInColumn(selection, 0);
             return !!cells?.some((_cell, index) => isRowSelected(selection, index));
           },
@@ -79,33 +91,45 @@ export const TableRow = TTableRow.extend<TableRowOptions>({
             return posToDOMRect(view, state.selection.from, state.selection.to);
           },
           onInit: ({ view, editor, element }) => {
-            const top = view.createButton({
+            const insertTop = view.createButton({
               id: "insert-top",
               name: this.options.dictionary.insertTop,
               view: icon("up"),
               onClick: () => editor.chain().addRowBefore().run(),
             });
-            const bottom = view.createButton({
+            const insertBottom = view.createButton({
               id: "insert-bottom",
               name: this.options.dictionary.insertBottom,
               view: icon("down"),
               onClick: () => editor.chain().addRowAfter().run(),
             });
-            const remove = view.createButton({
+            const alignLeft = view.createButton({
+              name: this.options.dictionary.alignLeft,
+              view: icon("align-left"),
+              onClick: () => editor.chain().setCellAttribute("align", "left").run(),
+            });
+            const alignCenter = view.createButton({
+              name: this.options.dictionary.alignCenter,
+              view: icon("align-center"),
+              onClick: () => editor.chain().setCellAttribute("align", "center").run(),
+            });
+            const alignRight = view.createButton({
+              name: this.options.dictionary.alignRight,
+              view: icon("align-right"),
+              onClick: () => editor.chain().setCellAttribute("align", "right").run(),
+            });
+            const deleteRow = view.createButton({
               name: this.options.dictionary.deleteRow,
               view: icon("remove"),
-              onClick: () => {
-                if (isTableSelected(editor.state.selection)) {
-                  editor.chain().deleteTable().run();
-                } else {
-                  editor.chain().deleteRow().run();
-                }
-              },
+              onClick: () => editor.chain().deleteRow().run(),
             });
 
-            element.append(top.button);
-            element.append(bottom.button);
-            element.append(remove.button);
+            element.append(insertTop.button);
+            element.append(insertBottom.button);
+            element.append(alignLeft.button);
+            element.append(alignCenter.button);
+            element.append(alignRight.button);
+            element.append(deleteRow.button);
           },
         }),
         props: {
@@ -131,7 +155,8 @@ export const TableRow = TTableRow.extend<TableRowOptions>({
                     const drag = document.createElement("div");
                     drag.classList.add("ProseMirror-table-grip-drag");
                     drag.innerHTML = icon("drag");
-                    drag.addEventListener("mousedown", (event) => {
+                    drag.draggable = true;
+                    drag.addEventListener("click", (event) => {
                       event.preventDefault();
                       event.stopImmediatePropagation();
                       this.editor.view.dispatch(selectRow(tr, index));

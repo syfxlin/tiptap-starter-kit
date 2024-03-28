@@ -11,6 +11,7 @@ export const ClickMenu = Extension.create<ClickMenuOptions>({
   addProseMirrorPlugins() {
     const view = new ClickMenuView({ editor: this.editor });
     return [
+      ...this.parent?.() ?? [],
       new Plugin({
         key: new PluginKey("click-menu"),
         props: {

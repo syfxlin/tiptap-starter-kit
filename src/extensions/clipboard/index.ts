@@ -42,6 +42,7 @@ export const Clipboard = Extension.create({
   name: "clipboard",
   addProseMirrorPlugins() {
     return [
+      ...this.parent?.() ?? [],
       new Plugin({
         key: new PluginKey("clipboard"),
         props: {

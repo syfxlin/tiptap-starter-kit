@@ -72,6 +72,7 @@ export const Link = TLink.extend<LinkOptions>({
   },
   addProseMirrorPlugins() {
     return [
+      ...this.parent?.() ?? [],
       new Plugin({
         key: new PluginKey(`${this.name}-float-menu`),
         view: () => new FloatMenuView({
