@@ -8,8 +8,13 @@ export interface FloatMenuInputViewOptions {
   name: string;
   type?: string;
   value?: string;
+  class?: string | string[];
+  style?: CSSStyleDeclaration | CSSStyleDeclaration[];
   onEnter?: (value: string, element: HTMLInputElement) => void;
+  onInput?: (value: string, element: HTMLInputElement) => void;
   onChange?: (value: string, element: HTMLInputElement) => void;
+  onKey?: (key: Pick<KeyboardEvent, "key" | "ctrlKey" | "altKey" | "metaKey" | "shiftKey">, value: string, element: HTMLInputElement) => void;
+  onBoundary?: (boundary: "left" | "right", value: string, element: HTMLInputElement) => void;
 }
 
 export interface FloatMenuButtonViewOptions {
@@ -17,6 +22,8 @@ export interface FloatMenuButtonViewOptions {
   name: string;
   view: string;
   shortcut?: string;
+  class?: string | string[];
+  style?: CSSStyleDeclaration | CSSStyleDeclaration[];
   onClick?: (element: HTMLButtonElement) => void;
 }
 
@@ -109,14 +116,27 @@ export class FloatMenuView implements PluginView {
     if (options.id) {
       input.name = options.id;
     }
+    if (options.name) {
+      input.placeholder = options.name;
+    }
     if (options.type) {
       input.type = options.type;
     }
     if (options.value) {
       input.value = options.value;
     }
-    if (options.name) {
-      input.placeholder = options.name;
+    if (options.class) {
+      for (const item of Array.isArray(options.class) ? options.class : [options.class]) {
+        input.classList.add(item);
+      }
+    }
+    if (options.style) {
+      for (const item of Array.isArray(options.style) ? options.style : [options.style]) {
+        for (const [key, val] of Object.entries(item)) {
+          // @ts-expect-error
+          input.style[key] = val;
+        }
+      }
     }
     if (options.onEnter) {
       input.addEventListener("keydown", (e) => {
@@ -125,9 +145,52 @@ export class FloatMenuView implements PluginView {
         }
       });
     }
+    if (options.onInput) {
+      input.addEventListener("input", () => {
+        options.onInput?.(input.value, input);
+      });
+    }
     if (options.onChange) {
       input.addEventListener("change", () => {
         options.onChange?.(input.value, input);
+      });
+    }
+    if (options.onKey) {
+      input.addEventListener("keydown", (e) => {
+        options.onKey?.({
+          key: e.key,
+          ctrlKey: e.ctrlKey,
+          altKey: e.altKey,
+          metaKey: e.metaKey,
+          shiftKey: e.shiftKey,
+        }, input.value, input);
+      });
+    }
+    if (options.onBoundary) {
+      let pos = -1;
+      input.addEventListener("mouseup", () => {
+        if (input.selectionStart === null) {
+          return;
+        }
+        if (input.selectionStart !== input.selectionEnd) {
+          return;
+        }
+        pos = input.selectionStart;
+      });
+      input.addEventListener("keyup", (e) => {
+        if (input.selectionStart === null) {
+          return;
+        }
+        if (input.selectionStart !== input.selectionEnd) {
+          return;
+        }
+        if (options.onBoundary && e.key === "ArrowLeft" && pos === 0) {
+          options.onBoundary("left", input.value, input);
+        }
+        if (options.onBoundary && e.key === "ArrowRight" && (pos === -1 || pos === input.value.length)) {
+          options.onBoundary("right", input.value, input);
+        }
+        pos = input.selectionStart;
       });
     }
     return { input };
@@ -141,6 +204,19 @@ export class FloatMenuView implements PluginView {
     }
     if (options.view) {
       button.innerHTML = options.view;
+    }
+    if (options.class) {
+      for (const item of Array.isArray(options.class) ? options.class : [options.class]) {
+        button.classList.add(item);
+      }
+    }
+    if (options.style) {
+      for (const item of Array.isArray(options.style) ? options.style : [options.style]) {
+        for (const [key, val] of Object.entries(item)) {
+          // @ts-expect-error
+          button.style[key] = val;
+        }
+      }
     }
     if (options.onClick) {
       button.addEventListener("click", () => {

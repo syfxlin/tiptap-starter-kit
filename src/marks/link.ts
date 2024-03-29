@@ -18,6 +18,7 @@ export const Link = TLink.extend<LinkOptions>({
   addOptions() {
     return {
       ...this.parent?.(),
+      openOnClick: false,
       dictionary: {
         name: "Link",
         inputLink: "Enter or paste link",
@@ -86,6 +87,13 @@ export const Link = TLink.extend<LinkOptions>({
                 editor.chain()
                   .extendMarkRange(this.name)
                   .updateAttributes(this.name, { href: value })
+                  .focus()
+                  .run();
+              },
+              onBoundary: (value) => {
+                editor.chain()
+                  .updateAttributes(this.name, { value })
+                  .setTextSelection(editor.state.selection.from + (value === "left" ? -1 : 1))
                   .focus()
                   .run();
               },

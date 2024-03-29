@@ -14,6 +14,8 @@ export interface BlockMenuButtonViewOptions {
   name: string;
   icon: string;
   shortcut?: string;
+  class?: string | string[];
+  style?: CSSStyleDeclaration | CSSStyleDeclaration[];
 }
 
 export interface BlockMenuViewOptions {
@@ -142,6 +144,22 @@ export class BlockMenuView {
   }
 
   public createButton(element: HTMLElement, options: BlockMenuButtonViewOptions) {
+    if (options.id) {
+      element.setAttribute("name", options.id);
+    }
+    if (options.class) {
+      for (const item of Array.isArray(options.class) ? options.class : [options.class]) {
+        element.classList.add(item);
+      }
+    }
+    if (options.style) {
+      for (const item of Array.isArray(options.style) ? options.style : [options.style]) {
+        for (const [key, val] of Object.entries(item)) {
+          // @ts-expect-error
+          element.style[key] = val;
+        }
+      }
+    }
     // icon
     const icon = document.createElement("div");
     icon.classList.add("ProseMirror-bm-button-icon");

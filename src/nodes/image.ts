@@ -136,20 +136,71 @@ export const Image = TImage.extend<ImageOptions>({
         view: () => new FloatMenuView({
           editor: this.editor,
           show: ({ editor }) => editor.isEditable && editor.isActive(this.name),
+          tippy: ({ options }) => ({ ...options, onMount: i => (i.popper.querySelector(`input[name="src"]`) as HTMLInputElement)?.focus() }),
           onInit: ({ view, editor, element }) => {
             const group = view.createGroup("column");
 
             const src = view.createInput({
               id: "src",
               name: this.options.dictionary.input.src,
+              onKey: ({ key }) => {
+                if (key === "ArrowDown") {
+                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  node?.focus();
+                }
+              },
+              onBoundary: (boundary) => {
+                if (boundary === "left") {
+                  editor.chain().focus().run();
+                }
+                if (boundary === "right") {
+                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  node?.focus();
+                }
+              },
             });
             const alt = view.createInput({
               id: "alt",
               name: this.options.dictionary.input.alt,
+              onKey: ({ key }) => {
+                if (key === "ArrowUp") {
+                  const node = element.querySelector(`input[name="src"]`) as HTMLInputElement;
+                  node?.focus();
+                }
+                if (key === "ArrowDown") {
+                  const node = element.querySelector(`input[name="title"]`) as HTMLInputElement;
+                  node?.focus();
+                }
+              },
+              onBoundary: (boundary) => {
+                if (boundary === "left") {
+                  const node = element.querySelector(`input[name="src"]`) as HTMLInputElement;
+                  node?.focus();
+                }
+                if (boundary === "right") {
+                  const node = element.querySelector(`input[name="title"]`) as HTMLInputElement;
+                  node?.focus();
+                }
+              },
             });
             const title = view.createInput({
               id: "title",
               name: this.options.dictionary.input.title,
+              onKey: ({ key }) => {
+                if (key === "ArrowUp") {
+                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  node?.focus();
+                }
+              },
+              onBoundary: (boundary) => {
+                if (boundary === "left") {
+                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  node?.focus();
+                }
+                if (boundary === "right") {
+                  editor.chain().focus().run();
+                }
+              },
             });
 
             const open = view.createButton({

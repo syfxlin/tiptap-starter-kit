@@ -665,7 +665,7 @@
 
 // endregion
 
-// region color
+// region editor
 
 .ProseMirror,
 .tippy-box[data-theme="ProseMirror"],
@@ -742,6 +742,24 @@
       background: @v;
     }
   });
+
+  .ProseMirror-code {
+    font-family: var(--tiptap-font-family-mono);
+  }
+
+  .ProseMirror-warn {
+    padding: 0 0.5em;
+    border-radius: 4px;
+    color: var(--tiptap-mark-color);
+    background: var(--tiptap-mark-background);
+  }
+
+  .ProseMirror-error {
+    padding: 0 0.5em;
+    border-radius: 4px;
+    color: var(--tiptap-code-color);
+    background: var(--tiptap-code-background);
+  }
 }
 
 // endregion
@@ -907,6 +925,10 @@
 
   &-header-col {
     --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M12 5v14h7V5zM4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1'/%3E%3C/svg%3E");
+  }
+
+  &-help {
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16m-1-5h2v2h-2zm2-1.645V14h-2v-1.5a1 1 0 0 1 1-1a1.5 1.5 0 1 0-1.471-1.794l-1.962-.393A3.501 3.501 0 1 1 13 13.355'/%3E%3C/svg%3E");
   }
 }
 

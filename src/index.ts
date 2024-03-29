@@ -11,6 +11,7 @@ import { Code } from "./marks/code";
 import { Highlight } from "./marks/highlight";
 import { Italic } from "./marks/italic";
 import { Link } from "./marks/link";
+import "katex/dist/katex.css";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
 import "./styles.less";
@@ -37,6 +38,7 @@ import { Table } from "./nodes/table";
 import { TableCell } from "./nodes/table-cell";
 import { TableRow } from "./nodes/table-row";
 import { TableHeader } from "./nodes/table-header";
+import { MathInline } from "./nodes/math-inline";
 
 const editor = new Editor({
   element: document.querySelector("#editor")!,
@@ -79,9 +81,10 @@ const editor = new Editor({
     TableCell,
     TableRow,
     TableHeader,
+    MathInline,
   ],
   content: `
-    aaa <a href="https://ixk.me">Blog</a>
+    aaa <a href="https://ixk.me">Blog</a> <span data-type="mathInline">E = mc^2</span>
     <pre language="javascript"><code>console.log("123");</code></pre>
     aaa <a href="https://ixk.me">Blog</a>
     <img src="https://source.unsplash.com/random" alt="Unsplash">
