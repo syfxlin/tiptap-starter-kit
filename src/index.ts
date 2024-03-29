@@ -39,6 +39,7 @@ import { TableCell } from "./nodes/table-cell";
 import { TableRow } from "./nodes/table-row";
 import { TableHeader } from "./nodes/table-header";
 import { MathInline } from "./nodes/math-inline";
+import { MathBlock } from "./nodes/math-block";
 
 const editor = new Editor({
   element: document.querySelector("#editor")!,
@@ -82,6 +83,7 @@ const editor = new Editor({
     TableRow,
     TableHeader,
     MathInline,
+    MathBlock,
   ],
   content: `
     aaa <a href="https://ixk.me">Blog</a> <span data-type="mathInline">E = mc^2</span>

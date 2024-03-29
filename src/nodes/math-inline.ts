@@ -5,6 +5,7 @@ import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { icon } from "../utils/icons";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { NodeMarkdownStorage } from "../extensions/markdown";
+import { InnerRenderView } from "../extensions/node-view/inner-render";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -16,9 +17,9 @@ declare module "@tiptap/core" {
 
 export interface MathInlineOptions {
   dictionary: {
-    empty: string;
-    code: string;
-    help: string;
+    emptyMath: string;
+    inputMath: string;
+    inputHelp: string;
   };
 }
 
@@ -38,9 +39,9 @@ export const MathInline = Node.create<MathInlineOptions>({
   addOptions() {
     return {
       dictionary: {
-        empty: "Add a Tex equation",
-        code: "Enter or paste the equation",
-        help: "Help",
+        emptyMath: "Add a Tex equation",
+        inputMath: "Enter or paste the equation",
+        inputHelp: "Help",
       },
     };
   },
@@ -74,41 +75,26 @@ export const MathInline = Node.create<MathInlineOptions>({
     ];
   },
   renderHTML({ node }) {
-    return [
-      "span",
-      { "data-type": this.name },
-      node.attrs.value,
-    ];
+    return ["span", { "data-type": this.name }, node.attrs.value];
   },
   addNodeView() {
-    return ({ node }) => {
-      const dom = document.createElement("span");
-      const render = (code: string) => {
+    return InnerRenderView.create({
+      tag: "span",
+      onRender: ({ view }) => {
         try {
-          if (!code) {
-            dom.innerHTML = this.options.dictionary.empty;
+          if (!view.node.attrs.value) {
+            view.$root.innerHTML = this.options.dictionary.inputMath;
           } else {
-            katex.render(code, dom);
+            katex.render(view.node.attrs.value, view.$root);
           }
         } catch (e) {
           const span = document.createElement("span");
           span.classList.add("ProseMirror-error");
           span.textContent = (e as Error).message;
-          dom.append(span);
+          view.$root.innerHTML = span.outerHTML;
         }
-      };
-      render(node.attrs.value);
-      return {
-        dom,
-        update: (updatedNode) => {
-          if (updatedNode.type !== this.type) {
-            return false;
-          }
-          render(updatedNode.attrs.value);
-          return true;
-        },
-      };
-    };
+      },
+    });
   },
   addCommands() {
     return {
@@ -145,13 +131,13 @@ export const MathInline = Node.create<MathInlineOptions>({
     return [
       new Plugin({
         key: new PluginKey(`${this.name}-float-menu`),
-        view: () => new FloatMenuView({
+        view: FloatMenuView.create({
           editor: this.editor,
           show: ({ editor }) => editor.isEditable && editor.isActive(this.name),
           tippy: ({ options }) => ({ ...options, onMount: i => i.popper.querySelector("input")?.focus() }),
           onInit: ({ view, editor, element }) => {
             const code = view.createInput({
-              name: this.options.dictionary.code,
+              name: this.options.dictionary.inputMath,
               onInput: (value) => {
                 editor.chain()
                   .updateAttributes(this.name, { value })
@@ -174,7 +160,7 @@ export const MathInline = Node.create<MathInlineOptions>({
               },
             });
             const help = view.createButton({
-              name: this.options.dictionary.help,
+              name: this.options.dictionary.inputHelp,
               view: icon("help"),
               onClick: () => window.open("https://katex.org/"),
             });

@@ -58,7 +58,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
       ...this.parent?.() ?? [],
       new Plugin({
         key: new PluginKey("float-menu"),
-        view: () => new FloatMenuView({
+        view: FloatMenuView.create({
           editor: this.editor,
           show: ({ editor }) => {
             const { state, isEditable } = editor;

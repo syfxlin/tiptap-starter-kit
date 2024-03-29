@@ -1179,6 +1179,25 @@
   }
 }
 
+.ProseMirror-ie {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0.75em 1em;
+  gap: 0.5em;
+  border-radius: 4px;
+  border: 1px solid var(--tiptap-operator-border);
+  background: var(--tiptap-card-background);
+
+  .ProseMirror {
+    white-space: pre;
+    line-height: 1.5;
+    background: none !important;
+    padding: 0 !important;
+    border: 0 !important;
+  }
+}
+
 .ProseMirror-fm-button,
 .ProseMirror-bm-button,
 .ProseMirror-fm-button-popover,

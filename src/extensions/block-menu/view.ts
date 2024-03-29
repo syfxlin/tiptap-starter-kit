@@ -40,6 +40,10 @@ export class BlockMenuView {
   private _index: number;
   private _items: Array<BlockMenuViewItem>;
 
+  public static create(options: BlockMenuViewOptions) {
+    return () => new BlockMenuView(options);
+  }
+
   constructor(options: BlockMenuViewOptions) {
     this.editor = options.editor;
     this.options = options;

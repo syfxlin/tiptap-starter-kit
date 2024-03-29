@@ -50,6 +50,10 @@ export class FloatMenuView implements PluginView {
   private readonly element: HTMLElement;
   private readonly options: FloatMenuViewOptions;
 
+  public static create(options: FloatMenuViewOptions) {
+    return () => new FloatMenuView(options);
+  }
+
   constructor(options: FloatMenuViewOptions) {
     this.editor = options.editor;
     this.options = options;

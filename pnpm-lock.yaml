@@ -166,6 +166,9 @@ devDependencies:
   mdast-util-to-markdown:
     specifier: ^2.1.0
     version: 2.1.0
+  prosemirror-commands:
+    specifier: ^1.5.2
+    version: 1.5.2
   prosemirror-model:
     specifier: ^1.19.4
     version: 1.19.4

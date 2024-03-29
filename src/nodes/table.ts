@@ -79,7 +79,7 @@ export const Table = TTable.extend<TableOptions>({
       ...this.parent?.() ?? [],
       new Plugin({
         key: new PluginKey(`${this.name}-float-menu`),
-        view: () => new FloatMenuView({
+        view: FloatMenuView.create({
           editor: this.editor,
           show: ({ editor }) => {
             if (!editor.isEditable) {

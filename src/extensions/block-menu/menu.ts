@@ -104,14 +104,12 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
             return [...all, item];
           }, []);
         },
-        render: () => {
-          return new BlockMenuView({
-            editor: this.editor,
-            dictionary: {
-              empty: this.options.dictionary.queryEmpty,
-            },
-          });
-        },
+        render: BlockMenuView.create({
+          editor: this.editor,
+          dictionary: {
+            empty: this.options.dictionary.queryEmpty,
+          },
+        }),
       }),
       new Plugin({
         key: new PluginKey("block-menu-placeholder"),

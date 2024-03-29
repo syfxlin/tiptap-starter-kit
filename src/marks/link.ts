@@ -76,7 +76,7 @@ export const Link = TLink.extend<LinkOptions>({
       ...this.parent?.() ?? [],
       new Plugin({
         key: new PluginKey(`${this.name}-float-menu`),
-        view: () => new FloatMenuView({
+        view: FloatMenuView.create({
           editor: this.editor,
           show: ({ editor }) => editor.isEditable && editor.state.selection.empty && editor.isActive(this.name),
           tippy: ({ options }) => ({ ...options, onMount: i => i.popper.querySelector("input")?.focus() }),
