@@ -21,32 +21,38 @@ export const BulletList = TBulletList.extend<BulletListOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "list" && !node.ordered && !node.children?.find(item => item.checked !== null),
-        apply: (state, node, type) => {
-          state.openNode(type);
-          state.next(node.children);
-          state.closeNode();
+      markdown: {
+        parser: {
+          match: node => node.type === "list" && !node.ordered && !node.children?.find(item => item.checked !== null),
+          apply: (state, node, type) => {
+            state.openNode(type);
+            state.next(node.children);
+            state.closeNode();
+          },
         },
-      },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.openNode({
-            type: "list",
-            ordered: false,
-          });
-          state.next(node.content);
-          state.closeNode();
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.openNode({
+              type: "list",
+              ordered: false,
+            });
+            state.next(node.content);
+            state.closeNode();
+          },
         },
       },
       blockMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        icon: icon("ul"),
-        shortcut: "Mod-Shift-8",
-        keywords: "bulletlist,bl,ul,wxlb",
-        action: editor => editor.chain().toggleBulletList().focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            icon: icon("ul"),
+            shortcut: "Mod-Shift-8",
+            keywords: "bulletlist,bl,ul,wxlb",
+            action: editor => editor.chain().toggleBulletList().focus().run(),
+          },
+        ],
       },
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },

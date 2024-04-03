@@ -65,28 +65,34 @@ export const Audio = Node.create<AudioOptions>({
   },
   addStorage() {
     return {
-      parser: {
-        match: node => node.type === "textDirective" && node.name === this.name,
-        apply: (state, node, type) => {
-          state.addNode(type, node.attributes);
+      markdown: {
+        parser: {
+          match: node => node.type === "textDirective" && node.name === this.name,
+          apply: (state, node, type) => {
+            state.addNode(type, node.attributes);
+          },
         },
-      },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.addNode({
-            type: "textDirective",
-            name: this.name,
-            attributes: node.attrs,
-          });
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.addNode({
+              type: "textDirective",
+              name: this.name,
+              attributes: node.attrs,
+            });
+          },
         },
       },
       blockMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        icon: icon("audio"),
-        keywords: "audio,yp",
-        action: editor => editor.chain().setAudio({ src: "" }).focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            icon: icon("audio"),
+            keywords: "audio,yp",
+            action: editor => editor.chain().setAudio({ src: "" }).focus().run(),
+          },
+        ],
       },
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },

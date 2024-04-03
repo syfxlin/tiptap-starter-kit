@@ -47,29 +47,35 @@ export const MathBlock = Node.create<MathBlockOptions>({
   },
   addStorage() {
     return {
-      processor: processor => processor.use(remarkMath),
-      parser: {
-        match: node => node.type === "math",
-        apply: (state, node, type) => {
-          const code = node.value as string;
-          state.openNode(type).addText(code).closeNode();
+      markdown: {
+        processor: processor => processor.use(remarkMath),
+        parser: {
+          match: node => node.type === "math",
+          apply: (state, node, type) => {
+            const code = node.value as string;
+            state.openNode(type).addText(code).closeNode();
+          },
         },
-      },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.addNode({
-            type: "math",
-            value: node.textContent,
-          });
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.addNode({
+              type: "math",
+              value: node.textContent,
+            });
+          },
         },
       },
       blockMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        icon: icon("math"),
-        keywords: "mathblock,sxgs,gsk",
-        action: editor => editor.chain().setMathBlock("E = mc^2").focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            icon: icon("math"),
+            keywords: "mathblock,sxgs,gsk",
+            action: editor => editor.chain().setMathBlock("E = mc^2").focus().run(),
+          },
+        ],
       },
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },

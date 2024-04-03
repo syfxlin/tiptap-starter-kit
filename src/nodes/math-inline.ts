@@ -52,28 +52,34 @@ export const MathInline = Node.create<MathInlineOptions>({
   },
   addStorage() {
     return {
-      processor: processor => processor.use(remarkMath),
-      parser: {
-        match: node => node.type === "inlineMath",
-        apply: (state, node, type) => {
-          state.addNode(type, { value: node.value });
+      markdown: {
+        processor: processor => processor.use(remarkMath),
+        parser: {
+          match: node => node.type === "inlineMath",
+          apply: (state, node, type) => {
+            state.addNode(type, { value: node.value });
+          },
         },
-      },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.addNode({
-            type: "inlineMath",
-            value: node.attrs.value,
-          });
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.addNode({
+              type: "inlineMath",
+              value: node.attrs.value,
+            });
+          },
         },
       },
       blockMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        icon: icon("math"),
-        keywords: "mathinline,sxgs,hngs",
-        action: editor => editor.chain().setMathInline("E = mc^2").focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            icon: icon("math"),
+            keywords: "mathinline,sxgs,hngs",
+            action: editor => editor.chain().setMathInline("E = mc^2").focus().run(),
+          },
+        ],
       },
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },

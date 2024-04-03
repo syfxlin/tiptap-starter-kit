@@ -41,33 +41,40 @@ export const Link = TLink.extend<LinkOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "link",
-        apply: (state, node, type) => {
-          const url = node.url as string;
-          const title = node.title as string;
-          state.openMark(type, { href: url, title });
-          state.next(node.children);
-          state.closeMark(type);
+      markdown: {
+        parser: {
+          match: node => node.type === "link",
+          apply: (state, node, type) => {
+            const url = node.url as string;
+            const title = node.title as string;
+            state.openMark(type, { href: url, title });
+            state.next(node.children);
+            state.closeMark(type);
+          },
         },
-      },
-      serializer: {
-        match: mark => mark.type.name === this.name,
-        apply: (state, mark) => {
-          state.withMark(mark, {
-            type: "link",
-            title: mark.attrs.title,
-            url: mark.attrs.href,
-          });
+        serializer: {
+          match: mark => mark.type.name === this.name,
+          apply: (state, mark) => {
+            state.withMark(mark, {
+              type: "link",
+              title: mark.attrs.title,
+              url: mark.attrs.href,
+            });
+          },
         },
       },
       floatMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        view: icon("link"),
-        shortcut: "Mod-K",
-        active: ({ editor }) => editor.isActive(this.name),
-        action: ({ editor }) => editor.chain().toggleLink({ href: "" }).setTextSelection(editor.state.selection.to - 1).run(),
+        hide: true,
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            view: icon("link"),
+            shortcut: "Mod-K",
+            active: ({ editor }) => editor.isActive(this.name),
+            action: ({ editor }) => editor.chain().toggleLink({ href: "" }).setTextSelection(editor.state.selection.to - 1).run(),
+          },
+        ],
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

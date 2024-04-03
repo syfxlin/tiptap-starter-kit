@@ -4,6 +4,7 @@ import tippy from "tippy.js";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { icon } from "../utils/icons";
+import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 
 export interface CodeBlockOptions extends CodeBlockLowlightOptions {
   dictionary: Record<string, string>;
@@ -68,35 +69,44 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "code",
-        apply: (state, node, type) => {
-          const language = node.lang as string;
-          const value = node.value as string;
-          state.openNode(type, { language });
-          state.addText(value);
-          state.closeNode();
+      markdown: {
+        parser: {
+          match: node => node.type === "code",
+          apply: (state, node, type) => {
+            const language = node.lang as string;
+            const value = node.value as string;
+            state.openNode(type, { language });
+            state.addText(value);
+            state.closeNode();
+          },
+        },
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.addNode({
+              type: "code",
+              value: node.content.firstChild?.text || "",
+              lang: node.attrs.language,
+            });
+          },
         },
       },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.addNode({
-            type: "code",
-            value: node.content.firstChild?.text || "",
-            lang: node.attrs.language,
-          });
-        },
+      floatMenu: {
+        hide: true,
       },
       blockMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        icon: icon("code"),
-        shortcut: "Mod-Alt-C",
-        keywords: "codeblock,cb,dmk,",
-        action: editor => editor.chain().toggleCodeBlock().focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            icon: icon("code"),
+            shortcut: "Mod-Alt-C",
+            keywords: "codeblock,cb,dmk,",
+            action: editor => editor.chain().toggleCodeBlock().focus().run(),
+          },
+        ],
       },
-    } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
+    } satisfies NodeMarkdownStorage & FloatMenuItemStorage & BlockMenuItemStorage;
   },
   addKeyboardShortcuts() {
     return {

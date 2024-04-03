@@ -16,26 +16,30 @@ export interface MarkdownNode extends UnistNode {
 }
 
 export interface MarkMarkdownStorage {
-  processor?: (processor: Processor) => Processor;
-  parser?: {
-    match: (node: MarkdownNode) => boolean;
-    apply: (state: ParserState, node: MarkdownNode, type: MarkType) => void;
-  };
-  serializer?: {
-    match: (mark: Mark) => boolean;
-    apply: (state: SerializerState, mark: Mark, node: Node) => void | boolean;
+  markdown?: {
+    processor?: (processor: Processor<any, any, any, any, any>) => Processor<any, any, any, any, any>;
+    parser?: {
+      match: (node: MarkdownNode) => boolean;
+      apply: (state: ParserState, node: MarkdownNode, type: MarkType) => void;
+    };
+    serializer?: {
+      match: (mark: Mark) => boolean;
+      apply: (state: SerializerState, mark: Mark, node: Node) => void | boolean;
+    };
   };
 }
 
 export interface NodeMarkdownStorage {
-  processor?: (processor: Processor) => Processor;
-  parser?: {
-    match: (node: MarkdownNode) => boolean;
-    apply: (state: ParserState, node: MarkdownNode, type: NodeType) => void;
-  };
-  serializer?: {
-    match: (node: Node) => boolean;
-    apply: (state: SerializerState, node: Node) => void;
+  markdown?: {
+    processor?: (processor: Processor) => Processor;
+    parser?: {
+      match: (node: MarkdownNode) => boolean;
+      apply: (state: ParserState, node: MarkdownNode, type: NodeType) => void;
+    };
+    serializer?: {
+      match: (node: Node) => boolean;
+      apply: (state: SerializerState, node: Node) => void;
+    };
   };
 }
 

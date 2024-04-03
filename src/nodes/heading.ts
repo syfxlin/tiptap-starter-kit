@@ -21,34 +21,38 @@ export const Heading = THeading.extend<HeadingOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "heading",
-        apply: (state, node, type) => {
-          const depth = node.depth as number;
-          state.openNode(type, { level: depth });
-          state.next(node.children);
-          state.closeNode();
+      markdown: {
+        parser: {
+          match: node => node.type === "heading",
+          apply: (state, node, type) => {
+            const depth = node.depth as number;
+            state.openNode(type, { level: depth });
+            state.next(node.children);
+            state.closeNode();
+          },
+        },
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.openNode({
+              type: "heading",
+              depth: node.attrs.level,
+            });
+            state.next(node.content);
+            state.closeNode();
+          },
         },
       },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.openNode({
-            type: "heading",
-            depth: node.attrs.level,
-          });
-          state.next(node.content);
-          state.closeNode();
-        },
+      blockMenu: {
+        items: ([1, 2, 3, 4, 5, 6] as const).map(level => ({
+          id: `${this.name}${level}`,
+          name: `${this.options.dictionary.name} ${level}`,
+          icon: icon(`h${level}`),
+          shortcut: `Mod-Alt-${level}`,
+          keywords: `heading${level},title${level},bt${level}`,
+          action: editor => editor.chain().toggleHeading({ level }).focus().run(),
+        })),
       },
-      blockMenu: ([1, 2, 3, 4, 5, 6] as const).map(level => ({
-        id: `${this.name}${level}`,
-        name: `${this.options.dictionary.name} ${level}`,
-        icon: icon(`h${level}`),
-        shortcut: `Mod-Alt-${level}`,
-        keywords: `heading${level},title${level},bt${level}`,
-        action: editor => editor.chain().toggleHeading({ level }).focus().run(),
-      })),
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },
 });

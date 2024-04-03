@@ -67,75 +67,81 @@ export const Highlight = THighlight.extend<HighlightOptions>({
     }
     return {
       ...this.parent?.(),
-      processor: processor => processor.use(remarkDecoration("highlight", "=", true)),
-      parser: {
-        match: node => node.type === "highlight",
-        apply: (state, node, type) => {
-          const value = (node.data as DecorationData)?.flags ?? "";
-          state.openMark(type, { color: mapping1.get(value) });
-          state.next(node.children);
-          state.closeMark(type);
+      markdown: {
+        processor: processor => processor.use(remarkDecoration("highlight", "=", true)),
+        parser: {
+          match: node => node.type === "highlight",
+          apply: (state, node, type) => {
+            const value = (node.data as DecorationData)?.flags ?? "";
+            state.openMark(type, { color: mapping1.get(value) });
+            state.next(node.children);
+            state.closeMark(type);
+          },
         },
-      },
-      serializer: {
-        match: mark => mark.type.name === this.name,
-        apply: (state, mark) => {
-          const value = mark.attrs.color ?? "";
-          state.withMark(mark, {
-            type: "highlight",
-            data: { flags: mapping2.get(value) },
-          });
+        serializer: {
+          match: mark => mark.type.name === this.name,
+          apply: (state, mark) => {
+            const value = mark.attrs.color ?? "";
+            state.withMark(mark, {
+              type: "highlight",
+              data: { flags: mapping2.get(value) },
+            });
+          },
         },
       },
       floatMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        view: icon("highlight"),
-        shortcut: "Mod-Shift-H",
-        active: ({ editor }) => editor.isActive(this.name),
-        action: ({ editor }) => editor.chain().toggleHighlight().focus().run(),
-        onInit: ({ editor, element }) => {
-          const container = document.createElement("div");
-          container.classList.add("ProseMirror-fm-color-picker");
-          for (const color of [...colors.map(i => i[0]), ...colors.map(i => `b-${i[0]}`)]) {
-            const button = document.createElement("button");
-            button.textContent = "A";
-            button.setAttribute("data-color", color);
-            const popover = document.createElement("span");
-            popover.classList.add("ProseMirror-fm-button-popover");
-            if (color.startsWith("b-")) {
-              // @ts-expect-error
-              popover.textContent = `Background ${this.options.dictionary[color.replace("b-", "")]}`;
-            } else {
-              // @ts-expect-error
-              popover.textContent = this.options.dictionary[color];
-            }
-            tippy(button, {
-              appendTo: () => document.body,
-              content: popover,
-              arrow: false,
-              theme: "ProseMirror-dark",
-              animation: "shift-away",
-              duration: [200, 150],
-            });
-            button.addEventListener("click", (e) => {
-              e.stopPropagation();
-              editor.chain().toggleHighlight({ color }).focus().run();
-            });
-            container.append(button);
-          }
-          tippy(element, {
-            appendTo: () => element,
-            content: container,
-            arrow: false,
-            interactive: true,
-            theme: "ProseMirror",
-            placement: "bottom",
-            maxWidth: "none",
-            animation: "shift-away",
-            duration: [200, 150],
-          });
-        },
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            view: icon("highlight"),
+            shortcut: "Mod-Shift-H",
+            active: ({ editor }) => editor.isActive(this.name),
+            action: ({ editor }) => editor.chain().toggleHighlight().focus().run(),
+            onInit: ({ editor, element }) => {
+              const container = document.createElement("div");
+              container.classList.add("ProseMirror-fm-color-picker");
+              for (const color of [...colors.map(i => i[0]), ...colors.map(i => `b-${i[0]}`)]) {
+                const button = document.createElement("button");
+                button.textContent = "A";
+                button.setAttribute("data-color", color);
+                const popover = document.createElement("span");
+                popover.classList.add("ProseMirror-fm-button-popover");
+                if (color.startsWith("b-")) {
+                  // @ts-expect-error
+                  popover.textContent = `Background ${this.options.dictionary[color.replace("b-", "")]}`;
+                } else {
+                  // @ts-expect-error
+                  popover.textContent = this.options.dictionary[color];
+                }
+                tippy(button, {
+                  appendTo: () => document.body,
+                  content: popover,
+                  arrow: false,
+                  theme: "ProseMirror-dark",
+                  animation: "shift-away",
+                  duration: [200, 150],
+                });
+                button.addEventListener("click", (e) => {
+                  e.stopPropagation();
+                  editor.chain().toggleHighlight({ color }).focus().run();
+                });
+                container.append(button);
+              }
+              tippy(element, {
+                appendTo: () => element,
+                content: container,
+                arrow: false,
+                interactive: true,
+                theme: "ProseMirror",
+                placement: "bottom",
+                maxWidth: "none",
+                animation: "shift-away",
+                duration: [200, 150],
+              });
+            },
+          },
+        ],
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

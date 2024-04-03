@@ -11,23 +11,25 @@ export const TaskItem = TTaskItem.extend({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "listItem" && node.checked !== null,
-        apply: (state, node, type) => {
-          state.openNode(type, { checked: node.checked as boolean });
-          state.next(node.children);
-          state.closeNode();
+      markdown: {
+        parser: {
+          match: node => node.type === "listItem" && node.checked !== null,
+          apply: (state, node, type) => {
+            state.openNode(type, { checked: node.checked as boolean });
+            state.next(node.children);
+            state.closeNode();
+          },
         },
-      },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.openNode({
-            type: "listItem",
-            checked: node.attrs.checked,
-          });
-          state.next(node.content);
-          state.closeNode();
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.openNode({
+              type: "listItem",
+              checked: node.attrs.checked,
+            });
+            state.next(node.content);
+            state.closeNode();
+          },
         },
       },
     } satisfies NodeMarkdownStorage;

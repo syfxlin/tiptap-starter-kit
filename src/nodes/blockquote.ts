@@ -21,29 +21,35 @@ export const Blockquote = IBlockquote.extend<BlockquoteOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "blockquote",
-        apply: (state, node, type) => {
-          state.openNode(type);
-          state.next(node.children);
-          state.closeNode();
+      markdown: {
+        parser: {
+          match: node => node.type === "blockquote",
+          apply: (state, node, type) => {
+            state.openNode(type);
+            state.next(node.children);
+            state.closeNode();
+          },
         },
-      },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.openNode({ type: "blockquote" });
-          state.next(node.content);
-          state.closeNode();
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.openNode({ type: "blockquote" });
+            state.next(node.content);
+            state.closeNode();
+          },
         },
       },
       blockMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        icon: icon("blockquote"),
-        shortcut: "Mod-Shift-B",
-        keywords: "blockquote,bq,yyk",
-        action: editor => editor.chain().toggleBlockquote().focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            icon: icon("blockquote"),
+            shortcut: "Mod-Shift-B",
+            keywords: "blockquote,bq,yyk",
+            action: editor => editor.chain().toggleBlockquote().focus().run(),
+          },
+        ],
       },
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },

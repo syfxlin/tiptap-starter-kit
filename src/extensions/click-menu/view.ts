@@ -258,7 +258,7 @@ export class ClickMenuView {
   }
 
   private _nodeIsDisabled(node: Node) {
-    return this.editor.storage[node.type.name]?.clickMenu === false;
+    return this.editor.storage[node.type.name]?.clickMenu?.hide;
   }
 
   private _nodeIsNotBlock(node: Node) {

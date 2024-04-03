@@ -63,7 +63,7 @@ export class ParserState {
       const name = extension.name;
       const type = this.editor.schema[extension.type === "node" ? "nodes" : "marks"][name] as MarkType & NodeType;
       const storage = extension.storage as MarkMarkdownStorage | NodeMarkdownStorage | undefined;
-      storage?.parser?.apply(this, node, type);
+      storage?.markdown?.parser?.apply(this, node, type);
     }
   }
 
@@ -71,7 +71,7 @@ export class ParserState {
     const extension = this.editor.extensionManager.extensions.find((e) => {
       const name = e.name;
       const storage = e.storage as MarkMarkdownStorage | NodeMarkdownStorage | undefined;
-      return name !== "markdown" && storage?.parser?.match(node);
+      return name !== "markdown" && storage?.markdown?.parser?.match(node);
     });
     if (!extension) {
       console.warn(`No parser match ${node.type}`);

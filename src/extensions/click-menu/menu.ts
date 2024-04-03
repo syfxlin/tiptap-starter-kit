@@ -3,7 +3,10 @@ import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { ClickMenuView } from "./view";
 
 export interface ClickMenuItemStorage {
-  clickMenu: false;
+  clickMenu: {
+    hide?: boolean;
+    items: Array<unknown>;
+  };
 }
 
 export interface ClickMenuOptions {

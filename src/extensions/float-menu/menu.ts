@@ -15,7 +15,10 @@ export interface FloatMenuItem {
 }
 
 export interface FloatMenuItemStorage {
-  floatMenu: FloatMenuItem | Array<FloatMenuItem>;
+  floatMenu?: {
+    hide?: boolean;
+    items?: Array<FloatMenuItem>;
+  };
 }
 
 export interface FloatMenuOptions {
@@ -42,12 +45,18 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
     };
   },
   addProseMirrorPlugins() {
+    const hiddens = new Set<string>();
     const mappings = new Map<string, FloatMenuItem>();
-    for (const storage of Object.values(this.editor.storage)) {
+    for (const [name, storage] of Object.entries(this.editor.storage as Record<string, FloatMenuItemStorage>)) {
       if (storage?.floatMenu) {
-        const menus = Array.isArray(storage.floatMenu) ? storage.floatMenu : [storage.floatMenu];
-        for (const menu of menus) {
-          mappings.set(menu.id, menu);
+        if (storage.floatMenu.hide) {
+          hiddens.add(name);
+        }
+        if (storage.floatMenu.items) {
+          const menus = Array.isArray(storage.floatMenu.items) ? storage.floatMenu.items : [storage.floatMenu.items];
+          for (const menu of menus) {
+            mappings.set(menu.id, menu);
+          }
         }
       }
     }
@@ -73,13 +82,12 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
             if (isEmptyTextBlock) {
               return false;
             }
-            return (
-              !isActive(state, "link") &&
-              !isActive(state, "image") &&
-              !isActive(state, "table") &&
-              !isActive(state, "codeBlock") &&
-              !isNodeSelection(selection)
-            );
+            for (const hidden of hiddens) {
+              if (isActive(state, hidden)) {
+                return false;
+              }
+            }
+            return !isNodeSelection(selection);
           },
           onInit: ({ view, range, editor, element }) => {
             for (const name of this.options.items) {

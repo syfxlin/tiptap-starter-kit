@@ -21,33 +21,39 @@ export const OrderedList = TOrderedList.extend<OrderedListOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "list" && !!node.ordered,
-        apply: (state, node, type) => {
-          state.openNode(type);
-          state.next(node.children);
-          state.closeNode();
+      markdown: {
+        parser: {
+          match: node => node.type === "list" && !!node.ordered,
+          apply: (state, node, type) => {
+            state.openNode(type);
+            state.next(node.children);
+            state.closeNode();
+          },
         },
-      },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.openNode({
-            type: "list",
-            ordered: true,
-            start: 1,
-          });
-          state.next(node.content);
-          state.closeNode();
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.openNode({
+              type: "list",
+              ordered: true,
+              start: 1,
+            });
+            state.next(node.content);
+            state.closeNode();
+          },
         },
       },
       blockMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        icon: icon("ol"),
-        shortcut: "Mod-Shift-7",
-        keywords: "orderedlist,ol,yxlb",
-        action: editor => editor.chain().toggleOrderedList().focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            icon: icon("ol"),
+            shortcut: "Mod-Shift-7",
+            keywords: "orderedlist,ol,yxlb",
+            action: editor => editor.chain().toggleOrderedList().focus().run(),
+          },
+        ],
       },
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },

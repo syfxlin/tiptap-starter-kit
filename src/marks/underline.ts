@@ -22,30 +22,36 @@ export const Underline = TUnderline.extend<UnderlineOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      processor: processor => processor.use(remarkDecoration("underline", "+")),
-      parser: {
-        match: node => node.type === "underline",
-        apply: (state, node, type) => {
-          state.openMark(type);
-          state.next(node.children);
-          state.closeMark(type);
+      markdown: {
+        processor: processor => processor.use(remarkDecoration("underline", "+")),
+        parser: {
+          match: node => node.type === "underline",
+          apply: (state, node, type) => {
+            state.openMark(type);
+            state.next(node.children);
+            state.closeMark(type);
+          },
         },
-      },
-      serializer: {
-        match: mark => mark.type.name === this.name,
-        apply: (state, mark) => {
-          state.withMark(mark, {
-            type: "underline",
-          });
+        serializer: {
+          match: mark => mark.type.name === this.name,
+          apply: (state, mark) => {
+            state.withMark(mark, {
+              type: "underline",
+            });
+          },
         },
       },
       floatMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        view: icon("underline"),
-        shortcut: "Mod-U",
-        active: ({ editor }) => editor.isActive(this.name),
-        action: ({ editor }) => editor.chain().toggleUnderline().focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            view: icon("underline"),
+            shortcut: "Mod-U",
+            active: ({ editor }) => editor.isActive(this.name),
+            action: ({ editor }) => editor.chain().toggleUnderline().focus().run(),
+          },
+        ],
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

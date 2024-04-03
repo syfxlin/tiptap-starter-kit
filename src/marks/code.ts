@@ -21,31 +21,37 @@ export const Code = TCode.extend<CodeOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "inlineCode",
-        apply: (state, node, type) => {
-          state.openMark(type);
-          state.addText(node.value);
-          state.closeMark(type);
+      markdown: {
+        parser: {
+          match: node => node.type === "inlineCode",
+          apply: (state, node, type) => {
+            state.openMark(type);
+            state.addText(node.value);
+            state.closeMark(type);
+          },
         },
-      },
-      serializer: {
-        match: mark => mark.type.name === this.name,
-        apply: (state, _mark, node) => {
-          state.addNode({
-            type: "inlineCode",
-            value: node.text ?? "",
-          });
-          return true;
+        serializer: {
+          match: mark => mark.type.name === this.name,
+          apply: (state, _mark, node) => {
+            state.addNode({
+              type: "inlineCode",
+              value: node.text ?? "",
+            });
+            return true;
+          },
         },
       },
       floatMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        view: icon("code"),
-        shortcut: "Mod-E",
-        active: ({ editor }) => editor.isActive(this.name),
-        action: ({ editor }) => editor.chain().toggleCode().focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            view: icon("code"),
+            shortcut: "Mod-E",
+            active: ({ editor }) => editor.isActive(this.name),
+            action: ({ editor }) => editor.chain().toggleCode().focus().run(),
+          },
+        ],
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

@@ -21,30 +21,36 @@ export const Superscript = TSuperscript.extend<SuperscriptOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "textDirective" && node.name === "sup",
-        apply: (state, node, type) => {
-          state.openMark(type);
-          state.next(node.children);
-          state.closeMark(type);
+      markdown: {
+        parser: {
+          match: node => node.type === "textDirective" && node.name === "sup",
+          apply: (state, node, type) => {
+            state.openMark(type);
+            state.next(node.children);
+            state.closeMark(type);
+          },
         },
-      },
-      serializer: {
-        match: mark => mark.type.name === this.name,
-        apply: (state, mark) => {
-          state.withMark(mark, {
-            type: "textDirective",
-            name: "sup",
-          });
+        serializer: {
+          match: mark => mark.type.name === this.name,
+          apply: (state, mark) => {
+            state.withMark(mark, {
+              type: "textDirective",
+              name: "sup",
+            });
+          },
         },
       },
       floatMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        view: icon("sup"),
-        shortcut: "Mod-.",
-        active: ({ editor }) => editor.isActive(this.name),
-        action: ({ editor }) => editor.chain().toggleSuperscript().focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            view: icon("sup"),
+            shortcut: "Mod-.",
+            active: ({ editor }) => editor.isActive(this.name),
+            action: ({ editor }) => editor.chain().toggleSuperscript().focus().run(),
+          },
+        ],
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

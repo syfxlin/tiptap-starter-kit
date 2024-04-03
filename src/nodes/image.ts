@@ -5,6 +5,7 @@ import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { icon } from "../utils/icons";
 import { UploaderItemStorage, UploaderStorage } from "../extensions/uploader";
+import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 
 export interface ImageOptions extends TImageOptions {
   dictionary: {
@@ -42,42 +43,51 @@ export const Image = TImage.extend<ImageOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "image",
-        apply: (state, node, type) => {
-          const src = node.url as string;
-          const alt = node.alt as string;
-          const title = node.title as string;
-          state.addNode(type, {
-            src,
-            alt,
-            title,
-          });
+      markdown: {
+        parser: {
+          match: node => node.type === "image",
+          apply: (state, node, type) => {
+            const src = node.url as string;
+            const alt = node.alt as string;
+            const title = node.title as string;
+            state.addNode(type, {
+              src,
+              alt,
+              title,
+            });
+          },
         },
-      },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.addNode({
-            type: "image",
-            title: node.attrs.title,
-            url: node.attrs.src,
-            alt: node.attrs.alt,
-          });
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.addNode({
+              type: "image",
+              title: node.attrs.title,
+              url: node.attrs.src,
+              alt: node.attrs.alt,
+            });
+          },
         },
       },
       uploader: {
         match: (_editor, data) => data.type.startsWith("image"),
         apply: (editor, data) => editor.chain().setImage({ src: data.url, alt: data.name }).run(),
       },
-      blockMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        icon: icon("image"),
-        keywords: "image,picture,tp,zp",
-        action: editor => editor.chain().setImage({ src: "" }).focus().run(),
+      floatMenu: {
+        hide: true,
       },
-    } satisfies NodeMarkdownStorage & UploaderItemStorage & BlockMenuItemStorage;
+      blockMenu: {
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            icon: icon("image"),
+            keywords: "image,picture,tp,zp",
+            action: editor => editor.chain().setImage({ src: "" }).focus().run(),
+          },
+        ],
+      },
+    } satisfies NodeMarkdownStorage & UploaderItemStorage & FloatMenuItemStorage & BlockMenuItemStorage;
   },
   addNodeView() {
     return ({ node }) => {

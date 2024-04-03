@@ -5,18 +5,20 @@ export const Document = TDocument.extend({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "root",
-        apply: (state, node, type) => {
-          state.openNode(type);
-          state.next(node.children);
+      markdown: {
+        parser: {
+          match: node => node.type === "root",
+          apply: (state, node, type) => {
+            state.openNode(type);
+            state.next(node.children);
+          },
         },
-      },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.openNode({ type: "root" });
-          state.next(node.content);
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.openNode({ type: "root" });
+            state.next(node.content);
+          },
         },
       },
     } satisfies NodeMarkdownStorage;

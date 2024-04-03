@@ -21,32 +21,38 @@ export const TaskList = TTaskList.extend<TaskListOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "list" && !node.ordered && node.children?.find(item => item.checked !== null),
-        apply: (state, node, type) => {
-          state.openNode(type);
-          state.next(node.children);
-          state.closeNode();
+      markdown: {
+        parser: {
+          match: node => node.type === "list" && !node.ordered && node.children?.find(item => item.checked !== null),
+          apply: (state, node, type) => {
+            state.openNode(type);
+            state.next(node.children);
+            state.closeNode();
+          },
         },
-      },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.openNode({
-            type: "list",
-            ordered: false,
-          })
-            .next(node.content)
-            .closeNode();
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.openNode({
+              type: "list",
+              ordered: false,
+            })
+              .next(node.content)
+              .closeNode();
+          },
         },
       },
       blockMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        icon: icon("tl"),
-        shortcut: "Mod-Shift-9",
-        keywords: "tasklist,tl,rwlb",
-        action: editor => editor.chain().toggleTaskList().focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            icon: icon("tl"),
+            shortcut: "Mod-Shift-9",
+            keywords: "tasklist,tl,rwlb",
+            action: editor => editor.chain().toggleTaskList().focus().run(),
+          },
+        ],
       },
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },

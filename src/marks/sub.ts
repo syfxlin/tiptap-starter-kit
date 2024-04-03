@@ -21,30 +21,36 @@ export const Subscript = TSubscript.extend<SubscriptOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "textDirective" && node.name === "sub",
-        apply: (state, node, type) => {
-          state.openMark(type);
-          state.next(node.children);
-          state.closeMark(type);
+      markdown: {
+        parser: {
+          match: node => node.type === "textDirective" && node.name === "sub",
+          apply: (state, node, type) => {
+            state.openMark(type);
+            state.next(node.children);
+            state.closeMark(type);
+          },
         },
-      },
-      serializer: {
-        match: mark => mark.type.name === this.name,
-        apply: (state, mark) => {
-          state.withMark(mark, {
-            type: "textDirective",
-            name: "sub",
-          });
+        serializer: {
+          match: mark => mark.type.name === this.name,
+          apply: (state, mark) => {
+            state.withMark(mark, {
+              type: "textDirective",
+              name: "sub",
+            });
+          },
         },
       },
       floatMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        view: icon("sub"),
-        shortcut: "Mod-,",
-        active: ({ editor }) => editor.isActive(this.name),
-        action: ({ editor }) => editor.chain().toggleSubscript().focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            view: icon("sub"),
+            shortcut: "Mod-,",
+            active: ({ editor }) => editor.isActive(this.name),
+            action: ({ editor }) => editor.chain().toggleSubscript().focus().run(),
+          },
+        ],
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

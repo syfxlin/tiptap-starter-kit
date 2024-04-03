@@ -7,6 +7,7 @@ import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { icon } from "../utils/icons";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { findTable, getCellInTable, isTableSelected } from "../utils/editor";
+import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 
 export interface TableOptions extends TTableOptions {
   dictionary: {
@@ -41,38 +42,47 @@ export const Table = TTable.extend<TableOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "table",
-        apply: (state, node, type) => {
-          state.openNode(type);
-          if (node.children) {
-            state.next(node.children.map((a, i) => ({ ...a, align: node.align[i], isHeader: i === 0 })));
-          }
-          state.closeNode();
+      markdown: {
+        parser: {
+          match: node => node.type === "table",
+          apply: (state, node, type) => {
+            state.openNode(type);
+            if (node.children) {
+              state.next(node.children.map((a, i) => ({ ...a, align: node.align[i], isHeader: i === 0 })));
+            }
+            state.closeNode();
+          },
+        },
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            const firstLine = node.content.firstChild?.content;
+            if (!firstLine) {
+              return;
+            }
+            const align: (string | null)[] = [];
+            firstLine.forEach(cell => align.push(cell.attrs.alignment));
+            state.openNode({ type: "table", align });
+            state.next(node.content);
+            state.closeNode();
+          },
         },
       },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          const firstLine = node.content.firstChild?.content;
-          if (!firstLine) {
-            return;
-          }
-          const align: (string | null)[] = [];
-          firstLine.forEach(cell => align.push(cell.attrs.alignment));
-          state.openNode({ type: "table", align });
-          state.next(node.content);
-          state.closeNode();
-        },
+      floatMenu: {
+        hide: true,
       },
       blockMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        icon: icon("table"),
-        keywords: "table,bg",
-        action: editor => editor.chain().insertTable({ rows: 3, cols: 3 }).focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            icon: icon("table"),
+            keywords: "table,bg",
+            action: editor => editor.chain().insertTable({ rows: 3, cols: 3 }).focus().run(),
+          },
+        ],
       },
-    } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
+    } satisfies NodeMarkdownStorage & FloatMenuItemStorage & BlockMenuItemStorage;
   },
   addProseMirrorPlugins() {
     return [

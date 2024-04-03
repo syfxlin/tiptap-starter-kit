@@ -21,29 +21,35 @@ export const Italic = TItalic.extend<ItalicOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "emphasis",
-        apply: (state, node, type) => {
-          state.openMark(type);
-          state.next(node.children);
-          state.closeMark(type);
+      markdown: {
+        parser: {
+          match: node => node.type === "emphasis",
+          apply: (state, node, type) => {
+            state.openMark(type);
+            state.next(node.children);
+            state.closeMark(type);
+          },
         },
-      },
-      serializer: {
-        match: mark => mark.type.name === this.name,
-        apply: (state, mark) => {
-          state.withMark(mark, {
-            type: "emphasis",
-          });
+        serializer: {
+          match: mark => mark.type.name === this.name,
+          apply: (state, mark) => {
+            state.withMark(mark, {
+              type: "emphasis",
+            });
+          },
         },
       },
       floatMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        view: icon("italic"),
-        shortcut: "Mod-I",
-        active: ({ editor }) => editor.isActive(this.name),
-        action: ({ editor }) => editor.chain().toggleItalic().focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            view: icon("italic"),
+            shortcut: "Mod-I",
+            active: ({ editor }) => editor.isActive(this.name),
+            action: ({ editor }) => editor.chain().toggleItalic().focus().run(),
+          },
+        ],
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

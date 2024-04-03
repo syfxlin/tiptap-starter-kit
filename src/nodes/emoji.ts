@@ -46,21 +46,23 @@ export const Emoji = Node.create<EmojiOptions>({
   },
   addStorage() {
     return {
-      // @ts-expect-error
-      processor: processor => processor.use(remarkGemoji),
-      parser: {
-        match: node => node.type === "emoji",
-        apply: (state, node, type) => {
-          state.openNode(type).addText(node.value).closeNode();
+      markdown: {
+        // @ts-expect-error
+        processor: processor => processor.use(remarkGemoji),
+        parser: {
+          match: node => node.type === "emoji",
+          apply: (state, node, type) => {
+            state.openNode(type).addText(node.value).closeNode();
+          },
         },
-      },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.addNode({
-            type: "text",
-            value: node.content.firstChild?.text || "",
-          });
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.addNode({
+              type: "text",
+              value: node.content.firstChild?.text || "",
+            });
+          },
         },
       },
     } satisfies NodeMarkdownStorage;

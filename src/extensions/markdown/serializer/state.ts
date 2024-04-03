@@ -56,11 +56,11 @@ export class SerializerState {
   private runNode(node: Node) {
     const next = node.marks.every((mark) => {
       const storage = this.matchNode(mark)?.storage as MarkMarkdownStorage | undefined;
-      return !storage?.serializer?.apply(this, mark, node);
+      return !storage?.markdown?.serializer?.apply(this, mark, node);
     });
     if (next) {
       const storage = this.matchNode(node)?.storage as NodeMarkdownStorage | undefined;
-      storage?.serializer?.apply(this, node);
+      storage?.markdown?.serializer?.apply(this, node);
     }
     for (const mark of node.marks) {
       this.stack.closeMark(mark);
@@ -71,7 +71,7 @@ export class SerializerState {
     const extension = this.editor.extensionManager.extensions.find((e) => {
       const name = e.name;
       const storage = e.storage as MarkMarkdownStorage | NodeMarkdownStorage | undefined;
-      return name !== "markdown" && storage?.serializer?.match(node as Node & Mark);
+      return name !== "markdown" && storage?.markdown?.serializer?.match(node as Node & Mark);
     });
     if (!extension) {
       console.warn(`No serializer match ${node.type.name}`);

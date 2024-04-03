@@ -45,24 +45,28 @@ export const TableHeader = TTableHeader.extend<TableHeaderOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      clickMenu: false,
-      parser: {
-        match: node => node.type === "tableCell" && !!node.isHeader,
-        apply: (state, node, type) => {
-          state.openNode(type, { alignment: node.align });
-          state.openNode(state.editor.schema.nodes.paragraph);
-          state.next(node.children);
-          state.closeNode();
-          state.closeNode();
+      markdown: {
+        parser: {
+          match: node => node.type === "tableCell" && !!node.isHeader,
+          apply: (state, node, type) => {
+            state.openNode(type, { alignment: node.align });
+            state.openNode(state.editor.schema.nodes.paragraph);
+            state.next(node.children);
+            state.closeNode();
+            state.closeNode();
+          },
+        },
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state.openNode({ type: "tableCell" });
+            state.next(node.content);
+            state.closeNode();
+          },
         },
       },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state, node) => {
-          state.openNode({ type: "tableCell" });
-          state.next(node.content);
-          state.closeNode();
-        },
+      clickMenu: {
+        hide: true,
       },
     } satisfies NodeMarkdownStorage & ClickMenuItemStorage;
   },

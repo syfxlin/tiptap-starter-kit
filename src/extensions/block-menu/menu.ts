@@ -14,7 +14,10 @@ export interface BlockMenuItem {
 }
 
 export interface BlockMenuItemStorage {
-  blockMenu: BlockMenuItem | Array<BlockMenuItem>;
+  blockMenu: {
+    hide?: boolean;
+    items: Array<BlockMenuItem>;
+  };
 }
 
 export interface BlockMenuOptions {
@@ -40,11 +43,13 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
   },
   addProseMirrorPlugins() {
     const mappings = new Map<string, BlockMenuItem>();
-    for (const storage of Object.values(this.editor.storage)) {
+    for (const storage of Object.values(this.editor.storage as Record<string, BlockMenuItemStorage>)) {
       if (storage?.blockMenu) {
-        const menus = Array.isArray(storage.blockMenu) ? storage.blockMenu : [storage.blockMenu];
-        for (const menu of menus) {
-          mappings.set(menu.id, menu);
+        if (storage.blockMenu.items) {
+          const menus = Array.isArray(storage.blockMenu.items) ? storage.blockMenu.items : [storage.blockMenu.items];
+          for (const menu of menus) {
+            mappings.set(menu.id, menu);
+          }
         }
       }
     }

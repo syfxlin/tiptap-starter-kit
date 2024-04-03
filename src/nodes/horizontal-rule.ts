@@ -24,26 +24,32 @@ export const HorizontalRule = THorizontalRule.extend<HorizontalRuleOptions>({
   addStorage() {
     return {
       ...this.parent?.(),
-      parser: {
-        match: node => node.type === "thematicBreak",
-        apply: (state, _node, type) => {
-          state.addNode(type);
+      markdown: {
+        parser: {
+          match: node => node.type === "thematicBreak",
+          apply: (state, _node, type) => {
+            state.addNode(type);
+          },
         },
-      },
-      serializer: {
-        match: node => node.type.name === this.name,
-        apply: (state) => {
-          state.addNode({
-            type: "thematicBreak",
-          });
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state) => {
+            state.addNode({
+              type: "thematicBreak",
+            });
+          },
         },
       },
       blockMenu: {
-        id: this.name,
-        name: this.options.dictionary.name,
-        icon: icon("hr"),
-        keywords: "horizontalrule,hr,hx,fgx",
-        action: editor => editor.chain().setHorizontalRule().focus().run(),
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            icon: icon("hr"),
+            keywords: "horizontalrule,hr,hx,fgx",
+            action: editor => editor.chain().setHorizontalRule().focus().run(),
+          },
+        ],
       },
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },
