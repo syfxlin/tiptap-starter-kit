@@ -2,6 +2,10 @@ import { Extension } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { ClickMenuView } from "./view";
 
+export interface ClickMenuItemStorage {
+  clickMenu: false;
+}
+
 export interface ClickMenuOptions {
 }
 

@@ -6,7 +6,8 @@ import { FloatMenuView } from "../extensions/float-menu/view";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { icon } from "../utils/icons";
 import { getCellsInRow, isCellSelection, isColumnSelected, isTableSelected, selectColumn } from "../utils/editor";
-import { ClickMenuItemStorage } from "../extensions/click-menu/view";
+
+import { ClickMenuItemStorage } from "../extensions/click-menu/menu";
 
 export interface TableHeaderOptions extends TTableHeaderOptions {
   dictionary: {

@@ -5,10 +5,6 @@ import { Node, ResolvedPos } from "@tiptap/pm/model";
 import { serializeForClipboard } from "../../utils/serialize";
 import { icon } from "../../utils/icons";
 
-export interface ClickMenuItemStorage {
-  clickMenu: false;
-}
-
 export interface ClickMenuViewOptions {
   editor: Editor;
   class?: string | string[];
