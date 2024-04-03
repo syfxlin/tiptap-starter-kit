@@ -33,6 +33,7 @@ export const MathBlock = Node.create<MathBlockOptions>({
   code: true,
   defining: true,
   isolating: true,
+  draggable: true,
   addOptions() {
     return {
       HTMLAttributes: {},

@@ -12,7 +12,7 @@ export type BlockMenuViewItem = "|" | {
 export interface BlockMenuButtonViewOptions {
   id?: string;
   name: string;
-  icon: string;
+  icon?: string;
   shortcut?: string;
   class?: string | string[];
   style?: CSSStyleDeclaration | CSSStyleDeclaration[];
@@ -165,10 +165,12 @@ export class BlockMenuView {
       }
     }
     // icon
-    const icon = document.createElement("div");
-    icon.classList.add("ProseMirror-bm-button-icon");
-    icon.innerHTML = options.icon;
-    element.append(icon);
+    if (options.icon) {
+      const icon = document.createElement("div");
+      icon.classList.add("ProseMirror-bm-button-icon");
+      icon.innerHTML = options.icon;
+      element.append(icon);
+    }
     // name
     const name = document.createElement("div");
     name.classList.add("ProseMirror-bm-button-name");
