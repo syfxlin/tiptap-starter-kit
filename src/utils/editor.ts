@@ -183,6 +183,7 @@ export function selectRowOrColumn(type: "row" | "column", tr: Transaction, index
 export function selectRow(tr: Transaction, index: number) {
   return selectRowOrColumn("row", tr, index);
 }
+
 export function selectColumn(tr: Transaction, index: number) {
   return selectRowOrColumn("column", tr, index);
 }
@@ -200,4 +201,15 @@ export function selectTable(tr: Transaction) {
     }
   }
   return tr;
+}
+
+export function parseAttrs(value: string) {
+  const regex = /([^=\s]+)="?([^"]+)"?/g;
+  const attrs: Record<string, string> = {};
+  let match: RegExpExecArray | null;
+  // eslint-disable-next-line no-cond-assign
+  while ((match = regex.exec(value))) {
+    attrs[match[1]] = match[2];
+  }
+  return attrs;
 }

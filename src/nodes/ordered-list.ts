@@ -14,7 +14,7 @@ export const OrderedList = TOrderedList.extend<OrderedListOptions>({
     return {
       ...this.parent?.(),
       dictionary: {
-        name: "OrderedList",
+        name: "Ordered List",
       },
     };
   },

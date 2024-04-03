@@ -1,11 +1,12 @@
 import katex from "katex";
 import remarkMath from "remark-math";
-import { InputRule, Node } from "@tiptap/core";
+import { InputRule, Node, mergeAttributes } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { icon } from "../utils/icons";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { InnerRenderView } from "../extensions/node-view/inner-render";
+import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -16,7 +17,9 @@ declare module "@tiptap/core" {
 }
 
 export interface MathInlineOptions {
+  HTMLAttributes: Record<string, any>;
   dictionary: {
+    name: string;
     emptyMath: string;
     inputMath: string;
     inputHelp: string;
@@ -38,7 +41,9 @@ export const MathInline = Node.create<MathInlineOptions>({
   },
   addOptions() {
     return {
+      HTMLAttributes: {},
       dictionary: {
+        name: "Math Inline",
         emptyMath: "Add a Tex equation",
         inputMath: "Enter or paste the equation",
         inputHelp: "Help",
@@ -63,7 +68,14 @@ export const MathInline = Node.create<MathInlineOptions>({
           });
         },
       },
-    } satisfies NodeMarkdownStorage;
+      blockMenu: {
+        id: this.name,
+        name: this.options.dictionary.name,
+        icon: icon("math"),
+        keywords: "mathinline,sxgs,hngs",
+        action: editor => editor.chain().setMathInline("E = mc^2").focus().run(),
+      },
+    } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },
   parseHTML() {
     return [
@@ -74,8 +86,12 @@ export const MathInline = Node.create<MathInlineOptions>({
       },
     ];
   },
-  renderHTML({ node }) {
-    return ["span", { "data-type": this.name }, node.attrs.value];
+  renderHTML({ node, HTMLAttributes }) {
+    return [
+      "span",
+      mergeAttributes({ "data-type": this.name }, this.options.HTMLAttributes, HTMLAttributes),
+      node.attrs.value,
+    ];
   },
   addNodeView() {
     return InnerRenderView.create({

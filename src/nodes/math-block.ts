@@ -1,8 +1,10 @@
 import katex from "katex";
 import remarkMath from "remark-math";
-import { Node, textblockTypeInputRule } from "@tiptap/core";
+import { Node, mergeAttributes, textblockTypeInputRule } from "@tiptap/core";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { InnerEditorView } from "../extensions/node-view/inner-editor";
+import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
+import { icon } from "../utils/icons";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -13,7 +15,9 @@ declare module "@tiptap/core" {
 }
 
 export interface MathBlockOptions {
+  HTMLAttributes: Record<string, any>;
   dictionary: {
+    name: string;
     emptyMath: string;
     inputMath: string;
     inputHelp: string;
@@ -31,7 +35,9 @@ export const MathBlock = Node.create<MathBlockOptions>({
   isolating: true,
   addOptions() {
     return {
+      HTMLAttributes: {},
       dictionary: {
+        name: "Math Block",
         emptyMath: "Add a Tex equation",
         inputMath: "Enter or paste the equation",
         inputHelp: "Help",
@@ -57,7 +63,14 @@ export const MathBlock = Node.create<MathBlockOptions>({
           });
         },
       },
-    } satisfies NodeMarkdownStorage;
+      blockMenu: {
+        id: this.name,
+        name: this.options.dictionary.name,
+        icon: icon("math"),
+        keywords: "mathblock,sxgs,gsk",
+        action: editor => editor.chain().setMathBlock("E = mc^2").focus().run(),
+      },
+    } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },
   parseHTML() {
     return [
@@ -67,8 +80,12 @@ export const MathBlock = Node.create<MathBlockOptions>({
       },
     ];
   },
-  renderHTML({ node }) {
-    return ["span", { "data-type": this.name }, node.textContent];
+  renderHTML({ node, HTMLAttributes }) {
+    return [
+      "span",
+      mergeAttributes({ "data-type": this.name }, this.options.HTMLAttributes, HTMLAttributes),
+      node.textContent,
+    ];
   },
   addNodeView() {
     return InnerEditorView.create({

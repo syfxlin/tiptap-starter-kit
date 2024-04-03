@@ -17,7 +17,7 @@ export const HorizontalRule = THorizontalRule.extend<HorizontalRuleOptions>({
     return {
       ...this.parent?.(),
       dictionary: {
-        name: "HorizontalRule",
+        name: "Horizontal Rule",
       },
     };
   },

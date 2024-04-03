@@ -15,7 +15,7 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
       ...this.parent?.(),
       lowlight: createLowlight(common),
       dictionary: {
-        "name": "CodeBlock",
+        "name": "Code Block",
         "copy": "Copy",
         "copied": "Copied!",
         "arduino": "Arduino",

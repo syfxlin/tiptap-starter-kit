@@ -1,124 +1,127 @@
-import { Image as TImage, ImageOptions as TImageOptions } from "@tiptap/extension-image";
+import { Node, mergeAttributes, nodeInputRule } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { FloatMenuView } from "../extensions/float-menu/view";
 import { icon } from "../utils/icons";
-import { UploaderItemStorage, UploaderStorage } from "../extensions/uploader";
+import { parseAttrs } from "../utils/editor";
+import { FloatMenuView } from "../extensions/float-menu/view";
+import { UploaderStorage } from "../extensions/uploader";
 
-export interface ImageOptions extends TImageOptions {
+declare module "@tiptap/core" {
+  interface Commands<ReturnType> {
+    video: {
+      setVideo: (options: { src: string; alt?: string; title?: string }) => ReturnType;
+    };
+  }
+}
+
+export interface VideoOptions {
+  inline: boolean;
+  HTMLAttributes: Record<string, any>;
   dictionary: {
     name: string;
-    empty: string;
-    error: string;
-    loading: string;
     inputSrc: string;
     inputAlt: string;
     inputTitle: string;
-    imageOpen: string;
-    imageUpload: string;
-    imageDelete: string;
+    videoOpen: string;
+    videoUpload: string;
+    videoDelete: string;
   };
 }
 
-export const Image = TImage.extend<ImageOptions>({
+export const Video = Node.create<VideoOptions>({
+  name: "video",
+  draggable: true,
+  inline() {
+    return this.options.inline;
+  },
+  group() {
+    return this.options.inline ? "inline" : "block";
+  },
+  addAttributes() {
+    return {
+      src: {
+        default: null,
+      },
+      title: {
+        default: null,
+      },
+    };
+  },
   addOptions() {
     return {
-      ...this.parent?.(),
+      inline: false,
+      HTMLAttributes: {},
       dictionary: {
-        name: "Image",
-        empty: "Add image",
-        error: "Error loading image",
-        loading: "Loading image...",
+        name: "Video",
         inputSrc: "Enter or paste link",
-        inputAlt: "Image description",
-        inputTitle: "Image title",
-        imageOpen: "Open image",
-        imageUpload: "Upload image",
-        imageDelete: "Delete image",
+        inputAlt: "Video description",
+        inputTitle: "Video title",
+        videoOpen: "Open video",
+        videoUpload: "Upload video",
+        videoDelete: "Delete video",
       },
     };
   },
   addStorage() {
     return {
-      ...this.parent?.(),
       parser: {
-        match: node => node.type === "image",
+        match: node => node.type === "textDirective" && node.name === this.name,
         apply: (state, node, type) => {
-          const src = node.url as string;
-          const alt = node.alt as string;
-          const title = node.title as string;
-          state.addNode(type, {
-            src,
-            alt,
-            title,
-          });
+          state.addNode(type, node.attributes);
         },
       },
       serializer: {
         match: node => node.type.name === this.name,
         apply: (state, node) => {
           state.addNode({
-            type: "image",
-            title: node.attrs.title,
-            url: node.attrs.src,
-            alt: node.attrs.alt,
+            type: "textDirective",
+            name: this.name,
+            attributes: node.attrs,
           });
         },
-      },
-      uploader: {
-        match: (_editor, data) => data.type.startsWith("image"),
-        apply: (editor, data) => editor.chain().setImage({ src: data.url, alt: data.name }).run(),
       },
       blockMenu: {
         id: this.name,
         name: this.options.dictionary.name,
-        icon: icon("image"),
-        keywords: "image,picture,tp,zp",
-        action: editor => editor.chain().setImage({ src: "" }).focus().run(),
+        icon: icon("video"),
+        keywords: "video,sp",
+        action: editor => editor.chain().setVideo({ src: "" }).focus().run(),
       },
-    } satisfies NodeMarkdownStorage & UploaderItemStorage & BlockMenuItemStorage;
+    } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },
-  addNodeView() {
-    return ({ node }) => {
-      const dom = document.createElement("div");
-      const img = document.createElement("img");
-
-      dom.classList.add("ProseMirror-image");
-      img.classList.add("ProseMirror-content");
-      for (const [key, value] of Object.entries(this.options.HTMLAttributes)) {
-        img.setAttribute(key, value);
-      }
-
-      img.src = node.attrs.src ?? "";
-      img.alt = node.attrs.alt ?? "";
-      img.title = node.attrs.title ?? "";
-
-      dom.setAttribute("data-loading", this.options.dictionary.loading);
-      img.addEventListener("load", () => {
-        dom.removeAttribute("data-loading");
-      });
-      img.addEventListener("error", () => {
-        if (img.getAttribute("src")) {
-          dom.setAttribute("data-loading", this.options.dictionary.error);
-        } else {
-          dom.setAttribute("data-loading", this.options.dictionary.empty);
-        }
-      });
-
-      dom.append(img);
-      return {
-        dom,
-        update: (updatedNode) => {
-          if (updatedNode.type !== this.type) {
-            return false;
-          }
-          img.src = updatedNode.attrs.src ?? "";
-          img.alt = updatedNode.attrs.alt ?? "";
-          img.title = updatedNode.attrs.title ?? "";
-        },
-      };
+  parseHTML() {
+    return [
+      {
+        tag: "video",
+      },
+    ];
+  },
+  renderHTML({ HTMLAttributes }) {
+    return [
+      "video",
+      mergeAttributes({ controls: "true" }, this.options.HTMLAttributes, HTMLAttributes),
+    ];
+  },
+  addCommands() {
+    return {
+      setVideo: (options) => {
+        return ({ commands }) =>
+          commands.insertContent({
+            type: this.name,
+            attrs: options,
+          });
+      },
     };
+  },
+  addInputRules() {
+    return [
+      nodeInputRule({
+        find: /(:video{([^}]+)})/,
+        type: this.type,
+        getAttributes: match => parseAttrs(match[2]),
+      }),
+    ];
   },
   addProseMirrorPlugins() {
     return [
@@ -197,7 +200,7 @@ export const Image = TImage.extend<ImageOptions>({
 
             const open = view.createButton({
               id: "open",
-              name: this.options.dictionary.imageOpen,
+              name: this.options.dictionary.videoOpen,
               view: icon("open"),
               onClick: () => {
                 const attrs = editor.getAttributes(this.name);
@@ -208,15 +211,15 @@ export const Image = TImage.extend<ImageOptions>({
             });
             const upload = view.createUpload({
               id: "upload",
-              name: this.options.dictionary.imageUpload,
+              name: this.options.dictionary.videoUpload,
               view: icon("upload"),
-              accept: "image/*",
+              accept: "video/*",
               onUpload: (element) => {
                 const uploader = this.editor.storage.uploader as UploaderStorage;
                 if (element.files && uploader) {
                   uploader.upload(element.files).then(items => items.forEach((item) => {
-                    if (item.type.startsWith("image")) {
-                      editor.chain().setImage({ src: item.url, alt: item.name }).run();
+                    if (item.type.startsWith("video")) {
+                      editor.chain().setVideo({ src: item.url, alt: item.name }).run();
                     }
                   }));
                 }
@@ -224,7 +227,7 @@ export const Image = TImage.extend<ImageOptions>({
             });
             const remove = view.createButton({
               id: "remove",
-              name: this.options.dictionary.imageDelete,
+              name: this.options.dictionary.videoDelete,
               view: icon("remove"),
               onClick: () => {
                 editor.chain().deleteSelection().run();

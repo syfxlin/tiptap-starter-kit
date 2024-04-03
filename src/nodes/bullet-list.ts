@@ -14,7 +14,7 @@ export const BulletList = TBulletList.extend<BulletListOptions>({
     return {
       ...this.parent?.(),
       dictionary: {
-        name: "BulletList",
+        name: "Bullet List",
       },
     };
   },

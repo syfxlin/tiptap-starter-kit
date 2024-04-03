@@ -14,7 +14,7 @@ export const TaskList = TTaskList.extend<TaskListOptions>({
     return {
       ...this.parent?.(),
       dictionary: {
-        name: "TaskList",
+        name: "Task List",
       },
     };
   },
