@@ -1,11 +1,11 @@
-import { Editor } from "@tiptap/core";
 import tippy, { Instance, Props } from "tippy.js";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
+import { Editor, Range } from "@tiptap/core";
 import { SuggestionKeyDownProps, SuggestionProps } from "@tiptap/suggestion";
 
 export type BlockMenuViewItem = "|" | {
-  action: (editor: Editor, view: BlockMenuView) => void;
-  render: (editor: Editor, view: BlockMenuView, element: HTMLElement) => void;
+  action: (props: { editor: Editor; view: BlockMenuView; range: Range; element: HTMLElement }) => void;
+  render: (props: { editor: Editor; view: BlockMenuView; range: Range; element: HTMLElement }) => void;
   [key: string]: any;
 };
 
@@ -22,10 +22,10 @@ export interface BlockMenuViewOptions {
   editor: Editor;
   class?: string | string[];
   style?: CSSStyleDeclaration | CSSStyleDeclaration[];
-  tippy?: (props: { view: BlockMenuView; editor: Editor; options: Partial<Props> }) => Partial<Props>;
-  onInit?: (props: { view: BlockMenuView; editor: Editor; element: HTMLElement; show: () => void; hide: () => void }) => void;
-  onUpdate?: (props: { view: BlockMenuView; editor: Editor; element: HTMLElement; show: () => void; hide: () => void; items: Array<BlockMenuViewItem> }) => void;
-  onDestroy?: (props: { view: BlockMenuView; editor: Editor; element: HTMLElement; show: () => void; hide: () => void }) => void;
+  tippy?: (props: { editor: Editor; view: BlockMenuView; options: Partial<Props> }) => Partial<Props>;
+  onInit?: (props: { editor: Editor; view: BlockMenuView; range: Range; element: HTMLElement }) => void;
+  onUpdate?: (props: { editor: Editor; view: BlockMenuView; range: Range; element: HTMLElement }) => void;
+  onDestroy?: (props: { editor: Editor; view: BlockMenuView; range: Range; element: HTMLElement }) => void;
   dictionary: {
     empty: string;
   };
@@ -33,12 +33,12 @@ export interface BlockMenuViewOptions {
 
 export class BlockMenuView {
   private readonly editor: Editor;
-  private readonly popover: Instance;
-  private readonly element: HTMLElement;
   private readonly options: BlockMenuViewOptions;
 
-  private _index: number;
-  private _items: Array<BlockMenuViewItem>;
+  private _popover: Instance | undefined;
+  private _element: HTMLElement | undefined;
+  private _index: number | undefined;
+  private _items: Array<BlockMenuViewItem> | undefined;
 
   public static create(options: BlockMenuViewOptions) {
     return () => new BlockMenuView(options);
@@ -47,104 +47,138 @@ export class BlockMenuView {
   constructor(options: BlockMenuViewOptions) {
     this.editor = options.editor;
     this.options = options;
-    this.element = this._element();
-    this.popover = this._popover();
-    this._index = 0;
-    this._items = [];
-  }
-
-  public show() {
-    this.popover.show();
-  }
-
-  public hide() {
-    this.popover.hide();
-  }
-
-  public update(items: Array<BlockMenuViewItem>, clientRect?: (() => DOMRect | null) | null) {
-    // items
-    this._items = items;
-
-    // update
-    if (this.options.onUpdate) {
-      this.options.onUpdate({
-        items,
-        view: this,
-        editor: this.editor,
-        element: this.element,
-        show: this.show.bind(this),
-        hide: this.hide.bind(this),
-      });
-    }
-
-    // render
-    this._render();
-
-    // client rect
-    // @ts-expect-error
-    this.popover.setProps({ getReferenceClientRect: clientRect });
-  }
-
-  public keydown(event: KeyboardEvent) {
-    if (event.key === "Escape") {
-      this.hide();
-      return true;
-    }
-    if (event.key === "Enter") {
-      const item = this._items[this._index];
-      if (item && typeof item !== "string" && item.action) {
-        item.action(this.editor, this);
-      }
-      return true;
-    }
-    if (event.key === "ArrowUp") {
-      const prev = this._index - 1;
-      const index = this._items[prev] && typeof this._items[prev] === "string" ? prev - 1 : prev;
-      this._index = index < 0 ? this._items.length - 1 : index;
-      this._render();
-      return true;
-    }
-    if (event.key === "ArrowDown") {
-      const next = this._index + 1;
-      const index = this._items[next] && typeof this._items[next] === "string" ? next + 1 : next;
-      this._index = index >= this._items.length ? 0 : index;
-      this._render();
-      return true;
-    }
-    return false;
-  }
-
-  public destroy() {
-    if (this.options.onDestroy) {
-      this.options.onDestroy({
-        view: this,
-        editor: this.editor,
-        element: this.element,
-        show: this.show.bind(this),
-        hide: this.hide.bind(this),
-      });
-    }
-    this.popover.destroy();
   }
 
   public onStart(props: SuggestionProps) {
     this._index = 0;
     this._items = [];
-    this.update(props.items, props.clientRect);
+    // element
+    this._element = document.createElement("div");
+    this._element.classList.add("ProseMirror-bm");
+    if (this.options.class) {
+      for (const item of Array.isArray(this.options.class) ? this.options.class : [this.options.class]) {
+        this._element.classList.add(item);
+      }
+    }
+    if (this.options.style) {
+      for (const item of Array.isArray(this.options.style) ? this.options.style : [this.options.style]) {
+        for (const [key, val] of Object.entries(item)) {
+          // @ts-expect-error
+          this._element.style[key] = val;
+        }
+      }
+    }
+    if (this.options.onInit) {
+      this.options.onInit({
+        view: this,
+        range: props.range,
+        editor: this.editor,
+        element: this._element,
+      });
+    }
+    // popover
+    const options: Partial<Props> = {
+      appendTo: () => document.body,
+      getReferenceClientRect: null,
+      content: this._element,
+      arrow: false,
+      interactive: true,
+      theme: "ProseMirror",
+      trigger: "manual",
+      placement: "top-start",
+      maxWidth: "none",
+    };
+    this._popover = tippy(document.body, this.options.tippy ? this.options.tippy({ options, view: this, editor: this.editor }) : options);
+    this.onUpdate(props);
   }
 
   public onUpdate(props: SuggestionProps) {
-    this.update(props.items, props.clientRect);
+    if (this._element === undefined || this._popover === undefined || this._index === undefined || this._items === undefined) {
+      return;
+    }
+
+    // items
+    this._items = props.items;
+
+    // update
+    if (this.options.onUpdate) {
+      this.options.onUpdate({
+        view: this,
+        range: props.range,
+        editor: this.editor,
+        element: this._element,
+      });
+    }
+
+    // render
+    this._render(props.range);
+
+    // client rect
+    // @ts-expect-error
+    this._popover.setProps({ getReferenceClientRect: props.clientRect });
   }
 
   public onKeyDown(props: SuggestionKeyDownProps) {
-    return this.keydown(props.event);
+    if (this._element === undefined || this._popover === undefined || this._index === undefined || this._items === undefined) {
+      return false;
+    }
+
+    if (props.event.key === "Escape") {
+      if (this._popover) {
+        this._popover.hide();
+      }
+      return true;
+    }
+    if (props.event.key === "Enter") {
+      const item = this._items[this._index];
+      if (item && typeof item !== "string" && item.action) {
+        item.action({
+          view: this,
+          range: props.range,
+          editor: this.editor,
+          element: this._element,
+        });
+      }
+      return true;
+    }
+    if (props.event.key === "ArrowUp") {
+      const prev = this._index - 1;
+      const index = this._items[prev] && typeof this._items[prev] === "string" ? prev - 1 : prev;
+      this._index = index < 0 ? this._items.length - 1 : index;
+      this._render(props.range);
+      return true;
+    }
+    if (props.event.key === "ArrowDown") {
+      const next = this._index + 1;
+      const index = this._items[next] && typeof this._items[next] === "string" ? next + 1 : next;
+      this._index = index >= this._items.length ? 0 : index;
+      this._render(props.range);
+      return true;
+    }
+    return false;
   }
 
-  public onExit() {
-    this.hide();
-    this._index = 0;
-    this._items = [];
+  public onExit(props: SuggestionProps) {
+    if (this._element === undefined || this._popover === undefined || this._index === undefined || this._items === undefined) {
+      return;
+    }
+
+    this._popover.hide();
+    if (this.options.onDestroy) {
+      this.options.onDestroy({
+        view: this,
+        range: props.range,
+        editor: this.editor,
+        element: this._element,
+      });
+    }
+
+    this._popover.destroy();
+    this._element.remove();
+    this._index = undefined;
+    this._items = undefined;
+    this._element = undefined;
+    this._popover = undefined;
   }
 
   public createButton(element: HTMLElement, options: BlockMenuButtonViewOptions) {
@@ -195,8 +229,12 @@ export class BlockMenuView {
     }
   }
 
-  private _render() {
-    this.element.innerHTML = "";
+  private _render(range: Range) {
+    if (this._element === undefined || this._popover === undefined || this._index === undefined || this._items === undefined) {
+      return;
+    }
+
+    this._element.innerHTML = "";
     this._index = Math.min(this._index, Math.max(0, this._items.length - 1));
     if (this._items.length) {
       const nodes: Array<HTMLElement> = [];
@@ -212,68 +250,38 @@ export class BlockMenuView {
           if (i === this._index) {
             view.classList.add("active");
           }
-          item.render(this.editor, this, view);
+          item.render({
+            range,
+            view: this,
+            editor: this.editor,
+            element: view,
+          });
           view.addEventListener("click", () => {
-            item.action(this.editor, this);
+            if (this._element) {
+              item.action({
+                range,
+                view: this,
+                editor: this.editor,
+                element: view,
+              });
+            }
           });
           nodes.push(view);
         }
       }
-      this.element.append(...nodes);
+      this._element.append(...nodes);
+      // noinspection JSIgnoredPromiseFromCall
       scrollIntoView(nodes[this._index], {
         block: "center",
         scrollMode: "if-needed",
-        boundary: parent => parent !== this.element,
+        boundary: parent => parent !== this._element,
       });
     } else {
       const view = document.createElement("div");
       view.classList.add("ProseMirror-bm-empty");
       view.textContent = this.options.dictionary.empty;
-      this.element.append(view);
+      this._element.append(view);
     }
-    this.show();
-  }
-
-  private _element() {
-    const element = document.createElement("div");
-    element.classList.add("ProseMirror-bm");
-    if (this.options.class) {
-      for (const item of Array.isArray(this.options.class) ? this.options.class : [this.options.class]) {
-        element.classList.add(item);
-      }
-    }
-    if (this.options.style) {
-      for (const item of Array.isArray(this.options.style) ? this.options.style : [this.options.style]) {
-        for (const [key, val] of Object.entries(item)) {
-          // @ts-expect-error
-          element.style[key] = val;
-        }
-      }
-    }
-    if (this.options.onInit) {
-      this.options.onInit({
-        element,
-        view: this,
-        editor: this.editor,
-        show: this.show.bind(this),
-        hide: this.hide.bind(this),
-      });
-    }
-    return element;
-  }
-
-  private _popover() {
-    const options: Partial<Props> = {
-      appendTo: () => document.body,
-      getReferenceClientRect: null,
-      content: this.element,
-      arrow: false,
-      interactive: true,
-      theme: "ProseMirror",
-      trigger: "manual",
-      placement: "top-start",
-      maxWidth: "none",
-    };
-    return tippy(document.body, this.options.tippy ? this.options.tippy({ options, view: this, editor: this.editor }) : options);
+    this._popover.show();
   }
 }

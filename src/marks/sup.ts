@@ -43,8 +43,8 @@ export const Superscript = TSuperscript.extend<SuperscriptOptions>({
         name: this.options.dictionary.name,
         view: icon("sup"),
         shortcut: "Mod-.",
-        active: editor => editor.isActive(this.name),
-        action: editor => editor.chain().toggleSuperscript().focus().run(),
+        active: ({ editor }) => editor.isActive(this.name),
+        action: ({ editor }) => editor.chain().toggleSuperscript().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

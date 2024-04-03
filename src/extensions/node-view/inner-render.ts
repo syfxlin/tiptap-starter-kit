@@ -111,5 +111,6 @@ export class InnerRenderView implements NodeView {
         $root: this._root,
       });
     }
+    this.$root.remove();
   }
 }

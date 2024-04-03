@@ -42,8 +42,8 @@ export const Italic = TItalic.extend<ItalicOptions>({
         name: this.options.dictionary.name,
         view: icon("italic"),
         shortcut: "Mod-I",
-        active: editor => editor.isActive(this.name),
-        action: editor => editor.chain().toggleItalic().focus().run(),
+        active: ({ editor }) => editor.isActive(this.name),
+        action: ({ editor }) => editor.chain().toggleItalic().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

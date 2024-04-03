@@ -1,7 +1,7 @@
 import tippy, { Instance, Props } from "tippy.js";
 import { EditorView } from "@tiptap/pm/view";
 import { EditorState, PluginView } from "@tiptap/pm/state";
-import { Editor, isNodeSelection, posToDOMRect } from "@tiptap/core";
+import { Editor, Range, isNodeSelection, posToDOMRect } from "@tiptap/core";
 
 export interface FloatMenuInputViewOptions {
   id?: string;
@@ -39,9 +39,9 @@ export interface FloatMenuViewOptions {
   rect?: (props: { view: FloatMenuView; editor: Editor }) => DOMRect;
   show?: (props: { view: FloatMenuView; editor: Editor }) => boolean;
   tippy?: (props: { view: FloatMenuView; editor: Editor; options: Partial<Props> }) => Partial<Props>;
-  onInit?: (props: { view: FloatMenuView; editor: Editor; element: HTMLElement; show: () => void; hide: () => void }) => void;
-  onUpdate?: (props: { view: FloatMenuView; editor: Editor; element: HTMLElement; show: () => void; hide: () => void; prevState?: EditorState }) => void;
-  onDestroy?: (props: { view: FloatMenuView; editor: Editor; element: HTMLElement; show: () => void; hide: () => void }) => void;
+  onInit?: (props: { view: FloatMenuView; editor: Editor; range: Range; element: HTMLElement }) => void;
+  onUpdate?: (props: { view: FloatMenuView; editor: Editor; range: Range; element: HTMLElement }) => void;
+  onDestroy?: (props: { view: FloatMenuView; editor: Editor; range: Range; element: HTMLElement }) => void;
 }
 
 export class FloatMenuView implements PluginView {
@@ -89,8 +89,10 @@ export class FloatMenuView implements PluginView {
         view: this,
         editor: this.editor,
         element: this.element,
-        show: this.show.bind(this),
-        hide: this.hide.bind(this),
+        range: {
+          from: Math.min(...this.editor.state.selection.ranges.map(range => range.$from.pos)),
+          to: Math.max(...this.editor.state.selection.ranges.map(range => range.$to.pos)),
+        },
       });
     }
 
@@ -107,11 +109,14 @@ export class FloatMenuView implements PluginView {
         view: this,
         editor: this.editor,
         element: this.element,
-        show: this.show.bind(this),
-        hide: this.hide.bind(this),
+        range: {
+          from: Math.min(...this.editor.state.selection.ranges.map(range => range.$from.pos)),
+          to: Math.max(...this.editor.state.selection.ranges.map(range => range.$to.pos)),
+        },
       });
     }
     this.popover.destroy();
+    this.element.remove();
   }
 
   public createInput(options: FloatMenuInputViewOptions) {
@@ -323,8 +328,10 @@ export class FloatMenuView implements PluginView {
         element,
         view: this,
         editor: this.editor,
-        show: this.show.bind(this),
-        hide: this.hide.bind(this),
+        range: {
+          from: Math.min(...this.editor.state.selection.ranges.map(range => range.$from.pos)),
+          to: Math.max(...this.editor.state.selection.ranges.map(range => range.$to.pos)),
+        },
       });
     }
     return element;

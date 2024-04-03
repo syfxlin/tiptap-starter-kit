@@ -43,8 +43,8 @@ export const Subscript = TSubscript.extend<SubscriptOptions>({
         name: this.options.dictionary.name,
         view: icon("sub"),
         shortcut: "Mod-,",
-        active: editor => editor.isActive(this.name),
-        action: editor => editor.chain().toggleSubscript().focus().run(),
+        active: ({ editor }) => editor.isActive(this.name),
+        action: ({ editor }) => editor.chain().toggleSubscript().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

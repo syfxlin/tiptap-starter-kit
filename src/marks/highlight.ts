@@ -92,9 +92,9 @@ export const Highlight = THighlight.extend<HighlightOptions>({
         name: this.options.dictionary.name,
         view: icon("highlight"),
         shortcut: "Mod-Shift-H",
-        active: editor => editor.isActive(this.name),
-        action: editor => editor.chain().toggleHighlight().focus().run(),
-        onInit: (editor, _view, element) => {
+        active: ({ editor }) => editor.isActive(this.name),
+        action: ({ editor }) => editor.chain().toggleHighlight().focus().run(),
+        onInit: ({ editor, element }) => {
           const container = document.createElement("div");
           container.classList.add("ProseMirror-fm-color-picker");
           for (const color of [...colors.map(i => i[0]), ...colors.map(i => `b-${i[0]}`)]) {

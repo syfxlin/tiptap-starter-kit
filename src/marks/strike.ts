@@ -42,8 +42,8 @@ export const Strike = TStrike.extend<StrikeOptions>({
         name: this.options.dictionary.name,
         view: icon("strike"),
         shortcut: "Mod-Shift-I",
-        active: editor => editor.isActive(this.name),
-        action: editor => editor.chain().toggleStrike().focus().run(),
+        active: ({ editor }) => editor.isActive(this.name),
+        action: ({ editor }) => editor.chain().toggleStrike().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

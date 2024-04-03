@@ -138,18 +138,10 @@ export const Emoji = Node.create<EmojiOptions>({
               }
             }
             items.push({
-              action: (editor) => {
-                // clear search
-                const { state, dispatch } = editor.view;
-                const from = state.selection.$from;
-                const tr = state.tr.deleteRange(from.start(), from.pos);
-                dispatch(tr);
-                // command
-                editor.chain().setEmoji(name).focus().run();
-                // focus
-                editor.view.focus();
+              action: ({ editor, range }) => {
+                editor.chain().deleteRange(range).setEmoji(name).focus().run();
               },
-              render: (_editor, view, element) => view.createButton(element, {
+              render: ({ view, element }) => view.createButton(element, {
                 id: name,
                 name: `${name} - ${html}`,
               }),

@@ -75,7 +75,7 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
               }
             }
             items.push({
-              action: (editor, view) => {
+              action: ({ editor, view }) => {
                 // clear search
                 const { state, dispatch } = editor.view;
                 const from = state.selection.$from;
@@ -86,7 +86,7 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
                 // focus
                 editor.view.focus();
               },
-              render: (_editor, view, element) => view.createButton(element, {
+              render: ({ view, element }) => view.createButton(element, {
                 id: name,
                 name: item.name,
                 icon: item.icon,

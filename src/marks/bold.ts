@@ -42,8 +42,8 @@ export const Bold = TBold.extend<BoldOptions>({
         name: this.options.dictionary.name,
         view: icon("bold"),
         shortcut: "Mod-B",
-        active: editor => editor.isActive(this.name),
-        action: editor => editor.chain().toggleBold().focus().run(),
+        active: ({ editor }) => editor.isActive(this.name),
+        action: ({ editor }) => editor.chain().toggleBold().focus().run(),
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
   },

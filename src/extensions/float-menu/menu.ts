@@ -1,4 +1,4 @@
-import { Editor, Extension, isActive, isNodeSelection, isTextSelection } from "@tiptap/core";
+import { Editor, Extension, Range, isActive, isNodeSelection, isTextSelection } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { FloatMenuView } from "./view";
 
@@ -7,11 +7,11 @@ export interface FloatMenuItem {
   name: string;
   view: string;
   shortcut?: string;
-  active: (editor: Editor, view: FloatMenuView) => boolean;
-  action: (editor: Editor, view: FloatMenuView) => void;
-  onInit?: (editor: Editor, view: FloatMenuView, element: HTMLElement) => void;
-  onUpdate?: (editor: Editor, view: FloatMenuView, element: HTMLElement) => void;
-  onDestroy?: (editor: Editor, view: FloatMenuView, element: HTMLElement) => void;
+  active: (props: { editor: Editor; view: FloatMenuView; range: Range; element: HTMLElement }) => boolean;
+  action: (props: { editor: Editor; view: FloatMenuView; range: Range; element: HTMLElement }) => void;
+  onInit?: (props: { editor: Editor; view: FloatMenuView; range: Range; element: HTMLElement }) => void;
+  onUpdate?: (props: { editor: Editor; view: FloatMenuView; range: Range; element: HTMLElement }) => void;
+  onDestroy?: (props: { editor: Editor; view: FloatMenuView; range: Range; element: HTMLElement }) => void;
 }
 
 export interface FloatMenuItemStorage {
@@ -81,7 +81,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
               !isNodeSelection(selection)
             );
           },
-          onInit: ({ view, element }) => {
+          onInit: ({ view, range, editor, element }) => {
             for (const name of this.options.items) {
               if (name !== "|") {
                 const item = mappings.get(name);
@@ -91,10 +91,10 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
                     name: item.name,
                     view: item.view,
                     shortcut: item.shortcut,
-                    onClick: () => item.action(this.editor, view),
+                    onClick: () => item.action({ view, range, editor, element: button.button }),
                   });
                   element.append(button.button);
-                  item.onInit?.(this.editor, view, button.button);
+                  item.onInit?.({ view, range, editor, element: button.button });
                 }
               } else {
                 const divider = view.createDivider();
@@ -102,14 +102,14 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
               }
             }
           },
-          onUpdate: ({ view, element }) => {
+          onUpdate: ({ view, range, editor, element }) => {
             for (const name of this.options.items) {
               if (name !== "|") {
                 const dom = element.querySelector(`[name="${name}"]`) as HTMLElement | undefined;
                 const item = mappings.get(name);
                 if (dom && item) {
-                  item.onUpdate?.(this.editor, view, dom);
-                  if (item.active(this.editor, view)) {
+                  item.onUpdate?.({ view, range, editor, element: dom });
+                  if (item.active({ view, range, editor, element: dom })) {
                     dom.classList.add("active");
                     continue;
                   }
@@ -118,13 +118,13 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
               }
             }
           },
-          onDestroy: ({ view, element }) => {
+          onDestroy: ({ view, range, editor, element }) => {
             for (const name of this.options.items) {
               if (name !== "|") {
                 const dom = element.querySelector(`[name="${name}"]`) as HTMLElement | undefined;
                 const item = mappings.get(name);
                 if (dom && item) {
-                  item.onDestroy?.(this.editor, view, dom);
+                  item.onDestroy?.({ view, range, editor, element: dom });
                 }
               }
             }

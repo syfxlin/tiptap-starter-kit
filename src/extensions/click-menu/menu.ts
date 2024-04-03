@@ -3,7 +3,6 @@ import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { ClickMenuView } from "./view";
 
 export interface ClickMenuOptions {
-  dictionary: {};
 }
 
 export const ClickMenu = Extension.create<ClickMenuOptions>({
@@ -14,6 +13,7 @@ export const ClickMenu = Extension.create<ClickMenuOptions>({
       ...this.parent?.() ?? [],
       new Plugin({
         key: new PluginKey("click-menu"),
+        view: () => ({ destroy: () => view.destroy() }),
         props: {
           handleDOMEvents: {
             drop: (_view, event) => view.drop(event),

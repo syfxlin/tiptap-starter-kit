@@ -5,17 +5,8 @@ import { Node, ResolvedPos } from "@tiptap/pm/model";
 import { serializeForClipboard } from "../../utils/serialize";
 import { icon } from "../../utils/icons";
 
-export interface ClickMenuItem {
-  id: string;
-  name: string;
-  icon: string;
-  keywords: string;
-  shortcut?: string;
-  action: (editor: Editor, view: ClickMenuView) => void;
-}
-
 export interface ClickMenuItemStorage {
-  clickMenu: false | ClickMenuItem | Array<ClickMenuItem>;
+  clickMenu: false;
 }
 
 export interface ClickMenuViewOptions {
@@ -168,6 +159,11 @@ export class ClickMenuView {
         .focus()
         .run();
     }
+  }
+
+  public destroy() {
+    this.popover.destroy();
+    this.element.remove();
   }
 
   private _element() {

@@ -267,5 +267,6 @@ export class InnerEditorView implements NodeView {
         $preview: this._preview,
       });
     }
+    this.$root.remove();
   }
 }
