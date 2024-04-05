@@ -96,6 +96,7 @@ export const MathBlock = Node.create<MathBlockOptions>({
   },
   addNodeView() {
     return InnerEditorView.create({
+      HTMLAttributes: this.options.HTMLAttributes,
       onRender: ({ view }) => {
         try {
           if (!view.node.textContent) {

@@ -29,8 +29,15 @@ export class InnerEditorView implements NodeView {
   private _editor: HTMLElement;
   private _preview: HTMLElement;
 
-  public static create(options: Omit<InnerEditorViewOptions, keyof NodeViewRendererProps>) {
-    return (_options: NodeViewRendererProps) => new InnerEditorView({ ..._options, ...options });
+  public static create(options: Partial<Omit<InnerEditorViewOptions, keyof Omit<NodeViewRendererProps, "HTMLAttributes">>>) {
+    return (_options: NodeViewRendererProps) => new InnerEditorView({
+      ...options,
+      ..._options,
+      HTMLAttributes: {
+        ...options.HTMLAttributes,
+        ..._options.HTMLAttributes,
+      },
+    });
   }
 
   constructor(options: InnerEditorViewOptions) {
@@ -56,7 +63,9 @@ export class InnerEditorView implements NodeView {
       }
     }
     for (const [key, value] of Object.entries(this.options.HTMLAttributes)) {
-      this._root.setAttribute(key, value);
+      if (value !== undefined && value !== null) {
+        this._root.setAttribute(key, value);
+      }
     }
     this._editor = document.createElement("div");
     this._preview = document.createElement("div");

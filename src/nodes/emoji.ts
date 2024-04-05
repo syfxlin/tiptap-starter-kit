@@ -86,6 +86,7 @@ export const Emoji = Node.create<EmojiOptions>({
   addNodeView() {
     return InnerRenderView.create({
       tag: "span",
+      HTMLAttributes: this.options.HTMLAttributes,
       onRender: ({ view }) => {
         view.$root.innerHTML = nameToEmoji[view.node.attrs.value];
       },

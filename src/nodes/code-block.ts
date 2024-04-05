@@ -1,6 +1,7 @@
 import { common, createLowlight } from "lowlight";
 import { CodeBlockLowlight, CodeBlockLowlightOptions } from "@tiptap/extension-code-block-lowlight";
 import tippy from "tippy.js";
+import { mergeAttributes } from "@tiptap/core";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { icon } from "../utils/icons";
@@ -120,7 +121,7 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
     };
   },
   addNodeView() {
-    return ({ node, editor, getPos }) => {
+    return ({ node, editor, getPos, HTMLAttributes }) => {
       const parent = document.createElement("pre");
       const toolbar = document.createElement("div");
       const content = document.createElement("code");
@@ -128,8 +129,12 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
       parent.classList.add("ProseMirror-code-block");
       toolbar.classList.add("ProseMirror-code-block-toolbar");
       content.classList.add("ProseMirror-code-block-content");
-      for (const [key, value] of Object.entries(this.options.HTMLAttributes)) {
-        parent.setAttribute(key, value);
+
+      for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes, HTMLAttributes))) {
+        if (value !== undefined && value !== null) {
+          parent.setAttribute(key, value);
+          content.setAttribute(key, value);
+        }
       }
 
       // language list

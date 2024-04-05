@@ -11,6 +11,7 @@ import { Code } from "./marks/code";
 import { Highlight } from "./marks/highlight";
 import { Italic } from "./marks/italic";
 import { Link } from "./marks/link";
+import "plyr/dist/plyr.css";
 import "katex/dist/katex.css";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";

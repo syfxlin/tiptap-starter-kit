@@ -17,7 +17,7 @@ export interface FloatMenuItem {
 export interface FloatMenuItemStorage {
   floatMenu?: {
     hide?: boolean;
-    items?: Array<FloatMenuItem>;
+    items?: FloatMenuItem | Array<FloatMenuItem>;
   };
 }
 

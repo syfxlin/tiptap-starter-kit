@@ -1,5 +1,6 @@
 import { Node, mergeAttributes, nodeInputRule } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
+import Plyr from "plyr";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { icon } from "../utils/icons";
@@ -108,6 +109,32 @@ export const Video = Node.create<VideoOptions>({
       "video",
       mergeAttributes({ controls: "true" }, this.options.HTMLAttributes, HTMLAttributes),
     ];
+  },
+  addNodeView() {
+    return ({ HTMLAttributes }) => {
+      const parent = document.createElement("div");
+      const video = document.createElement("video");
+
+      parent.classList.add("ProseMirror-video");
+      parent.classList.add("ProseMirror-selectedcard");
+
+      for (const [key, value] of Object.entries(mergeAttributes({ controls: "true" }, this.options.HTMLAttributes, HTMLAttributes))) {
+        if (value !== undefined && value !== null) {
+          parent.setAttribute(key, value);
+          video.setAttribute(key, value);
+        }
+      }
+
+      parent.append(video);
+
+      const plyr = new Plyr(video);
+      return {
+        dom: parent,
+        destroy: () => {
+          plyr.destroy();
+        },
+      };
+    };
   },
   addCommands() {
     return {

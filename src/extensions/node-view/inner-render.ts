@@ -20,8 +20,15 @@ export class InnerRenderView implements NodeView {
   private _node: Node;
   private _root: HTMLElement;
 
-  public static create(options: Omit<InnerRenderViewOptions, keyof NodeViewRendererProps>) {
-    return (_options: NodeViewRendererProps) => new InnerRenderView({ ..._options, ...options });
+  public static create(options: Partial<Omit<InnerRenderViewOptions, keyof Omit<NodeViewRendererProps, "HTMLAttributes">>>) {
+    return (_options: NodeViewRendererProps) => new InnerRenderView({
+      ...options,
+      ..._options,
+      HTMLAttributes: {
+        ...options.HTMLAttributes,
+        ..._options.HTMLAttributes,
+      },
+    });
   }
 
   constructor(options: InnerRenderViewOptions) {
@@ -47,7 +54,9 @@ export class InnerRenderView implements NodeView {
       }
     }
     for (const [key, value] of Object.entries(this.options.HTMLAttributes)) {
-      this._root.setAttribute(key, value);
+      if (value !== undefined && value !== null) {
+        this._root.setAttribute(key, value);
+      }
     }
     if (this.options.onInit) {
       this.options.onInit({

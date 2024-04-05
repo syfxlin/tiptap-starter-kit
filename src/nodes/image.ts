@@ -1,5 +1,6 @@
 import { Image as TImage, ImageOptions as TImageOptions } from "@tiptap/extension-image";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
+import { mergeAttributes } from "@tiptap/core";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { FloatMenuView } from "../extensions/float-menu/view";
@@ -90,29 +91,33 @@ export const Image = TImage.extend<ImageOptions>({
     } satisfies NodeMarkdownStorage & UploaderItemStorage & FloatMenuItemStorage & BlockMenuItemStorage;
   },
   addNodeView() {
-    return ({ node }) => {
+    return ({ node, HTMLAttributes }) => {
       const dom = document.createElement("div");
       const img = document.createElement("img");
 
       dom.classList.add("ProseMirror-image");
-      img.classList.add("ProseMirror-content");
-      for (const [key, value] of Object.entries(this.options.HTMLAttributes)) {
-        img.setAttribute(key, value);
+      dom.classList.add("ProseMirror-selectedcard");
+
+      for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes, HTMLAttributes))) {
+        if (value !== undefined && value !== null) {
+          dom.setAttribute(key, value);
+          img.setAttribute(key, value);
+        }
       }
 
       img.src = node.attrs.src ?? "";
       img.alt = node.attrs.alt ?? "";
       img.title = node.attrs.title ?? "";
 
-      dom.setAttribute("data-loading", this.options.dictionary.loading);
+      dom.setAttribute("data-status", this.options.dictionary.loading);
       img.addEventListener("load", () => {
-        dom.removeAttribute("data-loading");
+        dom.removeAttribute("data-status");
       });
       img.addEventListener("error", () => {
         if (img.getAttribute("src")) {
-          dom.setAttribute("data-loading", this.options.dictionary.error);
+          dom.setAttribute("data-status", this.options.dictionary.error);
         } else {
-          dom.setAttribute("data-loading", this.options.dictionary.empty);
+          dom.setAttribute("data-status", this.options.dictionary.empty);
         }
       });
 

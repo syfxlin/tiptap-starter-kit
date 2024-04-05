@@ -16,7 +16,7 @@ export interface BlockMenuItem {
 export interface BlockMenuItemStorage {
   blockMenu: {
     hide?: boolean;
-    items: Array<BlockMenuItem>;
+    items: BlockMenuItem | Array<BlockMenuItem>;
   };
 }
 

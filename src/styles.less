@@ -518,7 +518,7 @@
     border-radius: 4px;
     max-width: 100%;
     max-height: 100vh;
-    width: max-content;
+    box-sizing: content-box;
 
     img {
       display: block;
@@ -526,7 +526,7 @@
       max-height: 100vh;
     }
 
-    &[data-loading] {
+    &[data-status] {
       resize: none;
 
       img {
@@ -534,16 +534,16 @@
       }
 
       &::before {
-        content: attr(data-loading);
+        content: attr(data-status);
       }
     }
   }
 
-  audio,
-  video {
+  &-audio,
+  &-video {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
     color: var(--tiptap-card-color);
     background-color: var(--tiptap-card-background);
     border: 1px solid var(--tiptap-operator-border);
@@ -552,6 +552,20 @@
     border-radius: 4px;
     max-width: 100%;
     max-height: 100vh;
+
+    audio,
+    video {
+      width: 100%;
+    }
+  }
+
+  .plyr {
+    --plyr-color-main: var(--tiptap-color-primary);
+    --plyr-menu-background: var(--tiptap-background);
+    --plyr-audio-control-color: var(--tiptap-card-color);
+    --plyr-audio-controls-background: var(--tiptap-card-background);
+
+    width: 100%;
   }
 
   // prosemirror
@@ -581,6 +595,15 @@
         border-radius: 4px;
         pointer-events: none;
         background: var(--tiptap-background-selected);
+      }
+
+      &.ProseMirror-selectedcard {
+        border: 1px solid var(--tiptap-operator-hover-color);
+        box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
+
+        &::after {
+          content: none !important;
+        }
       }
     }
 
