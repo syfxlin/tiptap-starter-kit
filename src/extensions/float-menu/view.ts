@@ -9,7 +9,7 @@ export interface FloatMenuInputViewOptions {
   type?: string;
   value?: string;
   class?: string | string[];
-  style?: CSSStyleDeclaration | CSSStyleDeclaration[];
+  style?: Partial<CSSStyleDeclaration> | Array<Partial<CSSStyleDeclaration>>;
   onEnter?: (value: string, element: HTMLInputElement) => void;
   onInput?: (value: string, element: HTMLInputElement) => void;
   onChange?: (value: string, element: HTMLInputElement) => void;
@@ -23,7 +23,7 @@ export interface FloatMenuButtonViewOptions {
   view: string;
   shortcut?: string;
   class?: string | string[];
-  style?: CSSStyleDeclaration | CSSStyleDeclaration[];
+  style?: Partial<CSSStyleDeclaration> | Array<Partial<CSSStyleDeclaration>>;
   onClick?: (element: HTMLButtonElement) => void;
 }
 
@@ -35,7 +35,7 @@ export interface FloatMenuUploadViewOptions extends Omit<FloatMenuButtonViewOpti
 export interface FloatMenuViewOptions {
   editor: Editor;
   class?: string | string[];
-  style?: CSSStyleDeclaration | CSSStyleDeclaration[];
+  style?: Partial<CSSStyleDeclaration> | Array<Partial<CSSStyleDeclaration>>;
   rect?: (props: { view: FloatMenuView; editor: Editor }) => DOMRect;
   show?: (props: { view: FloatMenuView; editor: Editor }) => boolean;
   tippy?: (props: { view: FloatMenuView; editor: Editor; options: Partial<Props> }) => Partial<Props>;

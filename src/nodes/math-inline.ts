@@ -106,7 +106,10 @@ export const MathInline = Node.create<MathInlineOptions>({
       onRender: ({ view }) => {
         try {
           if (!view.node.attrs.value) {
-            view.$root.innerHTML = this.options.dictionary.inputMath;
+            const span = document.createElement("span");
+            span.classList.add("ProseMirror-empty");
+            span.textContent = this.options.dictionary.inputMath;
+            view.$root.innerHTML = span.outerHTML;
           } else {
             katex.render(view.node.attrs.value, view.$root);
           }

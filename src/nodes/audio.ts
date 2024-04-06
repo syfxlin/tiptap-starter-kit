@@ -32,7 +32,6 @@ export interface AudioOptions {
 
 export const Audio = Node.create<AudioOptions>({
   name: "audio",
-  draggable: true,
   inline() {
     return this.options.inline;
   },

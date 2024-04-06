@@ -15,13 +15,13 @@ export interface BlockMenuButtonViewOptions {
   icon?: string;
   shortcut?: string;
   class?: string | string[];
-  style?: CSSStyleDeclaration | CSSStyleDeclaration[];
+  style?: Partial<CSSStyleDeclaration> | Array<Partial<CSSStyleDeclaration>>;
 }
 
 export interface BlockMenuViewOptions {
   editor: Editor;
   class?: string | string[];
-  style?: CSSStyleDeclaration | CSSStyleDeclaration[];
+  style?: Partial<CSSStyleDeclaration> | Array<Partial<CSSStyleDeclaration>>;
   tippy?: (props: { editor: Editor; view: BlockMenuView; options: Partial<Props> }) => Partial<Props>;
   onInit?: (props: { editor: Editor; view: BlockMenuView; range: Range; element: HTMLElement }) => void;
   onUpdate?: (props: { editor: Editor; view: BlockMenuView; range: Range; element: HTMLElement }) => void;

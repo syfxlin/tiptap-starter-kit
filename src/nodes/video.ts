@@ -32,7 +32,6 @@ export interface VideoOptions {
 
 export const Video = Node.create<VideoOptions>({
   name: "video",
-  draggable: true,
   inline() {
     return this.options.inline;
   },

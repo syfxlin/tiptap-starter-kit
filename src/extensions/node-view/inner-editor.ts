@@ -10,7 +10,7 @@ export interface InnerEditorViewOptions extends NodeViewRendererProps {
   id?: string;
   tag?: keyof HTMLElementTagNameMap;
   class?: string | string[];
-  style?: CSSStyleDeclaration | CSSStyleDeclaration[];
+  style?: Partial<CSSStyleDeclaration> | Array<Partial<CSSStyleDeclaration>>;
   onRender?: (props: { view: InnerEditorView; editor: Editor; $root: HTMLElement; $editor: HTMLElement; $preview: HTMLElement }) => void;
   onOpen?: (props: { view: InnerEditorView; editor: Editor; $root: HTMLElement; $editor: HTMLElement; $preview: HTMLElement }) => void;
   onClose?: (props: { view: InnerEditorView; editor: Editor; $root: HTMLElement; $editor: HTMLElement; $preview: HTMLElement }) => void;
@@ -69,6 +69,11 @@ export class InnerEditorView implements NodeView {
     }
     this._editor = document.createElement("div");
     this._preview = document.createElement("div");
+    this._editor.style.display = "none";
+    this._editor.classList.add("ProseMirror-ie-editor");
+    this._preview.classList.add("ProseMirror-ie-preview");
+    this._root.append(this._editor);
+    this._root.append(this._preview);
     if (this.options.onInit) {
       this.options.onInit({
         view: this,
@@ -78,8 +83,15 @@ export class InnerEditorView implements NodeView {
         $preview: this._preview,
       });
     }
-    this._root.append(this._editor);
-    this._root.append(this._preview);
+    if (this.options.onRender) {
+      this.options.onRender({
+        view: this,
+        editor: this.editor,
+        $root: this._root,
+        $editor: this._editor,
+        $preview: this._preview,
+      });
+    }
   }
 
   public get dom() {
@@ -179,6 +191,8 @@ export class InnerEditorView implements NodeView {
         $preview: this._preview,
       });
     }
+    this._root.classList.add("ProseMirror-selectednode");
+    this._root.classList.add("ProseMirror-selectedcard");
     this._editor.style.display = "block";
     this._view = new EditorView(this._editor, {
       state: EditorState.create({
@@ -251,6 +265,8 @@ export class InnerEditorView implements NodeView {
       this._view.destroy();
     }
     this._view = undefined;
+    this._root.classList.remove("ProseMirror-selectednode");
+    this._root.classList.remove("ProseMirror-selectedcard");
     this._editor.style.display = "none";
   }
 

@@ -213,3 +213,11 @@ export function parseAttrs(value: string) {
   }
   return attrs;
 }
+
+export function debounce<A extends any[]>(delay: number, apply: (...args: A) => void) {
+  let timer: number | undefined;
+  return (...args: A) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => apply(...args), delay);
+  };
+}

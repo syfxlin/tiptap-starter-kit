@@ -1,9 +1,9 @@
 :root {
   --tiptap-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   --tiptap-font-family-mono: "Fira Code", "JetBrains Mono", ui-monospace,
-    SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
-    monospace;
+  SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+  monospace;
   --tiptap-font-weight: 400;
   --tiptap-font-size: 1em;
   --tiptap-line-height: 1.7;
@@ -511,7 +511,6 @@
     justify-content: center;
     align-items: center;
     color: var(--tiptap-card-color);
-    background-color: var(--tiptap-card-background);
     border: 1px solid var(--tiptap-operator-border);
     margin: 0.5em 0;
     padding: 0.5em 0.5em;
@@ -534,8 +533,21 @@
       }
 
       &::before {
-        content: attr(data-status);
+        content: attr(data-message);
       }
+    }
+
+    &[data-status="loading"] {
+      color: var(--tiptap-color-primary);
+    }
+
+    &[data-status="empty"] {
+      color: var(--tiptap-operator-color);
+    }
+
+    &[data-status="error"] {
+      color: var(--tiptap-code-color);
+      background: var(--tiptap-code-background);
     }
   }
 
@@ -545,7 +557,6 @@
     flex-direction: column;
     justify-content: center;
     color: var(--tiptap-card-color);
-    background-color: var(--tiptap-card-background);
     border: 1px solid var(--tiptap-operator-border);
     margin: 0.5em 0;
     padding: 0.5em 0.5em;
@@ -563,7 +574,7 @@
     --plyr-color-main: var(--tiptap-color-primary);
     --plyr-menu-background: var(--tiptap-background);
     --plyr-audio-control-color: var(--tiptap-card-color);
-    --plyr-audio-controls-background: var(--tiptap-card-background);
+    --plyr-audio-controls-background: var(--tiptap-background);
 
     width: 100%;
   }
@@ -676,19 +687,17 @@
 .tippy-box[data-theme="ProseMirror"] {
   color: var(--tiptap-operator-color);
   background: var(--tiptap-operator-background);
-  box-shadow:
-    var(--tiptap-operator-shadow) 0 0 0 1px,
-    var(--tiptap-operator-shadow) 0 2px 4px,
-    var(--tiptap-operator-shadow) 0 4px 8px;
+  box-shadow: var(--tiptap-operator-shadow) 0 0 0 1px,
+  var(--tiptap-operator-shadow) 0 2px 4px,
+  var(--tiptap-operator-shadow) 0 4px 8px;
 }
 
 .tippy-box[data-theme="ProseMirror-dark"] {
   color: var(--tiptap-operator-dark-color);
   background: var(--tiptap-operator-dark-background);
-  box-shadow:
-    var(--tiptap-operator-shadow) 0 0 0 1px,
-    var(--tiptap-operator-shadow) 0 2px 4px,
-    var(--tiptap-operator-shadow) 0 4px 8px;
+  box-shadow: var(--tiptap-operator-shadow) 0 0 0 1px,
+  var(--tiptap-operator-shadow) 0 2px 4px,
+  var(--tiptap-operator-shadow) 0 4px 8px;
 }
 
 // endregion
@@ -782,11 +791,38 @@
     background: var(--tiptap-mark-background);
   }
 
+  .ProseMirror-empty {
+    padding: 0 0.5em;
+    border-radius: 4px;
+    color: var(--tiptap-operator-color);
+    background: var(--tiptap-operator-hover-background);
+  }
+
   .ProseMirror-error {
     padding: 0 0.5em;
     border-radius: 4px;
     color: var(--tiptap-code-color);
     background: var(--tiptap-code-background);
+  }
+
+  .ProseMirror-loading {
+    padding: 0 0.5em;
+    border-radius: 4px;
+    color: var(--tiptap-color-primary);
+    background: var(--tiptap-operator-hover-background);
+  }
+
+  .ProseMirror-card-empty {
+    color: var(--tiptap-operator-color);
+  }
+
+  .ProseMirror-card-error {
+    color: var(--tiptap-code-color);
+    background: var(--tiptap-code-background);
+  }
+
+  .ProseMirror-card-loading {
+    color: var(--tiptap-color-primary);
   }
 }
 
@@ -969,6 +1005,10 @@
 
   &-video {
     --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M3 3.993C3 3.445 3.445 3 3.993 3h16.014c.548 0 .993.445.993.993v16.014a.994.994 0 0 1-.993.993H3.993A.993.993 0 0 1 3 20.007zM5 5v14h14V5zm5.622 3.415l4.879 3.252a.4.4 0 0 1 0 .666l-4.88 3.252a.4.4 0 0 1-.621-.332V8.747a.4.4 0 0 1 .622-.332'/%3E%3C/svg%3E");
+  }
+
+  &-mermaid {
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 16 16'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M11.5 12.5A1.5 1.5 0 0 1 10 14H6a1.5 1.5 0 0 1-1.5-1.5v-.823a3.114 3.114 0 0 0-1.35-2.566A6.114 6.114 0 0 1 .5 4.073V3A1.5 1.5 0 0 1 2 1.5h.666A6.425 6.425 0 0 1 8 4.343A6.425 6.425 0 0 1 13.334 1.5H14A1.5 1.5 0 0 1 15.5 3v1.073a6.114 6.114 0 0 1-2.65 5.038a3.114 3.114 0 0 0-1.35 2.566zm-8-9.43a4.924 4.924 0 0 1 3.738 3.025c.275.688 1.249.688 1.524 0A4.924 4.924 0 0 1 13.334 3H14v1.073a4.614 4.614 0 0 1-2 3.802c-1.252.86-2 2.283-2 3.802v.823H6v-.823c0-1.52-.748-2.941-2-3.802a4.614 4.614 0 0 1-2-3.802V3h.666c.283 0 .562.024.834.07' clip-rule='evenodd'/%3E%3C/svg%3E");
   }
 }
 
@@ -1223,18 +1263,33 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 0.75em 1em;
-  gap: 0.5em;
   border-radius: 4px;
-  border: 1px solid var(--tiptap-operator-border);
-  background: var(--tiptap-card-background);
 
   .ProseMirror {
     white-space: pre;
-    line-height: 1.5;
+    line-height: 1.5 !important;
+    font-family: var(--tiptap-font-family-mono) !important;
+    font-weight: normal !important;
+    font-size: 0.9em !important;
     background: none !important;
-    padding: 0 !important;
     border: 0 !important;
+    padding: 0 !important;
+  }
+
+  &-editor {
+    padding: 0.75em 1em;
+    background: var(--tiptap-card-background);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom: 1px solid var(--tiptap-operator-border);
+  }
+
+  &-preview {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75em 1em;
   }
 }
 

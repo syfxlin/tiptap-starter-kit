@@ -6,7 +6,7 @@ export interface InnerRenderViewOptions extends NodeViewRendererProps {
   id?: string;
   tag?: keyof HTMLElementTagNameMap;
   class?: string | string[];
-  style?: CSSStyleDeclaration | CSSStyleDeclaration[];
+  style?: Partial<CSSStyleDeclaration> | Array<Partial<CSSStyleDeclaration>>;
   onRender?: (props: { view: InnerRenderView; editor: Editor; $root: HTMLElement }) => void;
   onInit?: (props: { view: InnerRenderView; editor: Editor; $root: HTMLElement }) => void;
   onUpdate?: (props: { view: InnerRenderView; editor: Editor; $root: HTMLElement }) => void;

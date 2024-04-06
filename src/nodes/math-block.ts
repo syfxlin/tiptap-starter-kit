@@ -18,7 +18,6 @@ export interface MathBlockOptions {
   HTMLAttributes: Record<string, any>;
   dictionary: {
     name: string;
-    emptyMath: string;
     inputMath: string;
     inputHelp: string;
   };
@@ -33,13 +32,11 @@ export const MathBlock = Node.create<MathBlockOptions>({
   code: true,
   defining: true,
   isolating: true,
-  draggable: true,
   addOptions() {
     return {
       HTMLAttributes: {},
       dictionary: {
         name: "Math Block",
-        emptyMath: "Add a Tex equation",
         inputMath: "Enter or paste the equation",
         inputHelp: "Help",
       },
@@ -98,17 +95,19 @@ export const MathBlock = Node.create<MathBlockOptions>({
     return InnerEditorView.create({
       HTMLAttributes: this.options.HTMLAttributes,
       onRender: ({ view }) => {
+        view.$editor.style.fontFamily = "var(--tiptap-font-family-mono)";
+        view.$preview.classList.remove("ProseMirror-card-empty");
+        view.$preview.classList.remove("ProseMirror-card-error");
         try {
           if (!view.node.textContent) {
+            view.$preview.classList.add("ProseMirror-card-empty");
             view.$preview.innerHTML = this.options.dictionary.inputMath;
           } else {
             katex.render(view.node.textContent, view.$preview);
           }
         } catch (e) {
-          const span = document.createElement("span");
-          span.classList.add("ProseMirror-error");
-          span.textContent = (e as Error).message;
-          view.$preview.innerHTML = span.outerHTML;
+          view.$preview.classList.add("ProseMirror-card-error");
+          view.$preview.innerHTML = (e as Error).message;
         }
       },
     });
@@ -133,6 +132,10 @@ export const MathBlock = Node.create<MathBlockOptions>({
     return [
       textblockTypeInputRule({
         find: /^\$\$\s$/,
+        type: this.type,
+      }),
+      textblockTypeInputRule({
+        find: /^:::math$/,
         type: this.type,
       }),
     ];

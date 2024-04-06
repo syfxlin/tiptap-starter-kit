@@ -109,15 +109,19 @@ export const Image = TImage.extend<ImageOptions>({
       img.alt = node.attrs.alt ?? "";
       img.title = node.attrs.title ?? "";
 
-      dom.setAttribute("data-status", this.options.dictionary.loading);
+      dom.setAttribute("data-status", "loading");
+      dom.setAttribute("data-message", this.options.dictionary.loading);
       img.addEventListener("load", () => {
         dom.removeAttribute("data-status");
+        dom.removeAttribute("data-message");
       });
       img.addEventListener("error", () => {
         if (img.getAttribute("src")) {
-          dom.setAttribute("data-status", this.options.dictionary.error);
+          dom.setAttribute("data-status", "error");
+          dom.setAttribute("data-message", this.options.dictionary.error);
         } else {
-          dom.setAttribute("data-status", this.options.dictionary.empty);
+          dom.setAttribute("data-status", "empty");
+          dom.setAttribute("data-message", this.options.dictionary.empty);
         }
       });
 

@@ -8,7 +8,7 @@ import { icon } from "../../utils/icons";
 export interface ClickMenuViewOptions {
   editor: Editor;
   class?: string | string[];
-  style?: CSSStyleDeclaration | CSSStyleDeclaration[];
+  style?: Partial<CSSStyleDeclaration> | Array<Partial<CSSStyleDeclaration>>;
   tippy?: (props: { view: ClickMenuView; editor: Editor; options: Partial<Props> }) => Partial<Props>;
 }
 
