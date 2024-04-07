@@ -45,6 +45,7 @@ import { Video } from "./nodes/video";
 import { Audio } from "./nodes/audio";
 import { Emoji } from "./nodes/emoji";
 import { Mermaid } from "./nodes/mermaid";
+import { Plantuml } from "./nodes/plantuml";
 
 const editor = new Editor({
   element: document.querySelector("#editor")!,
@@ -93,6 +94,7 @@ const editor = new Editor({
     Video,
     Emoji,
     Mermaid,
+    Plantuml,
   ],
   content: `
     aaa <a href="https://ixk.me">Blog</a> <span data-type="mathInline">E = mc^2</span>

@@ -1,24 +1,20 @@
-import mermaid from "mermaid";
 import { Node, mergeAttributes, textblockTypeInputRule } from "@tiptap/core";
+import { encode } from "plantuml-encoder";
 import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
-import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { icon } from "../utils/icons";
+import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { InnerEditorView } from "../extensions/node-view/inner-editor";
 import { debounce } from "../utils/editor";
 
-mermaid.initialize({
-  startOnLoad: false,
-});
-
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
-    diagram: {
-      setMermaid: (code: string) => ReturnType;
+    plantuml: {
+      setPlantuml: (code: string) => ReturnType;
     };
   }
 }
 
-export interface MermaidOptions {
+export interface PlantumlOptions {
   HTMLAttributes: Record<string, any>;
   dictionary: {
     name: string;
@@ -27,8 +23,8 @@ export interface MermaidOptions {
   };
 }
 
-export const Mermaid = Node.create<MermaidOptions>({
-  name: "mermaid",
+export const Plantuml = Node.create<PlantumlOptions>({
+  name: "plantuml",
   group: "block",
   marks: "",
   content: "text*",
@@ -40,9 +36,9 @@ export const Mermaid = Node.create<MermaidOptions>({
     return {
       HTMLAttributes: {},
       dictionary: {
-        name: "Mermaid",
+        name: "PlantUML",
         inputHelp: "Help",
-        inputGraph: "Enter or paste the mermaid code",
+        inputGraph: "Enter or paste the plantuml code",
       },
     };
   },
@@ -82,9 +78,9 @@ export const Mermaid = Node.create<MermaidOptions>({
           {
             id: this.name,
             name: this.options.dictionary.name,
-            icon: icon("mermaid"),
-            keywords: "mermaid,graph",
-            action: editor => editor.chain().setMermaid("").focus().run(),
+            icon: icon("plantuml"),
+            keywords: "plantuml,graph",
+            action: editor => editor.chain().setPlantuml("").focus().run(),
           },
         ],
       },
@@ -107,19 +103,15 @@ export const Mermaid = Node.create<MermaidOptions>({
   },
   addNodeView() {
     const render = debounce(300, (code: string, node: HTMLElement) => {
-      const dom = document.createElement("div");
-      dom.id = `${this.name}-${Math.random().toString(36).substring(2, 10)}`;
-      mermaid.render(dom.id, code)
-        .then(({ svg, bindFunctions }) => {
-          dom.innerHTML = svg;
-          bindFunctions?.(dom);
-          node.innerHTML = dom.outerHTML;
-        })
-        .catch((reason) => {
-          document.querySelector(`#d${dom.id}`)?.remove();
-          node.classList.add("ProseMirror-card-error");
-          node.innerHTML = reason;
-        });
+      try {
+        const dom = document.createElement("img");
+        dom.src = `https://www.plantuml.com/plantuml/svg/${encode(code)}`;
+        dom.alt = code;
+        node.innerHTML = dom.outerHTML;
+      } catch (e) {
+        node.classList.add("ProseMirror-card-error");
+        node.innerHTML = (e as Error).message;
+      }
     });
     return InnerEditorView.create({
       HTMLAttributes: this.options.HTMLAttributes,
@@ -154,7 +146,7 @@ export const Mermaid = Node.create<MermaidOptions>({
   addInputRules() {
     return [
       textblockTypeInputRule({
-        find: /^:::mermaid$/,
+        find: /^:::plantuml$/,
         type: this.type,
       }),
     ];

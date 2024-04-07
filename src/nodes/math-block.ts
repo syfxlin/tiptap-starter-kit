@@ -95,7 +95,6 @@ export const MathBlock = Node.create<MathBlockOptions>({
     return InnerEditorView.create({
       HTMLAttributes: this.options.HTMLAttributes,
       onRender: ({ view }) => {
-        view.$editor.style.fontFamily = "var(--tiptap-font-family-mono)";
         view.$preview.classList.remove("ProseMirror-card-empty");
         view.$preview.classList.remove("ProseMirror-card-error");
         try {
