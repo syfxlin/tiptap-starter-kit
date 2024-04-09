@@ -46,6 +46,9 @@ import { Audio } from "./nodes/audio";
 import { Emoji } from "./nodes/emoji";
 import { Mermaid } from "./nodes/mermaid";
 import { Plantuml } from "./nodes/plantuml";
+import { Details } from "./nodes/details";
+import { DetailsSummary } from "./nodes/details-summary";
+import { DetailsContent } from "./nodes/details-content";
 
 const editor = new Editor({
   element: document.querySelector("#editor")!,
@@ -95,9 +98,16 @@ const editor = new Editor({
     Emoji,
     Mermaid,
     Plantuml,
+    Details,
+    DetailsSummary,
+    DetailsContent,
   ],
   content: `
     aaa <a href="https://ixk.me">Blog</a> <span data-type="mathInline">E = mc^2</span>
+    <details>
+      <summary>123</summary>
+      456
+    </details>
     <pre language="javascript"><code>console.log("123");</code></pre>
     aaa <a href="https://ixk.me">Blog</a>
     <img src="https://source.unsplash.com/random" alt="Unsplash">

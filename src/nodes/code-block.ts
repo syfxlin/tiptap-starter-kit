@@ -126,9 +126,9 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
       const toolbar = document.createElement("div");
       const content = document.createElement("code");
 
-      parent.classList.add("ProseMirror-code-block");
-      toolbar.classList.add("ProseMirror-code-block-toolbar");
-      content.classList.add("ProseMirror-code-block-content");
+      parent.setAttribute("data-type", this.name);
+      toolbar.setAttribute("data-type", `${this.name}Toolbar`);
+      content.setAttribute("data-type", `${this.name}Content`);
 
       for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes, HTMLAttributes))) {
         if (value !== undefined && value !== null) {

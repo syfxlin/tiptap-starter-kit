@@ -95,7 +95,7 @@ export const Image = TImage.extend<ImageOptions>({
       const dom = document.createElement("div");
       const img = document.createElement("img");
 
-      dom.classList.add("ProseMirror-image");
+      dom.setAttribute("data-type", this.name);
       dom.classList.add("ProseMirror-selectedcard");
 
       for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes, HTMLAttributes))) {

@@ -102,7 +102,7 @@ export const MathInline = Node.create<MathInlineOptions>({
   addNodeView() {
     return InnerRenderView.create({
       tag: "span",
-      HTMLAttributes: this.options.HTMLAttributes,
+      HTMLAttributes: { "data-type": this.name, ...this.options.HTMLAttributes },
       onRender: ({ view }) => {
         try {
           if (!view.node.attrs.value) {

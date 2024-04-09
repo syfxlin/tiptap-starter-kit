@@ -114,8 +114,8 @@ export const Audio = Node.create<AudioOptions>({
       const parent = document.createElement("div");
       const audio = document.createElement("audio");
 
-      parent.classList.add("ProseMirror-audio");
       parent.classList.add("ProseMirror-selectedcard");
+      parent.setAttribute("data-type", this.name);
 
       for (const [key, value] of Object.entries(mergeAttributes({ controls: "true" }, this.options.HTMLAttributes, HTMLAttributes))) {
         if (value !== undefined && value !== null) {

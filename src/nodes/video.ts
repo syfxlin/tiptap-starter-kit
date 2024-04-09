@@ -114,8 +114,8 @@ export const Video = Node.create<VideoOptions>({
       const parent = document.createElement("div");
       const video = document.createElement("video");
 
-      parent.classList.add("ProseMirror-video");
       parent.classList.add("ProseMirror-selectedcard");
+      parent.setAttribute("data-type", this.name);
 
       for (const [key, value] of Object.entries(mergeAttributes({ controls: "true" }, this.options.HTMLAttributes, HTMLAttributes))) {
         if (value !== undefined && value !== null) {

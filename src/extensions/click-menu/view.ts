@@ -135,6 +135,7 @@ export class ClickMenuView {
       return false;
     }
     clearTimeout(this._timer);
+    // @ts-expect-error
     this._timer = setTimeout(() => {
       const active = this._find(event.target as HTMLElement);
       if (active) {
