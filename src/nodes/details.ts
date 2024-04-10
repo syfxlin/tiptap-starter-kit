@@ -1,5 +1,6 @@
 import { Node, mergeAttributes, wrappingInputRule } from "@tiptap/core";
 import { NodeMarkdownStorage } from "../extensions/markdown";
+import { icon } from "../utils/icons";
 
 export interface DetailsOptions {
   HTMLAttributes: Record<string, any>;
@@ -58,7 +59,7 @@ export const Details = Node.create<DetailsOptions>({
         }
       }
 
-      toggle.textContent = "open";
+      toggle.innerHTML = icon(node.attrs.open ? "down-line" : "right-line");
       toggle.addEventListener("click", () => {
         if (editor.isEditable && typeof getPos === "function") {
           console.log("click");

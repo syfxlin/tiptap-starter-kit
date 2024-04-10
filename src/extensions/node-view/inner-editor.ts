@@ -198,13 +198,19 @@ export class InnerEditorView implements NodeView {
       state: EditorState.create({
         doc: this._node,
         plugins: [keymap({
+          "Enter": newlineInCode,
           "Tab": (state, dispatch) => {
             if (dispatch) {
               dispatch(state.tr.insertText("  "));
             }
             return true;
           },
-          "Enter": newlineInCode,
+          "Backspace": (state) => {
+            if (state.selection.$anchor.parentOffset !== 0) {
+              return false;
+            }
+            return this.editor.chain().toggleNode(this.options.node.type.name, "paragraph").focus().run();
+          },
           "Mod-Enter": () => {
             const $view = this.editor.view;
             const $state = $view.state;

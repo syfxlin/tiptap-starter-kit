@@ -24,13 +24,15 @@ export const DetailsSummary = Node.create<DetailsSummaryOptions>({
   },
   parseHTML() {
     return [
-      { tag: "summary" },
+      {
+        tag: "summary",
+      },
     ];
   },
   renderHTML({ HTMLAttributes }) {
     return [
       "summary",
-      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+      mergeAttributes({ "data-type": this.name }, this.options.HTMLAttributes, HTMLAttributes),
       0,
     ];
   },

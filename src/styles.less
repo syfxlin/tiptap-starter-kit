@@ -499,13 +499,37 @@
   }
 
   [data-type="details"] {
-    [data-type="detailsContent"] {
-      display: none;
+    display: flex;
+    padding: 0.5em;
+    border-radius: 4px;
+    border: 1px solid var(--tiptap-operator-border);
+
+    > button {
+      display: flex;
+      cursor: pointer;
+      border: none;
+      padding: 0;
+      background: transparent;
+
+      .ProseMirror-icon {
+        width: 2em;
+        height: 2em;
+      }
+    }
+
+    > div {
+      flex: 1;
+
+      [data-type="detailsContent"] {
+        display: none;
+      }
     }
 
     &[open] {
-      [data-type="detailsContent"] {
-        display: block;
+      > div {
+        [data-type="detailsContent"] {
+          display: block;
+        }
       }
     }
   }
@@ -961,6 +985,22 @@
 
   &-down {
     --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m12 19.164l6.207-6.207l-1.414-1.414L12 16.336l-4.793-4.793l-1.414 1.414zm0-5.65l6.207-6.207l-1.414-1.414L12 10.686L7.207 5.893L5.793 7.307z'/%3E%3C/svg%3E");
+  }
+
+  &-left-line {
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m11.828 12l2.829 2.829l-1.414 1.414L9 12.001l4.243-4.243l1.414 1.414z'/%3E%3C/svg%3E");
+  }
+
+  &-right-line {
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M12.172 12L9.343 9.173l1.415-1.414L15 12l-4.242 4.242l-1.415-1.414z'/%3E%3C/svg%3E");
+  }
+
+  &-up-line {
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m12 11.828l-2.828 2.829l-1.415-1.414L12 9l4.243 4.243l-1.415 1.414z'/%3E%3C/svg%3E");
+  }
+
+  &-down-line {
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m12 15l-4.243-4.242l1.415-1.414L12 12.172l2.828-2.828l1.415 1.414z'/%3E%3C/svg%3E");
   }
 
   &-table {

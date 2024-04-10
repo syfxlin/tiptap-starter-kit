@@ -113,10 +113,20 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
     return {
       Tab: ({ editor }) => {
         if (editor.isActive(this.name)) {
-          this.editor.commands.insertContent("  ");
-          return true;
+          return editor.chain().insertContent("  ").focus().run();
         }
         return false;
+      },
+      Backspace: ({ editor }) => {
+        const state = editor.state;
+        const selection = state.selection;
+        if (selection.$anchor.parent.type.name !== this.name) {
+          return false;
+        }
+        if (selection.$anchor.parentOffset !== 0) {
+          return false;
+        }
+        return editor.chain().toggleNode(this.name, "paragraph").focus().run();
       },
     };
   },
