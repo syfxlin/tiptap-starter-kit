@@ -209,7 +209,7 @@ export class InnerEditorView implements NodeView {
             if (state.selection.$anchor.parentOffset !== 0) {
               return false;
             }
-            return this.editor.chain().toggleNode(this.options.node.type.name, "paragraph").focus().run();
+            return this.editor.chain().toggleNode(this._node.type.name, "paragraph").focus().run();
           },
           "Mod-Enter": () => {
             const $view = this.editor.view;
