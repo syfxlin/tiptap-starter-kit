@@ -548,6 +548,25 @@
     }
   }
 
+  [data-type="embed"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--tiptap-card-color);
+    border: 1px solid var(--tiptap-operator-border);
+    margin: 0.5em 0;
+    padding: 0.5em 0.5em;
+    border-radius: 4px;
+    max-width: 100%;
+    box-sizing: content-box;
+
+    iframe {
+      width: 100%;
+      border: 0;
+      border-radius: 4px;
+    }
+  }
+
   [data-type="image"] {
     display: flex;
     justify-content: center;
@@ -558,7 +577,6 @@
     padding: 0.5em 0.5em;
     border-radius: 4px;
     max-width: 100%;
-    max-height: 100vh;
     box-sizing: content-box;
 
     img {
@@ -604,7 +622,6 @@
     padding: 0.5em 0.5em;
     border-radius: 4px;
     max-width: 100%;
-    max-height: 100vh;
 
     audio,
     video {

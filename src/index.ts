@@ -49,6 +49,7 @@ import { Plantuml } from "./nodes/plantuml";
 import { Details } from "./nodes/details";
 import { DetailsSummary } from "./nodes/details-summary";
 import { DetailsContent } from "./nodes/details-content";
+import { Embed } from "./nodes/embed";
 
 const editor = new Editor({
   element: document.querySelector("#editor")!,
@@ -101,6 +102,7 @@ const editor = new Editor({
     Details,
     DetailsSummary,
     DetailsContent,
+    Embed,
   ],
   content: `
     aaa <a href="https://ixk.me">Blog</a> <span data-type="mathInline">E = mc^2</span>
@@ -108,6 +110,7 @@ const editor = new Editor({
       <summary>123</summary>
       456
     </details>
+    <iframe src="https://ixk.me" height="1000px"></iframe>
     <pre language="javascript"><code>console.log("123");</code></pre>
     aaa <a href="https://ixk.me">Blog</a>
     <img src="https://source.unsplash.com/random" alt="Unsplash">
