@@ -43,7 +43,7 @@ export const DetailsContent = Node.create<DetailsContentOptions>({
         const state = editor.state;
         const selection = state.selection;
 
-        const findNode = findParentNode(node => node.type === this.type)(selection);
+        const findNode = findParentNode(node => node.type.name === this.name)(selection);
         if (!selection.empty || !findNode || !findNode.node.childCount) {
           return false;
         }

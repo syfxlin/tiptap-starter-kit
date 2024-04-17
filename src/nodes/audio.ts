@@ -138,11 +138,10 @@ export const Audio = Node.create<AudioOptions>({
   addCommands() {
     return {
       setAudio: (options) => {
-        return ({ commands }) =>
-          commands.insertContent({
-            type: this.name,
-            attrs: options,
-          });
+        return ({ commands }) => commands.insertContent({
+          type: this.name,
+          attrs: options,
+        });
       },
     };
   },

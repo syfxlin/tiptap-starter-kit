@@ -515,10 +515,24 @@
         width: 2em;
         height: 2em;
       }
+
+      > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+
+        &:hover,
+        &.active {
+          color: var(--tiptap-operator-hover-color);
+          background: var(--tiptap-operator-hover-background);
+        }
+      }
     }
 
     > div {
       flex: 1;
+      margin-left: 0.2em;
 
       [data-type="detailsContent"] {
         display: none;
@@ -1049,6 +1063,10 @@
 
   &-video {
     --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M3 3.993C3 3.445 3.445 3 3.993 3h16.014c.548 0 .993.445.993.993v16.014a.994.994 0 0 1-.993.993H3.993A.993.993 0 0 1 3 20.007zM5 5v14h14V5zm5.622 3.415l4.879 3.252a.4.4 0 0 1 0 .666l-4.88 3.252a.4.4 0 0 1-.621-.332V8.747a.4.4 0 0 1 .622-.332'/%3E%3C/svg%3E");
+  }
+
+  &-details {
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='m20 3l2 4v13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.004L4 3zm0 6H4v10h16zm-7 1v4h3l-4 4l-4-4h3v-4zm5.764-5H5.237l-1 2h15.527z'/%3E%3C/svg%3E");
   }
 
   &-mermaid {

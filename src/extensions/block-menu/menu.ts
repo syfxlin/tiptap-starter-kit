@@ -33,7 +33,7 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
   name: "blockMenu",
   addOptions() {
     return {
-      items: ["orderedList", "taskList", "image", "audio", "video", "table"],
+      items: ["orderedList", "taskList", "image", "audio", "video", "table", "details"],
       dictionary: {
         lineEmpty: "Enter '/' to insert block...",
         lineSlash: "Continue typing to filter...",
