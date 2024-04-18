@@ -7,6 +7,7 @@ import { FloatMenuView } from "../extensions/float-menu/view";
 import { icon } from "../utils/icons";
 import { UploaderItemStorage, UploaderStorage } from "../extensions/uploader";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { createResizer, setAttributes } from "../utils/editor";
 
 export interface ImageOptions extends TImageOptions {
   dictionary: {
@@ -38,6 +39,17 @@ export const Image = TImage.extend<ImageOptions>({
         imageOpen: "Open image",
         imageUpload: "Upload image",
         imageDelete: "Delete image",
+      },
+    };
+  },
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      width: {
+        default: null,
+      },
+      height: {
+        default: null,
       },
     };
   },
@@ -91,19 +103,19 @@ export const Image = TImage.extend<ImageOptions>({
     } satisfies NodeMarkdownStorage & UploaderItemStorage & FloatMenuItemStorage & BlockMenuItemStorage;
   },
   addNodeView() {
-    return ({ node, HTMLAttributes }) => {
+    return ({ node, editor, getPos }) => {
       const dom = document.createElement("div");
       const img = document.createElement("img");
 
-      dom.setAttribute("data-type", this.name);
-      dom.classList.add("ProseMirror-selectedcard");
-
-      for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes, HTMLAttributes))) {
+      for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes))) {
         if (value !== undefined && value !== null) {
           dom.setAttribute(key, value);
           img.setAttribute(key, value);
         }
       }
+
+      dom.setAttribute("data-type", this.name);
+      dom.classList.add("ProseMirror-selectedcard");
 
       img.src = node.attrs.src ?? "";
       img.alt = node.attrs.alt ?? "";
@@ -126,15 +138,36 @@ export const Image = TImage.extend<ImageOptions>({
       });
 
       dom.append(img);
+      createResizer(dom, (size) => {
+        setAttributes(editor, getPos, { ...node.attrs, ...size });
+      });
       return {
         dom,
         update: (updatedNode) => {
           if (updatedNode.type !== this.type) {
             return false;
           }
-          img.src = updatedNode.attrs.src ?? "";
-          img.alt = updatedNode.attrs.alt ?? "";
-          img.title = updatedNode.attrs.title ?? "";
+          const src = updatedNode.attrs.src ?? "";
+          if (img.getAttribute("src") !== src) {
+            img.src = src;
+          }
+          const alt = updatedNode.attrs.alt ?? "";
+          if (img.getAttribute("alt") !== alt) {
+            img.alt = alt;
+          }
+          const title = updatedNode.attrs.title ?? "";
+          if (img.getAttribute("title") !== title) {
+            img.title = title;
+          }
+          const width = updatedNode.attrs.width ? `${updatedNode.attrs.width}px` : "";
+          if (dom.style.width !== width) {
+            dom.style.width = width;
+          }
+          const height = updatedNode.attrs.height ? `${updatedNode.attrs.height}px` : "";
+          if (dom.style.height !== height) {
+            dom.style.height = height;
+          }
+          return true;
         },
       };
     };

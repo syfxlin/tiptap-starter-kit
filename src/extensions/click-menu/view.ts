@@ -224,12 +224,6 @@ export class ClickMenuView {
     if (node === view.dom) {
       node = document.elementFromPoint(event.x + 70, event.y);
     }
-    while (node !== view.dom && node && node.tagName === "IFRAME") {
-      node = node.parentElement;
-    }
-    if (node === view.dom) {
-      node = document.elementFromPoint(event.x + 70, event.y);
-    }
     if (node) {
       pos = view.posAtDOM(node, 0);
     }

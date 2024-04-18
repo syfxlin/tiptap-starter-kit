@@ -284,6 +284,14 @@ export function createResizer(element: HTMLElement, onUpdate: (size: { width: nu
       wrapper.style.userSelect = "unset";
       onUpdate({ width: element.clientWidth, height: element.clientHeight });
     });
+    wrapper.addEventListener("mouseleave", () => {
+      store.resizing = false;
+      store.offset = 0;
+      store.size = 0;
+      wrapper.style.display = "none";
+      wrapper.style.userSelect = "unset";
+      onUpdate({ width: element.clientWidth, height: element.clientHeight });
+    });
 
     resizer.append(wrapper);
     element.append(resizer);

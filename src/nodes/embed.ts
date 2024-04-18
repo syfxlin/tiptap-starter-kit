@@ -112,11 +112,10 @@ export const Embed = Node.create<EmbedOptions>({
       dom.style.width = node.attrs.width ? `${node.attrs.width}px` : "";
       dom.style.height = node.attrs.height ? `${node.attrs.height}px` : "";
 
+      dom.append(ifr);
       createResizer(dom, (size) => {
         setAttributes(editor, getPos, { ...node.attrs, ...size });
       });
-
-      dom.append(ifr);
       return {
         dom,
         update: (updatedNode) => {
