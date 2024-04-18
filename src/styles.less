@@ -35,6 +35,10 @@
 
 .ProseMirror {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 100%;
   width: 100%;
   outline: none;
   word-wrap: break-word;
@@ -47,13 +51,20 @@
   font-weight: var(--tiptap-font-weight);
   font-size: var(--tiptap-font-size);
   line-height: var(--tiptap-line-height);
+  box-sizing: border-box;
 
-  * {
-    box-sizing: border-box;
+  &::before {
+    content: "";
+    position: absolute;
+    left: -4em;
+    width: 4em;
+    height: 100%;
   }
 
   > * {
     margin: 0.5em 0;
+    width: 100%;
+    max-width: 100%;
   }
 
   p {
@@ -227,7 +238,6 @@
     border-collapse: collapse;
     box-sizing: border-box;
     border-radius: 4px;
-    margin-top: 1em;
     width: 100%;
 
     tr {
@@ -281,17 +291,15 @@
       width: 0.3em;
       height: 1.7em;
       border-radius: 2px;
+      transition-duration: 0.3s;
       transition-property: width, height, border-radius;
-      transition-duration: 150ms;
-      transition-timing-function: ease-in-out;
       border: 1px solid var(--tiptap-operator-border);
       background: var(--tiptap-operator-hover-background);
 
       .ProseMirror-icon {
         opacity: 0;
+        transition-duration: 0.3s;
         transition-property: opacity;
-        transition-duration: 150ms;
-        transition-timing-function: ease-in-out;
       }
     }
 
@@ -366,9 +374,8 @@
       display: flex;
       gap: 0.5em;
       opacity: 0;
-      transition-duration: 150ms;
+      transition-duration: 0.3s;
       transition-property: opacity;
-      transition-timing-function: ease-in-out;
 
       select {
         display: inline-block;
@@ -378,9 +385,8 @@
         outline: 0;
         border: 1px solid var(--tiptap-operator-hover-border);
         background: var(--tiptap-operator-background);
-        transition-duration: 150ms;
+        transition-duration: 0.3s;
         transition-property: color, border, box-shadow;
-        transition-timing-function: ease-in-out;
 
         &:hover,
         &:focus,
@@ -400,9 +406,8 @@
         outline: 0;
         border: 1px solid var(--tiptap-operator-hover-border);
         background: var(--tiptap-operator-background);
-        transition-duration: 150ms;
+        transition-duration: 0.3s;
         transition-property: color, border, box-shadow;
-        transition-timing-function: ease-in-out;
 
         &:hover,
         &:focus,
@@ -549,21 +554,20 @@
   }
 
   [data-type="embed"] {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--tiptap-card-color);
-    border: 1px solid var(--tiptap-operator-border);
+    align-self: center;
     margin: 0.5em 0;
-    padding: 0.5em 0.5em;
+    overflow: hidden;
     border-radius: 4px;
-    max-width: 100%;
-    box-sizing: content-box;
+    color: var(--tiptap-card-color);
 
     iframe {
-      width: 100%;
       border: 0;
-      border-radius: 4px;
+      width: 100%;
+      height: 100%;
     }
   }
 
@@ -639,10 +643,6 @@
   }
 
   // prosemirror
-  .ProseMirror-separator.ProseMirror-separator {
-    display: none !important;
-  }
-
   .ProseMirror-hideselection {
     caret-color: transparent;
 
@@ -719,15 +719,6 @@
   }
 }
 
-// region common
-
-.resize-cursor {
-  cursor: ew-resize;
-  cursor: col-resize;
-}
-
-// endregion
-
 // region tippy
 
 .tippy-box[data-theme="ProseMirror"],
@@ -758,10 +749,6 @@
   var(--tiptap-operator-shadow) 0 2px 4px,
   var(--tiptap-operator-shadow) 0 4px 8px;
 }
-
-// endregion
-
-// region editor
 
 .ProseMirror,
 .tippy-box[data-theme="ProseMirror"],
@@ -838,56 +825,16 @@
       background: @v;
     }
   });
-
-  .ProseMirror-code {
-    font-family: var(--tiptap-font-family-mono);
-  }
-
-  .ProseMirror-warn {
-    padding: 0 0.5em;
-    border-radius: 4px;
-    color: var(--tiptap-mark-color);
-    background: var(--tiptap-mark-background);
-  }
-
-  .ProseMirror-empty {
-    padding: 0 0.5em;
-    border-radius: 4px;
-    color: var(--tiptap-operator-color);
-    background: var(--tiptap-operator-hover-background);
-  }
-
-  .ProseMirror-error {
-    padding: 0 0.5em;
-    border-radius: 4px;
-    color: var(--tiptap-code-color);
-    background: var(--tiptap-code-background);
-  }
-
-  .ProseMirror-loading {
-    padding: 0 0.5em;
-    border-radius: 4px;
-    color: var(--tiptap-color-primary);
-    background: var(--tiptap-operator-hover-background);
-  }
-
-  .ProseMirror-card-empty {
-    color: var(--tiptap-operator-color);
-  }
-
-  .ProseMirror-card-error {
-    color: var(--tiptap-code-color);
-    background: var(--tiptap-code-background);
-  }
-
-  .ProseMirror-card-loading {
-    color: var(--tiptap-color-primary);
-  }
 }
 
 // endregion
 
-// region icon
+// region extra
+
+.resize-cursor {
+  cursor: ew-resize;
+  cursor: col-resize;
+}
 
 .ProseMirror-icon {
   display: inline-block;
@@ -1095,6 +1042,100 @@
   }
 }
 
+.ProseMirror-code {
+  font-family: var(--tiptap-font-family-mono);
+}
+
+.ProseMirror-warn {
+  padding: 0 0.5em;
+  border-radius: 4px;
+  color: var(--tiptap-mark-color);
+  background: var(--tiptap-mark-background);
+}
+
+.ProseMirror-empty {
+  padding: 0 0.5em;
+  border-radius: 4px;
+  color: var(--tiptap-operator-color);
+  background: var(--tiptap-operator-hover-background);
+}
+
+.ProseMirror-error {
+  padding: 0 0.5em;
+  border-radius: 4px;
+  color: var(--tiptap-code-color);
+  background: var(--tiptap-code-background);
+}
+
+.ProseMirror-loading {
+  padding: 0 0.5em;
+  border-radius: 4px;
+  color: var(--tiptap-color-primary);
+  background: var(--tiptap-operator-hover-background);
+}
+
+.ProseMirror-card-empty {
+  color: var(--tiptap-operator-color);
+}
+
+.ProseMirror-card-error {
+  color: var(--tiptap-code-color);
+  background: var(--tiptap-code-background);
+}
+
+.ProseMirror-card-loading {
+  color: var(--tiptap-color-primary);
+}
+
+.ProseMirror-separator {
+  && {
+    display: none !important;
+  }
+}
+
+.ProseMirror-hresizer,
+.ProseMirror-vresizer {
+  position: absolute;
+  border-radius: 5px;
+  background-color: var(--tiptap-operator-color);
+  opacity: 0;
+  transition: opacity 0.3s;
+
+  > div {
+    cursor: col-resize;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  &.ProseMirror-hresizer {
+    right: 0.25em;
+    width: 5px;
+    height: 40px;
+    cursor: col-resize;
+  }
+
+  &.ProseMirror-vresizer {
+    bottom: 0.25em;
+    width: 40px;
+    height: 5px;
+    cursor: row-resize;
+  }
+}
+
+.ProseMirror-resizeable {
+  position: relative;
+
+  &:hover {
+    .ProseMirror-hresizer,
+    .ProseMirror-vresizer {
+      opacity: 1;
+    }
+  }
+}
+
 // endregion
 
 // region menu
@@ -1127,9 +1168,8 @@
     color: var(--tiptap-operator-color);
     background: var(--tiptap-operator-background);
     border: 1px solid var(--tiptap-operator-hover-border);
-    transition-duration: 150ms;
+    transition-duration: 0.3s;
     transition-property: color, border, box-shadow;
-    transition-timing-function: ease-in-out;
 
     &:hover,
     &.active {
@@ -1154,9 +1194,8 @@
     cursor: pointer;
     border: none;
     border-radius: 4px;
-    transition-duration: 150ms;
+    transition-duration: 0.3s;
     transition-property: color;
-    transition-timing-function: ease-in-out;
     color: var(--tiptap-operator-color);
     background: transparent;
 
@@ -1202,9 +1241,8 @@
       padding: 0.35em 0.5em;
       border-radius: 4px;
       border: 1px solid var(--tiptap-operator-hover-border);
-      transition-duration: 150ms;
+      transition-duration: 0.3s;
       transition-property: color, border, box-shadow;
-      transition-timing-function: ease-in-out;
 
       &:hover,
       &.active {
@@ -1291,7 +1329,7 @@
     content: attr(data-empty);
     display: block;
     opacity: 0;
-    transition: opacity 150ms ease-in-out;
+    transition: opacity 0.3s;
     pointer-events: none;
     height: 0;
     color: var(--tiptap-operator-color);
@@ -1319,7 +1357,7 @@
     width: 1.2em;
     height: 1.2em;
     padding: 0.25em 0;
-    transition: background 150ms ease-in-out;
+    transition: background 0.3s;
     border-radius: 4px;
 
     &:hover,

@@ -2,6 +2,7 @@ import { Node, findChildren, findParentNode, mergeAttributes, wrappingInputRule 
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { icon } from "../utils/icons";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
+import { setAttributes } from "../utils/editor";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -111,14 +112,7 @@ export const Details = Node.create<DetailsOptions>({
       toggle.innerHTML = icon(node.attrs.open ? "down-line" : "right-line");
       button.append(toggle);
       button.addEventListener("click", () => {
-        if (editor.isEditable && typeof getPos === "function") {
-          editor.view.dispatch(
-            editor.view.state.tr.setNodeMarkup(getPos(), undefined, {
-              ...node.attrs,
-              open: !node.attrs.open,
-            }),
-          );
-        }
+        setAttributes(editor, getPos, { ...node.attrs, open: !node.attrs.open });
       });
 
       parent.append(button);

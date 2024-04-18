@@ -2,7 +2,7 @@ import { Editor, Node, mergeAttributes, nodeInputRule } from "@tiptap/core";
 import { Node as PNode } from "@tiptap/pm/model";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { NodeMarkdownStorage } from "../extensions/markdown";
-import { parseAttrs } from "../utils/editor";
+import { createResizer, parseAttributes, setAttributes } from "../utils/editor";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { icon } from "../utils/icons";
 
@@ -94,25 +94,50 @@ export const Embed = Node.create<EmbedOptions>({
     ];
   },
   addNodeView() {
-    return ({ node, HTMLAttributes }) => {
+    return ({ node, editor, getPos }) => {
       const dom = document.createElement("div");
       const ifr = document.createElement("iframe");
 
-      dom.setAttribute("data-type", this.name);
-      dom.classList.add("ProseMirror-selectedcard");
-
-      for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes, HTMLAttributes))) {
+      for (const [key, value] of Object.entries(this.options.HTMLAttributes)) {
         if (value !== undefined && value !== null) {
           dom.setAttribute(key, value);
           ifr.setAttribute(key, value);
         }
       }
 
+      dom.setAttribute("data-type", this.name);
+      dom.classList.add("ProseMirror-selectedcard");
+
       ifr.src = node.attrs.src ?? "";
-      ifr.width = node.attrs.width ?? "";
-      ifr.height = node.attrs.height ?? "";
+      dom.style.width = node.attrs.width ? `${node.attrs.width}px` : "";
+      dom.style.height = node.attrs.height ? `${node.attrs.height}px` : "";
+
+      createResizer(dom, (size) => {
+        setAttributes(editor, getPos, { ...node.attrs, ...size });
+      });
+
       dom.append(ifr);
-      return { dom };
+      return {
+        dom,
+        update: (updatedNode) => {
+          if (updatedNode.type !== this.type) {
+            return false;
+          }
+          const src = updatedNode.attrs.src ?? "";
+          if (ifr.getAttribute("src") !== src) {
+            ifr.src = src;
+          }
+          const width = updatedNode.attrs.width ? `${updatedNode.attrs.width}px` : "";
+          if (dom.style.width !== width) {
+            dom.style.width = width;
+          }
+          const height = updatedNode.attrs.height ? `${updatedNode.attrs.height}px` : "";
+          if (dom.style.height !== height) {
+            dom.style.height = height;
+          }
+          return true;
+        },
+      };
     };
   },
   addCommands() {
@@ -130,7 +155,7 @@ export const Embed = Node.create<EmbedOptions>({
       nodeInputRule({
         find: /(:embed{([^}]+)})/,
         type: this.type,
-        getAttributes: match => parseAttrs(match[2]),
+        getAttributes: match => parseAttributes(match[2]),
       }),
     ];
   },
@@ -147,7 +172,7 @@ export const Embed = Node.create<EmbedOptions>({
               name: this.options.dictionary.inputEmbed,
               onEnter: (value) => {
                 editor.chain()
-                  .updateAttributes(this.name, { href: value })
+                  .updateAttributes(this.name, { src: value })
                   .focus()
                   .run();
               },
@@ -165,8 +190,8 @@ export const Embed = Node.create<EmbedOptions>({
               view: icon("open"),
               onClick: () => {
                 const attrs = editor.getAttributes(this.name);
-                if (attrs.href) {
-                  window.open(attrs.href, attrs.target);
+                if (attrs.src) {
+                  window.open(attrs.src, attrs.target);
                 }
               },
             });
@@ -175,7 +200,7 @@ export const Embed = Node.create<EmbedOptions>({
               name: this.options.dictionary.deleteEmbed,
               view: icon("remove"),
               onClick: () => {
-                editor.chain().unsetLink().run();
+                editor.chain().deleteSelection().focus().run();
               },
             });
 

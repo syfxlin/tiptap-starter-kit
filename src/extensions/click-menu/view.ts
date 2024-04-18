@@ -137,7 +137,7 @@ export class ClickMenuView {
     clearTimeout(this._timer);
     // @ts-expect-error
     this._timer = setTimeout(() => {
-      const active = this._find(event.target as HTMLElement);
+      const active = this._find(event);
       if (active) {
         this.show(active);
       } else {
@@ -213,13 +213,26 @@ export class ClickMenuView {
     return tippy(document.body, this.options.tippy ? this.options.tippy({ options, view: this, editor: this.editor }) : options);
   }
 
-  private _find(target: HTMLElement) {
+  private _find(event: HTMLElementEventMap["mousemove"]) {
     const { view } = this.editor;
-    if (view.composing || !view.editable || !target || !view.dom.parentElement || target === view.dom) {
+    if (view.composing || !view.editable || !event.target || !view.dom.parentElement) {
       return undefined;
     }
 
-    const pos = view.posAtDOM(target, 0);
+    let pos = 0;
+    let node = event.target as Element | null;
+    if (node === view.dom) {
+      node = document.elementFromPoint(event.x + 70, event.y);
+    }
+    while (node !== view.dom && node && node.tagName === "IFRAME") {
+      node = node.parentElement;
+    }
+    if (node === view.dom) {
+      node = document.elementFromPoint(event.x + 70, event.y);
+    }
+    if (node) {
+      pos = view.posAtDOM(node, 0);
+    }
     if (pos <= 0) {
       return undefined;
     }

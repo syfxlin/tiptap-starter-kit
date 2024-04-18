@@ -246,7 +246,7 @@ export const Image = TImage.extend<ImageOptions>({
               name: this.options.dictionary.imageDelete,
               view: icon("remove"),
               onClick: () => {
-                editor.chain().deleteSelection().run();
+                editor.chain().deleteSelection().focus().run();
               },
             });
 

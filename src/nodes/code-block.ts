@@ -6,6 +6,7 @@ import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { icon } from "../utils/icons";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { setAttributes } from "../utils/editor";
 
 export interface CodeBlockOptions extends CodeBlockLowlightOptions {
   dictionary: Record<string, string>;
@@ -160,12 +161,7 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
         if (!editor.isEditable) {
           language.value = node.attrs.language;
         } else if (typeof getPos === "function") {
-          editor.view.dispatch(
-            editor.view.state.tr.setNodeMarkup(getPos(), undefined, {
-              ...node.attrs,
-              language: language.value,
-            }),
-          );
+          setAttributes(editor, getPos, { ...node.attrs, language: language.value });
         }
       });
 

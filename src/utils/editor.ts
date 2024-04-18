@@ -1,4 +1,4 @@
-import { findParentNode } from "@tiptap/core";
+import { Editor, findParentNode } from "@tiptap/core";
 import { Node } from "@tiptap/pm/model";
 import { Selection, Transaction } from "@tiptap/pm/state";
 import { CellSelection, Rect, TableMap } from "@tiptap/pm/tables";
@@ -203,7 +203,7 @@ export function selectTable(tr: Transaction) {
   return tr;
 }
 
-export function parseAttrs(value: string) {
+export function parseAttributes(value: string) {
   const regex = /([^=\s]+)="?([^"]+)"?/g;
   const attrs: Record<string, string> = {};
   let match: RegExpExecArray | null;
@@ -214,6 +214,14 @@ export function parseAttrs(value: string) {
   return attrs;
 }
 
+export function setAttributes(editor: Editor, getPos: (() => number) | boolean, attrs: Record<string, any>) {
+  if (editor.isEditable && typeof getPos === "function") {
+    editor.view.dispatch(
+      editor.view.state.tr.setNodeMarkup(getPos(), undefined, attrs),
+    );
+  }
+}
+
 export function debounce<A extends any[]>(delay: number, apply: (...args: A) => void) {
   let timer: number | undefined;
   return (...args: A) => {
@@ -221,4 +229,66 @@ export function debounce<A extends any[]>(delay: number, apply: (...args: A) => 
     // @ts-expect-error
     timer = setTimeout(() => apply(...args), delay);
   };
+}
+
+export function createResizer(element: HTMLElement, onUpdate: (size: { width: number; height: number }) => void) {
+  const create = (attr: "width" | "height") => {
+    const store = { resizing: false, offset: 0, size: 0 };
+    const resizer = document.createElement("div");
+    const wrapper = document.createElement("div");
+
+    wrapper.style.display = "none";
+    wrapper.style.userSelect = "unset";
+    element.classList.add("ProseMirror-resizeable");
+    if (attr === "width") {
+      resizer.classList.add("ProseMirror-hresizer");
+    } else {
+      resizer.classList.add("ProseMirror-vresizer");
+    }
+
+    resizer.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      const rect = resizer.getBoundingClientRect();
+      wrapper.style.display = "block";
+      wrapper.style.userSelect = "none";
+      store.resizing = true;
+      if (attr === "width") {
+        store.offset = rect.x;
+        store.size = element.clientWidth;
+      } else {
+        store.offset = rect.y;
+        store.size = element.clientHeight;
+      }
+    });
+    wrapper.addEventListener("mousemove", (e) => {
+      if (!store.resizing) {
+        return;
+      }
+      if (attr === "width") {
+        const size = store.size + Math.round((e.clientX - store.offset) * 2);
+        if (size >= 100) {
+          element.style.width = `${size}px`;
+        }
+      } else {
+        const size = store.size + Math.round(e.clientY - store.offset);
+        if (size >= 100) {
+          element.style.height = `${size}px`;
+        }
+      }
+    });
+    wrapper.addEventListener("mouseup", () => {
+      store.resizing = false;
+      store.offset = 0;
+      store.size = 0;
+      wrapper.style.display = "none";
+      wrapper.style.userSelect = "unset";
+      onUpdate({ width: element.clientWidth, height: element.clientHeight });
+    });
+
+    resizer.append(wrapper);
+    element.append(resizer);
+  };
+
+  create("width");
+  create("height");
 }

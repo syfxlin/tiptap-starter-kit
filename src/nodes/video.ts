@@ -4,7 +4,7 @@ import Plyr from "plyr";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { icon } from "../utils/icons";
-import { parseAttrs } from "../utils/editor";
+import { parseAttributes } from "../utils/editor";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { UploaderStorage } from "../extensions/uploader";
 
@@ -151,7 +151,7 @@ export const Video = Node.create<VideoOptions>({
       nodeInputRule({
         find: /(:video{([^}]+)})/,
         type: this.type,
-        getAttributes: match => parseAttrs(match[2]),
+        getAttributes: match => parseAttributes(match[2]),
       }),
     ];
   },
