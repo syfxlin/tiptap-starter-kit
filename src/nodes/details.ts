@@ -36,15 +36,6 @@ export const Details = Node.create<DetailsOptions>({
       },
     };
   },
-  addAttributes() {
-    return {
-      open: {
-        default: false,
-        parseHTML: e => e.getAttribute("open"),
-        renderHTML: a => a.open ? { open: "" } : {},
-      },
-    };
-  },
   addStorage() {
     return {
       markdown: {
@@ -82,6 +73,15 @@ export const Details = Node.create<DetailsOptions>({
       },
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },
+  addAttributes() {
+    return {
+      open: {
+        default: false,
+        parseHTML: e => e.getAttribute("open"),
+        renderHTML: a => a.open ? { open: "" } : {},
+      },
+    };
+  },
   parseHTML() {
     return [
       {
@@ -97,29 +97,50 @@ export const Details = Node.create<DetailsOptions>({
     ];
   },
   addNodeView() {
-    return ({ node, editor, getPos, HTMLAttributes }) => {
-      const parent = document.createElement("div");
-      const button = document.createElement("button");
-      const content = document.createElement("div");
+    return ({ node, editor, getPos }) => {
+      const dom = document.createElement("div");
+      const btn = document.createElement("button");
+      const ico = document.createElement("div");
+      const div = document.createElement("div");
 
-      for (const [key, value] of Object.entries(mergeAttributes({ "data-type": this.name }, this.options.HTMLAttributes, HTMLAttributes))) {
+      for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes))) {
         if (value !== undefined && value !== null) {
-          parent.setAttribute(key, value);
+          dom.setAttribute(key, value);
         }
       }
 
-      const toggle = document.createElement("div");
-      toggle.innerHTML = icon(node.attrs.open ? "down-line" : "right-line");
-      button.append(toggle);
-      button.addEventListener("click", () => {
-        setAttributes(editor, getPos, { ...node.attrs, open: !node.attrs.open });
+      dom.setAttribute("data-type", this.name);
+      btn.setAttribute("data-type", `${this.name}Button`);
+      div.setAttribute("data-type", `${this.name}Container`);
+      if (node.attrs.open) {
+        dom.setAttribute("open", "true");
+      } else {
+        dom.removeAttribute("open");
+      }
+
+      ico.innerHTML = icon("right-line");
+      btn.addEventListener("click", () => {
+        const open = !dom.hasAttribute("open");
+        setAttributes(editor, getPos, { ...node.attrs, open });
       });
 
-      parent.append(button);
-      parent.append(content);
+      btn.append(ico);
+      dom.append(btn);
+      dom.append(div);
       return {
-        dom: parent,
-        contentDOM: content,
+        dom,
+        contentDOM: div,
+        update: (updatedNode) => {
+          if (updatedNode.type !== this.type) {
+            return false;
+          }
+          if (updatedNode.attrs.open) {
+            dom.setAttribute("open", "true");
+          } else {
+            dom.removeAttribute("open");
+          }
+          return true;
+        },
       };
     };
   },
@@ -202,11 +223,6 @@ export const Details = Node.create<DetailsOptions>({
       },
     };
   },
-  addKeyboardShortcuts() {
-    return {
-      "Mod-Alt-d": () => this.editor.commands.toggleDetails(),
-    };
-  },
   addInputRules() {
     return [
       wrappingInputRule({
@@ -214,5 +230,10 @@ export const Details = Node.create<DetailsOptions>({
         type: this.type,
       }),
     ];
+  },
+  addKeyboardShortcuts() {
+    return {
+      "Mod-Alt-d": () => this.editor.commands.toggleDetails(),
+    };
   },
 });

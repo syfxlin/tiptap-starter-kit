@@ -7,7 +7,7 @@ import { FloatMenuView } from "../extensions/float-menu/view";
 import { icon } from "../utils/icons";
 import { UploaderItemStorage, UploaderStorage } from "../extensions/uploader";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
-import { createResizer, setAttributes } from "../utils/editor";
+import { InnerResizerView } from "../extensions/node-view/inner-resizer";
 
 export interface ImageOptions extends TImageOptions {
   dictionary: {
@@ -21,6 +21,9 @@ export interface ImageOptions extends TImageOptions {
     imageOpen: string;
     imageUpload: string;
     imageDelete: string;
+    alignLeft: string;
+    alignCenter: string;
+    alignRight: string;
   };
 }
 
@@ -39,17 +42,9 @@ export const Image = TImage.extend<ImageOptions>({
         imageOpen: "Open image",
         imageUpload: "Upload image",
         imageDelete: "Delete image",
-      },
-    };
-  },
-  addAttributes() {
-    return {
-      ...this.parent?.(),
-      width: {
-        default: null,
-      },
-      height: {
-        default: null,
+        alignLeft: "Left alignment",
+        alignCenter: "Center alignment",
+        alignRight: "Right alignment",
       },
     };
   },
@@ -102,75 +97,70 @@ export const Image = TImage.extend<ImageOptions>({
       },
     } satisfies NodeMarkdownStorage & UploaderItemStorage & FloatMenuItemStorage & BlockMenuItemStorage;
   },
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      align: {
+        default: "center",
+      },
+      width: {
+        default: null,
+      },
+      height: {
+        default: null,
+      },
+    };
+  },
   addNodeView() {
-    return ({ node, editor, getPos }) => {
-      const dom = document.createElement("div");
-      const img = document.createElement("img");
-
-      for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes))) {
-        if (value !== undefined && value !== null) {
-          dom.setAttribute(key, value);
-          img.setAttribute(key, value);
-        }
-      }
-
-      dom.setAttribute("data-type", this.name);
-      dom.classList.add("ProseMirror-selectedcard");
-
-      img.src = node.attrs.src ?? "";
-      img.alt = node.attrs.alt ?? "";
-      img.title = node.attrs.title ?? "";
-
-      dom.setAttribute("data-status", "loading");
-      dom.setAttribute("data-message", this.options.dictionary.loading);
-      img.addEventListener("load", () => {
-        dom.removeAttribute("data-status");
-        dom.removeAttribute("data-message");
-      });
-      img.addEventListener("error", () => {
-        if (img.getAttribute("src")) {
-          dom.setAttribute("data-status", "error");
-          dom.setAttribute("data-message", this.options.dictionary.error);
-        } else {
-          dom.setAttribute("data-status", "empty");
-          dom.setAttribute("data-message", this.options.dictionary.empty);
-        }
-      });
-
-      dom.append(img);
-      createResizer(dom, (size) => {
-        setAttributes(editor, getPos, { ...node.attrs, ...size });
-      });
-      return {
-        dom,
-        update: (updatedNode) => {
-          if (updatedNode.type !== this.type) {
-            return false;
+    return InnerResizerView.create({
+      HTMLAttributes: this.options.HTMLAttributes,
+      onInit: ({ view }) => {
+        const img = document.createElement("img");
+        for (const [key, value] of Object.entries(mergeAttributes(view.HTMLAttributes))) {
+          if (value !== undefined && value !== null) {
+            img.setAttribute(key, value);
           }
-          const src = updatedNode.attrs.src ?? "";
+        }
+        img.src = view.node.attrs.src ?? "";
+        img.alt = view.node.attrs.alt ?? "";
+        img.title = view.node.attrs.title ?? "";
+
+        view.$root.setAttribute("data-status", "loading");
+        view.$root.setAttribute("data-message", this.options.dictionary.loading);
+        img.addEventListener("load", () => {
+          view.$root.removeAttribute("data-status");
+          view.$root.removeAttribute("data-message");
+        });
+        img.addEventListener("error", () => {
+          if (img.getAttribute("src")) {
+            view.$root.setAttribute("data-status", "error");
+            view.$root.setAttribute("data-message", this.options.dictionary.error);
+          } else {
+            view.$root.setAttribute("data-status", "empty");
+            view.$root.setAttribute("data-message", this.options.dictionary.empty);
+          }
+        });
+
+        view.$root.append(img);
+      },
+      onUpdate: ({ view }) => {
+        const img = view.$root.firstElementChild as HTMLImageElement;
+        if (img) {
+          const src = view.node.attrs.src ?? "";
           if (img.getAttribute("src") !== src) {
             img.src = src;
           }
-          const alt = updatedNode.attrs.alt ?? "";
+          const alt = view.node.attrs.alt ?? "";
           if (img.getAttribute("alt") !== alt) {
             img.alt = alt;
           }
-          const title = updatedNode.attrs.title ?? "";
+          const title = view.node.attrs.title ?? "";
           if (img.getAttribute("title") !== title) {
             img.title = title;
           }
-          const width = updatedNode.attrs.width ? `${updatedNode.attrs.width}px` : "";
-          if (dom.style.width !== width) {
-            dom.style.width = width;
-          }
-          const height = updatedNode.attrs.height ? `${updatedNode.attrs.height}px` : "";
-          if (dom.style.height !== height) {
-            dom.style.height = height;
-          }
-          return true;
-        },
-      };
-    };
+        }
+      },
+    });
   },
   addProseMirrorPlugins() {
     return [
@@ -182,7 +172,9 @@ export const Image = TImage.extend<ImageOptions>({
           show: ({ editor }) => editor.isEditable && editor.isActive(this.name),
           tippy: ({ options }) => ({ ...options, onMount: i => (i.popper.querySelector(`input[name="src"]`) as HTMLInputElement)?.focus() }),
           onInit: ({ view, editor, element }) => {
-            const group = view.createGroup("column");
+            const group1 = view.createGroup("row");
+            const group2 = view.createGroup("column");
+            const group3 = view.createGroup("column");
 
             const src = view.createInput({
               id: "src",
@@ -282,8 +274,23 @@ export const Image = TImage.extend<ImageOptions>({
                 editor.chain().deleteSelection().focus().run();
               },
             });
+            const alignLeft = view.createButton({
+              name: this.options.dictionary.alignLeft,
+              view: icon("align-left"),
+              onClick: () => editor.chain().updateAttributes(this.name, { align: "left" }).run(),
+            });
+            const alignCenter = view.createButton({
+              name: this.options.dictionary.alignCenter,
+              view: icon("align-center"),
+              onClick: () => editor.chain().updateAttributes(this.name, { align: "center" }).run(),
+            });
+            const alignRight = view.createButton({
+              name: this.options.dictionary.alignRight,
+              view: icon("align-right"),
+              onClick: () => editor.chain().updateAttributes(this.name, { align: "right" }).run(),
+            });
 
-            group.addEventListener("keydown", (e) => {
+            group2.addEventListener("keydown", (e) => {
               if (e.key === "Enter") {
                 editor
                   .chain()
@@ -297,13 +304,22 @@ export const Image = TImage.extend<ImageOptions>({
               }
             });
 
-            group.append(src.input);
-            group.append(alt.input);
-            group.append(title.input);
-            element.append(group);
-            element.append(open.button);
-            element.append(upload.button);
-            element.append(remove.button);
+            const div1 = view.createGroup("row");
+            const div2 = view.createGroup("row");
+            div1.append(open.button);
+            div1.append(upload.button);
+            div1.append(remove.button);
+            div2.append(alignLeft.button);
+            div2.append(alignCenter.button);
+            div2.append(alignRight.button);
+            group2.append(src.input);
+            group2.append(alt.input);
+            group2.append(title.input);
+            group3.append(div1);
+            group3.append(div2);
+            group1.append(group2);
+            group1.append(group3);
+            element.append(group1);
           },
           onUpdate: ({ editor, element }) => {
             const attrs = editor.getAttributes(this.name);

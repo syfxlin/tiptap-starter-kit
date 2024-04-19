@@ -2,9 +2,11 @@ import { Editor, Node, mergeAttributes, nodeInputRule } from "@tiptap/core";
 import { Node as PNode } from "@tiptap/pm/model";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { NodeMarkdownStorage } from "../extensions/markdown";
-import { createResizer, parseAttributes, setAttributes } from "../utils/editor";
+import { parseAttributes } from "../utils/editor";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { icon } from "../utils/icons";
+import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
+import { InnerResizerView } from "../extensions/node-view/inner-resizer";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -24,9 +26,13 @@ export interface EmbedOptions {
   items: Array<EmbedItem>;
   HTMLAttributes: Record<string, any>;
   dictionary: {
+    name: string;
     inputEmbed: string;
     openEmbed: string;
     deleteEmbed: string;
+    alignLeft: string;
+    alignCenter: string;
+    alignRight: string;
   };
 }
 
@@ -42,6 +48,9 @@ export const Embed = Node.create<EmbedOptions>({
         inputEmbed: "Enter or paste embed",
         openEmbed: "Open embed",
         deleteEmbed: "Delete embed",
+        alignLeft: "Left alignment",
+        alignCenter: "Center alignment",
+        alignRight: "Right alignment",
       },
     };
   },
@@ -49,6 +58,9 @@ export const Embed = Node.create<EmbedOptions>({
     return {
       src: {
         default: null,
+      },
+      align: {
+        default: "center",
       },
       width: {
         default: null,
@@ -78,7 +90,18 @@ export const Embed = Node.create<EmbedOptions>({
           },
         },
       },
-    } satisfies NodeMarkdownStorage;
+      blockMenu: {
+        items: [
+          {
+            id: this.name,
+            name: this.options.dictionary.name,
+            icon: icon("embed"),
+            keywords: "embed,iframe,qrk",
+            action: editor => editor.chain().setEmbed({ src: "" }).focus().run(),
+          },
+        ],
+      },
+    } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },
   parseHTML() {
     return [
@@ -94,50 +117,28 @@ export const Embed = Node.create<EmbedOptions>({
     ];
   },
   addNodeView() {
-    return ({ node, editor, getPos }) => {
-      const dom = document.createElement("div");
-      const ifr = document.createElement("iframe");
-
-      for (const [key, value] of Object.entries(this.options.HTMLAttributes)) {
-        if (value !== undefined && value !== null) {
-          dom.setAttribute(key, value);
-          ifr.setAttribute(key, value);
-        }
-      }
-
-      dom.setAttribute("data-type", this.name);
-      dom.classList.add("ProseMirror-selectedcard");
-
-      ifr.src = node.attrs.src ?? "";
-      dom.style.width = node.attrs.width ? `${node.attrs.width}px` : "";
-      dom.style.height = node.attrs.height ? `${node.attrs.height}px` : "";
-
-      dom.append(ifr);
-      createResizer(dom, (size) => {
-        setAttributes(editor, getPos, { ...node.attrs, ...size });
-      });
-      return {
-        dom,
-        update: (updatedNode) => {
-          if (updatedNode.type !== this.type) {
-            return false;
+    return InnerResizerView.create({
+      HTMLAttributes: this.options.HTMLAttributes,
+      onInit: ({ view }) => {
+        const ifr = document.createElement("iframe");
+        for (const [key, value] of Object.entries(mergeAttributes(view.HTMLAttributes))) {
+          if (value !== undefined && value !== null) {
+            ifr.setAttribute(key, value);
           }
-          const src = updatedNode.attrs.src ?? "";
+        }
+        ifr.src = view.node.attrs.src ?? "";
+        view.$root.append(ifr);
+      },
+      onUpdate: ({ view }) => {
+        const ifr = view.$root.firstElementChild as HTMLIFrameElement;
+        if (ifr) {
+          const src = view.node.attrs.src ?? "";
           if (ifr.getAttribute("src") !== src) {
             ifr.src = src;
           }
-          const width = updatedNode.attrs.width ? `${updatedNode.attrs.width}px` : "";
-          if (dom.style.width !== width) {
-            dom.style.width = width;
-          }
-          const height = updatedNode.attrs.height ? `${updatedNode.attrs.height}px` : "";
-          if (dom.style.height !== height) {
-            dom.style.height = height;
-          }
-          return true;
-        },
-      };
-    };
+        }
+      },
+    });
   },
   addCommands() {
     return {
@@ -194,7 +195,6 @@ export const Embed = Node.create<EmbedOptions>({
                 }
               },
             });
-
             const remove = view.createButton({
               name: this.options.dictionary.deleteEmbed,
               view: icon("remove"),
@@ -202,8 +202,26 @@ export const Embed = Node.create<EmbedOptions>({
                 editor.chain().deleteSelection().focus().run();
               },
             });
+            const alignLeft = view.createButton({
+              name: this.options.dictionary.alignLeft,
+              view: icon("align-left"),
+              onClick: () => editor.chain().updateAttributes(this.name, { align: "left" }).run(),
+            });
+            const alignCenter = view.createButton({
+              name: this.options.dictionary.alignCenter,
+              view: icon("align-center"),
+              onClick: () => editor.chain().updateAttributes(this.name, { align: "center" }).run(),
+            });
+            const alignRight = view.createButton({
+              name: this.options.dictionary.alignRight,
+              view: icon("align-right"),
+              onClick: () => editor.chain().updateAttributes(this.name, { align: "right" }).run(),
+            });
 
             element.append(href.input);
+            element.append(alignLeft.button);
+            element.append(alignCenter.button);
+            element.append(alignRight.button);
             element.append(open.button);
             element.append(remove.button);
           },

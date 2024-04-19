@@ -114,7 +114,7 @@ export const Plantuml = Node.create<PlantumlOptions>({
       }
     });
     return InnerEditorView.create({
-      HTMLAttributes: { "data-type": this.name, ...this.options.HTMLAttributes },
+      HTMLAttributes: this.options.HTMLAttributes,
       onRender: ({ view }) => {
         view.$preview.classList.remove("ProseMirror-card-empty");
         view.$preview.classList.remove("ProseMirror-card-error");

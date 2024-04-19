@@ -7,6 +7,7 @@ import { icon } from "../utils/icons";
 import { parseAttributes } from "../utils/editor";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { UploaderStorage } from "../extensions/uploader";
+import { InnerResizerView } from "../extensions/node-view/inner-resizer";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -44,6 +45,15 @@ export const Video = Node.create<VideoOptions>({
         default: null,
       },
       title: {
+        default: null,
+      },
+      align: {
+        default: "center",
+      },
+      width: {
+        default: null,
+      },
+      height: {
         default: null,
       },
     };
@@ -110,30 +120,38 @@ export const Video = Node.create<VideoOptions>({
     ];
   },
   addNodeView() {
-    return ({ HTMLAttributes }) => {
-      const parent = document.createElement("div");
-      const video = document.createElement("video");
-
-      parent.classList.add("ProseMirror-selectedcard");
-      parent.setAttribute("data-type", this.name);
-
-      for (const [key, value] of Object.entries(mergeAttributes({ controls: "true" }, this.options.HTMLAttributes, HTMLAttributes))) {
-        if (value !== undefined && value !== null) {
-          parent.setAttribute(key, value);
-          video.setAttribute(key, value);
+    return InnerResizerView.create({
+      HTMLAttributes: this.options.HTMLAttributes,
+      onInit: ({ view }) => {
+        const vdo = document.createElement("video");
+        for (const [key, value] of Object.entries(mergeAttributes(view.HTMLAttributes))) {
+          if (value !== undefined && value !== null) {
+            vdo.setAttribute(key, value);
+          }
         }
-      }
-
-      parent.append(video);
-
-      const plyr = new Plyr(video);
-      return {
-        dom: parent,
-        destroy: () => {
-          plyr.destroy();
-        },
-      };
-    };
+        view.$root.append(vdo);
+        view.$root.classList.add("ProseMirror-selectedcard");
+        // @ts-expect-error
+        view.plyr = new Plyr(vdo);
+      },
+      onUpdate: ({ view }) => {
+        const vdo = view.$root.firstElementChild as HTMLVideoElement;
+        if (vdo) {
+          const src = view.node.attrs.src ?? "";
+          if (vdo.getAttribute("src") !== src) {
+            vdo.src = src;
+          }
+          const title = view.node.attrs.title ?? "";
+          if (vdo.getAttribute("title") !== title) {
+            vdo.title = title;
+          }
+        }
+      },
+      onDestroy: ({ view }) => {
+        // @ts-expect-error
+        view.plyr?.destroy();
+      },
+    });
   },
   addCommands() {
     return {

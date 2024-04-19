@@ -38,16 +38,6 @@ export const Audio = Node.create<AudioOptions>({
   group() {
     return this.options.inline ? "inline" : "block";
   },
-  addAttributes() {
-    return {
-      src: {
-        default: null,
-      },
-      title: {
-        default: null,
-      },
-    };
-  },
   addOptions() {
     return {
       inline: false,
@@ -96,6 +86,16 @@ export const Audio = Node.create<AudioOptions>({
       },
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },
+  addAttributes() {
+    return {
+      src: {
+        default: null,
+      },
+      title: {
+        default: null,
+      },
+    };
+  },
   parseHTML() {
     return [
       {
@@ -110,25 +110,42 @@ export const Audio = Node.create<AudioOptions>({
     ];
   },
   addNodeView() {
-    return ({ HTMLAttributes }) => {
-      const parent = document.createElement("div");
-      const audio = document.createElement("audio");
+    return ({ node }) => {
+      const dom = document.createElement("div");
+      const ado = document.createElement("audio");
 
-      parent.classList.add("ProseMirror-selectedcard");
-      parent.setAttribute("data-type", this.name);
-
-      for (const [key, value] of Object.entries(mergeAttributes({ controls: "true" }, this.options.HTMLAttributes, HTMLAttributes))) {
+      for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes))) {
         if (value !== undefined && value !== null) {
-          parent.setAttribute(key, value);
-          audio.setAttribute(key, value);
+          dom.setAttribute(key, value);
+          ado.setAttribute(key, value);
         }
       }
 
-      parent.append(audio);
+      dom.setAttribute("data-type", this.name);
+      ado.setAttribute("data-type", `${this.name}Audio`);
+      dom.classList.add("ProseMirror-selectedcard");
+      ado.controls = true;
+      ado.src = node.attrs.src ?? "";
+      ado.title = node.attrs.title ?? "";
 
-      const plyr = new Plyr(audio);
+      dom.append(ado);
+      const plyr = new Plyr(ado);
       return {
-        dom: parent,
+        dom,
+        update: (updatedNode) => {
+          if (updatedNode.type !== this.type) {
+            return false;
+          }
+          const src = updatedNode.attrs.src ?? "";
+          if (ado.getAttribute("src") !== src) {
+            ado.src = src;
+          }
+          const title = updatedNode.attrs.title ?? "";
+          if (ado.getAttribute("title") !== title) {
+            ado.title = title;
+          }
+          return true;
+        },
         destroy: () => {
           plyr.destroy();
         },

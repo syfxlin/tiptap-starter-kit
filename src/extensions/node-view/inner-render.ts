@@ -1,4 +1,4 @@
-import { Editor, NodeViewRendererProps } from "@tiptap/core";
+import { Editor, NodeViewRendererProps, mergeAttributes } from "@tiptap/core";
 import { NodeView } from "@tiptap/pm/view";
 import { Node } from "@tiptap/pm/model";
 
@@ -36,7 +36,8 @@ export class InnerRenderView implements NodeView {
     this.options = options;
     this._node = options.node;
     this._root = document.createElement(options.tag ?? "div");
-    this._root.classList.add("ProseMirror-ir");
+    this._root.classList.add("ProseMirror-inner-render");
+    this._root.setAttribute("data-type", this._node.type.name);
     if (this.options.id) {
       this._root.setAttribute("name", this.options.id);
     }
@@ -53,7 +54,7 @@ export class InnerRenderView implements NodeView {
         }
       }
     }
-    for (const [key, value] of Object.entries(this.options.HTMLAttributes)) {
+    for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes))) {
       if (value !== undefined && value !== null) {
         this._root.setAttribute(key, value);
       }
@@ -84,6 +85,10 @@ export class InnerRenderView implements NodeView {
 
   public get getPos() {
     return this.options.getPos;
+  }
+
+  public get HTMLAttributes() {
+    return this.options.HTMLAttributes;
   }
 
   public get $root() {

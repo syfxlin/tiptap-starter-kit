@@ -93,7 +93,7 @@ export const MathBlock = Node.create<MathBlockOptions>({
   },
   addNodeView() {
     return InnerEditorView.create({
-      HTMLAttributes: { "data-type": this.name, ...this.options.HTMLAttributes },
+      HTMLAttributes: this.options.HTMLAttributes,
       onRender: ({ view }) => {
         view.$preview.classList.remove("ProseMirror-card-empty");
         view.$preview.classList.remove("ProseMirror-card-error");

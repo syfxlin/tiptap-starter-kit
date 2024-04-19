@@ -32,13 +32,6 @@ export const MathInline = Node.create<MathInlineOptions>({
   group: "inline",
   atom: true,
   draggable: true,
-  addAttributes() {
-    return {
-      value: {
-        default: "",
-      },
-    };
-  },
   addOptions() {
     return {
       HTMLAttributes: {},
@@ -83,6 +76,13 @@ export const MathInline = Node.create<MathInlineOptions>({
       },
     } satisfies NodeMarkdownStorage & BlockMenuItemStorage;
   },
+  addAttributes() {
+    return {
+      value: {
+        default: "",
+      },
+    };
+  },
   parseHTML() {
     return [
       {
@@ -102,7 +102,7 @@ export const MathInline = Node.create<MathInlineOptions>({
   addNodeView() {
     return InnerRenderView.create({
       tag: "span",
-      HTMLAttributes: { "data-type": this.name, ...this.options.HTMLAttributes },
+      HTMLAttributes: this.options.HTMLAttributes,
       onRender: ({ view }) => {
         try {
           if (!view.node.attrs.value) {

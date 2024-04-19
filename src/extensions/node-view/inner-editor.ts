@@ -1,4 +1,4 @@
-import { Editor, NodeViewRendererProps } from "@tiptap/core";
+import { Editor, NodeViewRendererProps, mergeAttributes } from "@tiptap/core";
 import { Node } from "@tiptap/pm/model";
 import { keymap } from "@tiptap/pm/keymap";
 import { StepMap } from "@tiptap/pm/transform";
@@ -45,7 +45,8 @@ export class InnerEditorView implements NodeView {
     this.options = options;
     this._node = options.node;
     this._root = document.createElement(options.tag ?? "div");
-    this._root.classList.add("ProseMirror-ie");
+    this._root.classList.add("ProseMirror-inner-editor");
+    this._root.setAttribute("data-type", this._node.type.name);
     if (this.options.id) {
       this._root.setAttribute("name", this.options.id);
     }
@@ -62,7 +63,7 @@ export class InnerEditorView implements NodeView {
         }
       }
     }
-    for (const [key, value] of Object.entries(this.options.HTMLAttributes)) {
+    for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes))) {
       if (value !== undefined && value !== null) {
         this._root.setAttribute(key, value);
       }
@@ -70,8 +71,8 @@ export class InnerEditorView implements NodeView {
     this._editor = document.createElement("div");
     this._preview = document.createElement("div");
     this._editor.style.display = "none";
-    this._editor.classList.add("ProseMirror-ie-editor");
-    this._preview.classList.add("ProseMirror-ie-preview");
+    this._editor.classList.add("ProseMirror-inner-editor-editor");
+    this._preview.classList.add("ProseMirror-inner-editor-preview");
     this._root.append(this._editor);
     this._root.append(this._preview);
     if (this.options.onInit) {
@@ -108,6 +109,10 @@ export class InnerEditorView implements NodeView {
 
   public get getPos() {
     return this.options.getPos;
+  }
+
+  public get HTMLAttributes() {
+    return this.options.HTMLAttributes;
   }
 
   public get $root() {

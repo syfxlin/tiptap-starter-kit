@@ -61,13 +61,6 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
       },
     };
   },
-  addAttributes() {
-    return {
-      language: {
-        default: "plaintext",
-      },
-    };
-  },
   addStorage() {
     return {
       ...this.parent?.(),
@@ -110,43 +103,29 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
       },
     } satisfies NodeMarkdownStorage & FloatMenuItemStorage & BlockMenuItemStorage;
   },
-  addKeyboardShortcuts() {
+  addAttributes() {
     return {
-      Tab: ({ editor }) => {
-        if (editor.isActive(this.name)) {
-          return editor.chain().insertContent("  ").focus().run();
-        }
-        return false;
-      },
-      Backspace: ({ editor }) => {
-        const state = editor.state;
-        const selection = state.selection;
-        if (selection.$anchor.parent.type.name !== this.name) {
-          return false;
-        }
-        if (selection.$anchor.parentOffset !== 0) {
-          return false;
-        }
-        return editor.chain().toggleNode(this.name, "paragraph").focus().run();
+      language: {
+        default: "plaintext",
       },
     };
   },
   addNodeView() {
-    return ({ node, editor, getPos, HTMLAttributes }) => {
+    return ({ node, editor, getPos }) => {
       const parent = document.createElement("pre");
       const toolbar = document.createElement("div");
       const content = document.createElement("code");
 
-      parent.setAttribute("data-type", this.name);
-      toolbar.setAttribute("data-type", `${this.name}Toolbar`);
-      content.setAttribute("data-type", `${this.name}Content`);
-
-      for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes, HTMLAttributes))) {
+      for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes))) {
         if (value !== undefined && value !== null) {
           parent.setAttribute(key, value);
           content.setAttribute(key, value);
         }
       }
+
+      parent.setAttribute("data-type", this.name);
+      toolbar.setAttribute("data-type", `${this.name}Toolbar`);
+      content.setAttribute("data-type", `${this.name}Content`);
 
       // language list
       const language = document.createElement("select");
@@ -200,10 +179,33 @@ export const CodeBlock = CodeBlockLowlight.extend<CodeBlockOptions>({
           if (updatedNode.type !== this.type) {
             return false;
           }
-          language.value = updatedNode.attrs.language;
+          if (language.value !== updatedNode.attrs.language) {
+            language.value = updatedNode.attrs.language;
+          }
           return true;
         },
       };
+    };
+  },
+  addKeyboardShortcuts() {
+    return {
+      Tab: ({ editor }) => {
+        if (editor.isActive(this.name)) {
+          return editor.chain().insertContent("  ").focus().run();
+        }
+        return false;
+      },
+      Backspace: ({ editor }) => {
+        const state = editor.state;
+        const selection = state.selection;
+        if (selection.$anchor.parent.type.name !== this.name) {
+          return false;
+        }
+        if (selection.$anchor.parentOffset !== 0) {
+          return false;
+        }
+        return editor.chain().toggleNode(this.name, "paragraph").focus().run();
+      },
     };
   },
 });
