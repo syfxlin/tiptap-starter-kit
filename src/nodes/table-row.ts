@@ -141,34 +141,36 @@ export const TableRow = TTableRow.extend<TableRowOptions>({
           decorations: (state) => {
             const { tr, doc, selection } = state;
             const decorations: Array<Decoration> = [];
-            const cells = getCellsInColumn(selection, 0);
-            if (cells) {
-              for (let index = 0; index < cells.length; index++) {
-                decorations.push(
-                  Decoration.widget(cells[index].pos + 1, () => {
-                    const grip = document.createElement("div");
-                    grip.classList.add("ProseMirror-table-grip-row");
-                    if (isRowSelected(selection, index)) {
-                      grip.classList.add("active");
-                    }
-                    if (index === 0) {
-                      grip.classList.add("first");
-                    }
-                    if (index === cells.length - 1) {
-                      grip.classList.add("last");
-                    }
-                    const drag = document.createElement("div");
-                    drag.classList.add("ProseMirror-table-grip-drag");
-                    drag.innerHTML = icon("drag");
-                    drag.addEventListener("mousedown", (event) => {
-                      event.preventDefault();
-                      event.stopImmediatePropagation();
-                      this.editor.view.dispatch(selectRow(tr, index));
-                    });
-                    grip.append(drag);
-                    return grip;
-                  }),
-                );
+            if (this.editor.isEditable) {
+              const cells = getCellsInColumn(selection, 0);
+              if (cells) {
+                for (let index = 0; index < cells.length; index++) {
+                  decorations.push(
+                    Decoration.widget(cells[index].pos + 1, () => {
+                      const grip = document.createElement("div");
+                      grip.classList.add("ProseMirror-table-grip-row");
+                      if (isRowSelected(selection, index)) {
+                        grip.classList.add("active");
+                      }
+                      if (index === 0) {
+                        grip.classList.add("first");
+                      }
+                      if (index === cells.length - 1) {
+                        grip.classList.add("last");
+                      }
+                      const drag = document.createElement("div");
+                      drag.classList.add("ProseMirror-table-grip-drag");
+                      drag.innerHTML = icon("drag");
+                      drag.addEventListener("mousedown", (event) => {
+                        event.preventDefault();
+                        event.stopImmediatePropagation();
+                        this.editor.view.dispatch(selectRow(tr, index));
+                      });
+                      grip.append(drag);
+                      return grip;
+                    }),
+                  );
+                }
               }
             }
             return DecorationSet.create(doc, decorations);

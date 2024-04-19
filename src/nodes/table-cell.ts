@@ -152,17 +152,19 @@ export const TableCell = TTableCell.extend<TableCellOptions>({
           decorations: (state) => {
             const { doc, selection } = state;
             const decorations: Array<Decoration> = [];
-            const table = findTable(selection);
-            if (table) {
-              const map = TableMap.get(table.node);
-              for (const pos of map.cellsInRect({ left: 0, right: map.width, top: 0, bottom: map.height })) {
-                decorations.push(
-                  Decoration.widget(table.start + pos + 1, () => {
-                    const grip = document.createElement("div");
-                    grip.classList.add("ProseMirror-table-grip-cell");
-                    return grip;
-                  }),
-                );
+            if (this.editor.isEditable) {
+              const table = findTable(selection);
+              if (table) {
+                const map = TableMap.get(table.node);
+                for (const pos of map.cellsInRect({ left: 0, right: map.width, top: 0, bottom: map.height })) {
+                  decorations.push(
+                    Decoration.widget(table.start + pos + 1, () => {
+                      const grip = document.createElement("div");
+                      grip.classList.add("ProseMirror-table-grip-cell");
+                      return grip;
+                    }),
+                  );
+                }
               }
             }
             return DecorationSet.create(doc, decorations);

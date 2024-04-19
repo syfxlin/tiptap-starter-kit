@@ -153,15 +153,17 @@ export const Table = TTable.extend<TableOptions>({
           decorations: (state) => {
             const { doc, selection } = state;
             const decorations: Array<Decoration> = [];
-            const cell = getCellInTable(selection, 0, 0);
-            if (cell) {
-              decorations.push(
-                Decoration.widget(cell.pos + 1, () => {
-                  const grip = document.createElement("div");
-                  grip.classList.add("ProseMirror-table-grip-table");
-                  return grip;
-                }),
-              );
+            if (this.editor.isEditable) {
+              const cell = getCellInTable(selection, 0, 0);
+              if (cell) {
+                decorations.push(
+                  Decoration.widget(cell.pos + 1, () => {
+                    const grip = document.createElement("div");
+                    grip.classList.add("ProseMirror-table-grip-table");
+                    return grip;
+                  }),
+                );
+              }
             }
             return DecorationSet.create(doc, decorations);
           },

@@ -1076,7 +1076,7 @@
 }
 
 .ProseMirror-gapcursor {
-  .ProseMirror:not([contenteditable="false"]) & {
+  .ProseMirror[contenteditable="true"] & {
     display: none;
     pointer-events: none;
     position: absolute;
@@ -1092,13 +1092,13 @@
     }
   }
 
-  .ProseMirror-focused:not([contenteditable="false"]) & {
+  .ProseMirror-focused[contenteditable="true"] & {
     display: block;
   }
 }
 
 .ProseMirror-selectednode {
-  .ProseMirror:not([contenteditable="false"]) & {
+  .ProseMirror[contenteditable="true"] & {
     position: relative;
 
     &::after {
@@ -1121,17 +1121,17 @@
         content: none !important;
       }
     }
-  }
 
-  .ProseMirror:not([contenteditable="false"]) li& {
-    &::after {
-      left: -24px;
+    li& {
+      &::after {
+        left: -24px;
+      }
     }
-  }
 
-  .ProseMirror:not([contenteditable="false"]) ul[data-type="taskList"] li& {
-    &::after {
-      left: -4px;
+    ul[data-type="taskList"] li& {
+      &::after {
+        left: -4px;
+      }
     }
   }
 }
@@ -1185,10 +1185,17 @@
       align-items: center;
     }
   }
+
+  .ProseMirror[contenteditable="false"] & {
+    &-editor {
+      display: none !important;
+    }
+  }
 }
 
 .ProseMirror-inner-resizer {
   position: relative;
+  border-radius: 4px;
 
   .ProseMirror-lresizer,
   .ProseMirror-rresizer,
@@ -1247,6 +1254,14 @@
     .ProseMirror-rresizer,
     .ProseMirror-bresizer {
       opacity: 1;
+    }
+  }
+
+  .ProseMirror[contenteditable="false"] & {
+    .ProseMirror-lresizer,
+    .ProseMirror-rresizer,
+    .ProseMirror-bresizer {
+      display: none !important;
     }
   }
 }
