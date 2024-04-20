@@ -53,9 +53,6 @@ export const Video = Node.create<VideoOptions>({
       width: {
         default: null,
       },
-      height: {
-        default: null,
-      },
     };
   },
   addOptions() {
@@ -121,6 +118,7 @@ export const Video = Node.create<VideoOptions>({
   },
   addNodeView() {
     return InnerResizerView.create({
+      resize: ["width"],
       HTMLAttributes: this.options.HTMLAttributes,
       onInit: ({ view }) => {
         const vdo = document.createElement("video");

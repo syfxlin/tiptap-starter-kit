@@ -33,7 +33,30 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
   name: "blockMenu",
   addOptions() {
     return {
-      items: ["orderedList", "taskList", "image", "audio", "video", "table", "details", "embed"],
+      items: [
+        "heading1",
+        "heading2",
+        "heading3",
+        "|",
+        "orderedList",
+        "bulletList",
+        "taskList",
+        "|",
+        "image",
+        "audio",
+        "video",
+        "|",
+        "blockquote",
+        "codeBlock",
+        "mathBlock",
+        "mermaid",
+        "plantuml",
+        "|",
+        "horizontalRule",
+        "table",
+        "details",
+        "embed",
+      ],
       dictionary: {
         lineEmpty: "Enter '/' to insert block...",
         lineSlash: "Continue typing to filter...",
@@ -63,10 +86,10 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
         pluginKey: new PluginKey("block-menu"),
         char: "/",
         items: ({ query }) => {
-          const items: Array<BlockMenuViewItem> = [];
+          const filtered: Array<BlockMenuViewItem> = [];
           for (const name of this.options.items) {
             if (name === "|") {
-              items.push(name);
+              filtered.push(name);
               continue;
             }
             const item = mappings.get(name);
@@ -79,7 +102,7 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
                 continue;
               }
             }
-            items.push({
+            filtered.push({
               action: ({ editor, view }) => {
                 // clear search
                 const { state, dispatch } = editor.view;
@@ -99,15 +122,26 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
               }),
             });
           }
-          return items.reduce<Array<BlockMenuViewItem>>((all, item, index) => {
-            if ((index === 0 || index === items.length - 1) && typeof item === "string") {
-              return all;
+          const items: Array<BlockMenuViewItem> = [];
+          for (let i = 0; i < filtered.length; i++) {
+            const item = filtered[i];
+            if (item === "|") {
+              if (i === 0 || i === filtered.length - 1) {
+                continue;
+              }
+              if (filtered[i + 1] === "|") {
+                continue;
+              }
+              if (items.length === 0) {
+                continue;
+              }
+              if (items[items.length - 1] === "|") {
+                continue;
+              }
             }
-            if (typeof item === "string" && typeof items[index + 1] === "string") {
-              return all;
-            }
-            return [...all, item];
-          }, []);
+            items.push(item);
+          }
+          return items;
         },
         render: BlockMenuView.create({
           editor: this.editor,
@@ -140,7 +174,7 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
               if (isSlash) {
                 decorations.push(Decoration.node(parent.pos, parent.pos + parent.node.nodeSize, {
                   "class": "ProseMirror-bm-placeholder",
-                  "data-empty": this.options.dictionary.lineSlash,
+                  "data-empty": ` ${this.options.dictionary.lineSlash}`,
                 }));
               }
               return DecorationSet.create(state.doc, decorations);

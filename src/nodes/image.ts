@@ -106,13 +106,11 @@ export const Image = TImage.extend<ImageOptions>({
       width: {
         default: null,
       },
-      height: {
-        default: null,
-      },
     };
   },
   addNodeView() {
     return InnerResizerView.create({
+      resize: ["width"],
       HTMLAttributes: this.options.HTMLAttributes,
       onInit: ({ view }) => {
         const img = document.createElement("img");

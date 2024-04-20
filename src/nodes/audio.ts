@@ -7,6 +7,7 @@ import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { parseAttributes } from "../utils/editor";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { UploaderStorage } from "../extensions/uploader";
+import { InnerResizerView } from "../extensions/node-view/inner-resizer";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -94,6 +95,12 @@ export const Audio = Node.create<AudioOptions>({
       title: {
         default: null,
       },
+      align: {
+        default: "center",
+      },
+      width: {
+        default: null,
+      },
     };
   },
   parseHTML() {
@@ -110,47 +117,39 @@ export const Audio = Node.create<AudioOptions>({
     ];
   },
   addNodeView() {
-    return ({ node }) => {
-      const dom = document.createElement("div");
-      const ado = document.createElement("audio");
-
-      for (const [key, value] of Object.entries(mergeAttributes(this.options.HTMLAttributes))) {
-        if (value !== undefined && value !== null) {
-          dom.setAttribute(key, value);
-          ado.setAttribute(key, value);
+    return InnerResizerView.create({
+      resize: ["width"],
+      HTMLAttributes: this.options.HTMLAttributes,
+      onInit: ({ view }) => {
+        const ado = document.createElement("audio");
+        for (const [key, value] of Object.entries(mergeAttributes(view.HTMLAttributes))) {
+          if (value !== undefined && value !== null) {
+            ado.setAttribute(key, value);
+          }
         }
-      }
-
-      dom.setAttribute("data-type", this.name);
-      ado.setAttribute("data-type", `${this.name}Audio`);
-      dom.classList.add("ProseMirror-selectedcard");
-      ado.controls = true;
-      ado.src = node.attrs.src ?? "";
-      ado.title = node.attrs.title ?? "";
-
-      dom.append(ado);
-      const plyr = new Plyr(ado);
-      return {
-        dom,
-        update: (updatedNode) => {
-          if (updatedNode.type !== this.type) {
-            return false;
+        view.$root.append(ado);
+        view.$root.classList.add("ProseMirror-selectedcard");
+        // @ts-expect-error
+        view.plyr = new Plyr(ado);
+      },
+      onUpdate: ({ view }) => {
+        const vdo = view.$root.firstElementChild as HTMLAudioElement;
+        if (vdo) {
+          const src = view.node.attrs.src ?? "";
+          if (vdo.getAttribute("src") !== src) {
+            vdo.src = src;
           }
-          const src = updatedNode.attrs.src ?? "";
-          if (ado.getAttribute("src") !== src) {
-            ado.src = src;
+          const title = view.node.attrs.title ?? "";
+          if (vdo.getAttribute("title") !== title) {
+            vdo.title = title;
           }
-          const title = updatedNode.attrs.title ?? "";
-          if (ado.getAttribute("title") !== title) {
-            ado.title = title;
-          }
-          return true;
-        },
-        destroy: () => {
-          plyr.destroy();
-        },
-      };
-    };
+        }
+      },
+      onDestroy: ({ view }) => {
+        // @ts-expect-error
+        view.plyr?.destroy();
+      },
+    });
   },
   addCommands() {
     return {

@@ -8,6 +8,7 @@ export interface InnerResizerViewOptions extends NodeViewRendererProps {
   tag?: keyof HTMLElementTagNameMap;
   class?: string | string[];
   style?: Partial<CSSStyleDeclaration> | Array<Partial<CSSStyleDeclaration>>;
+  resize?: Array<"width" | "height">;
   onRender?: (props: { view: InnerResizerView; editor: Editor; $root: HTMLElement }) => void;
   onInit?: (props: { view: InnerResizerView; editor: Editor; $root: HTMLElement }) => void;
   onUpdate?: (props: { view: InnerResizerView; editor: Editor; $root: HTMLElement }) => void;
@@ -82,9 +83,13 @@ export class InnerResizerView implements NodeView {
         $root: this._root,
       });
     }
-    this._resizer("left");
-    this._resizer("right");
-    this._resizer("bottom");
+    if (!this.options.resize || this.options.resize.includes("width")) {
+      this._resizer("left");
+      this._resizer("right");
+    }
+    if (!this.options.resize || this.options.resize.includes("height")) {
+      this._resizer("bottom");
+    }
   }
 
   public get dom() {
@@ -222,11 +227,17 @@ export class InnerResizerView implements NodeView {
       store.size = 0;
       wrapper.style.display = "none";
       wrapper.style.userSelect = "unset";
-      setAttributes(this.editor, this.options.getPos, {
-        ...this._node.attrs,
-        width: this._root.clientWidth,
-        height: this._root.clientHeight,
-      });
+      if (direction === "left" || direction === "right") {
+        setAttributes(this.editor, this.options.getPos, {
+          ...this._node.attrs,
+          width: this._root.clientWidth,
+        });
+      } else {
+        setAttributes(this.editor, this.options.getPos, {
+          ...this._node.attrs,
+          height: this._root.clientHeight,
+        });
+      }
     });
     wrapper.addEventListener("mouseleave", () => {
       store.resizing = false;
@@ -234,11 +245,17 @@ export class InnerResizerView implements NodeView {
       store.size = 0;
       wrapper.style.display = "none";
       wrapper.style.userSelect = "unset";
-      setAttributes(this.editor, this.options.getPos, {
-        ...this._node.attrs,
-        width: this._root.clientWidth,
-        height: this._root.clientHeight,
-      });
+      if (direction === "left" || direction === "right") {
+        setAttributes(this.editor, this.options.getPos, {
+          ...this._node.attrs,
+          width: this._root.clientWidth,
+        });
+      } else {
+        setAttributes(this.editor, this.options.getPos, {
+          ...this._node.attrs,
+          height: this._root.clientHeight,
+        });
+      }
     });
 
     resizer.append(wrapper);
