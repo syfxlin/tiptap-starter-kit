@@ -1,9 +1,10 @@
+import { Processor, unified } from "unified";
 import remarkGfm from "remark-gfm";
+import remarkParse from "remark-parse";
+import remarkStringify from "remark-stringify";
 import remarkDirective from "remark-directive";
-import { remark } from "remark";
 import { Node } from "@tiptap/pm/model";
 import { Extension } from "@tiptap/core";
-import { Processor } from "unified";
 import { ParserState } from "./parser/state";
 import { SerializerState } from "./serializer/state";
 import { MarkMarkdownStorage, NodeMarkdownStorage } from "./types";
@@ -25,10 +26,19 @@ export const Markdown = Extension.create<MarkdownOptions, MarkdownStorage>({
   name: "markdown",
   onBeforeCreate() {
     // processor
-    this.storage.processor = remark().use(remarkGfm).use(remarkDirective) as unknown as Processor;
+    this.storage.processor = unified()
+      .use(remarkParse)
+      .use(remarkStringify)
+      .use(remarkGfm)
+      .use(remarkDirective) as unknown as Processor;
     for (const [key, value] of Object.entries(this.editor.storage as Record<string, NodeMarkdownStorage | MarkMarkdownStorage>)) {
-      if (key !== this.name && value?.markdown?.processor) {
-        this.storage.processor = value.markdown.processor(this.storage.processor);
+      if (key !== this.name && value?.markdown?.hooks?.beforeInit) {
+        this.storage.processor = value.markdown.hooks.beforeInit(this.storage.processor);
+      }
+    }
+    for (const [key, value] of Object.entries(this.editor.storage as Record<string, NodeMarkdownStorage | MarkMarkdownStorage>)) {
+      if (key !== this.name && value?.markdown?.hooks?.afterInit) {
+        this.storage.processor = value.markdown.hooks.afterInit(this.storage.processor);
       }
     }
     // parser

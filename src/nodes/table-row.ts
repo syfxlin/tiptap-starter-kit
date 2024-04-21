@@ -43,7 +43,7 @@ export const TableRow = TTableRow.extend<TableRowOptions>({
           apply: (state, node, type) => {
             state.openNode(type);
             if (node.children) {
-              state.next(node.children.map((a, i) => ({ ...a, align: node.align[i], isHeader: node.isHeader })));
+              state.next(node.children.map((a, i) => ({ ...a, align: node.align?.[i], isHeader: node.isHeader })));
             }
             state.closeNode();
           },

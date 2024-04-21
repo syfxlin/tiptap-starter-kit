@@ -8,6 +8,7 @@ export interface DetailsSummaryOptions {
   };
 }
 
+// TODO: markdown support
 export const DetailsSummary = Node.create<DetailsSummaryOptions>({
   name: "detailsSummary",
   group: "block",

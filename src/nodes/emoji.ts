@@ -47,8 +47,6 @@ export const Emoji = Node.create<EmojiOptions>({
   addStorage() {
     return {
       markdown: {
-        // @ts-expect-error
-        processor: processor => processor.use(remarkGemoji),
         parser: {
           match: node => node.type === "emoji",
           apply: (state, node, type) => {
@@ -63,6 +61,10 @@ export const Emoji = Node.create<EmojiOptions>({
               value: node.content.firstChild?.text || "",
             });
           },
+        },
+        hooks: {
+          // @ts-expect-error
+          beforeInit: processor => processor.use(remarkGemoji),
         },
       },
     } satisfies NodeMarkdownStorage;

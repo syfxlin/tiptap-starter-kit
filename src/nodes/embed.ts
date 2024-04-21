@@ -7,6 +7,7 @@ import { FloatMenuView } from "../extensions/float-menu/view";
 import { icon } from "../utils/icons";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { InnerResizerView } from "../extensions/node-view/inner-resizer";
+import { unwrap, wrap } from "../extensions/markdown/plugins/wrap";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -24,6 +25,7 @@ export interface EmbedItem {
 
 export interface EmbedOptions {
   items: Array<EmbedItem>;
+  inline: boolean;
   HTMLAttributes: Record<string, any>;
   dictionary: {
     name: string;
@@ -38,10 +40,16 @@ export interface EmbedOptions {
 
 export const Embed = Node.create<EmbedOptions>({
   name: "embed",
-  group: "block",
+  inline() {
+    return this.options.inline;
+  },
+  group() {
+    return this.options.inline ? "inline" : "block";
+  },
   addOptions() {
     return {
       items: [],
+      inline: false,
       HTMLAttributes: {},
       dictionary: {
         name: "Embed",
@@ -88,6 +96,10 @@ export const Embed = Node.create<EmbedOptions>({
               attributes: node.attrs,
             });
           },
+        },
+        hooks: {
+          afterParse: root => this.options.inline ? root : unwrap(root, node => node.type === "textDirective" && node.name === this.name),
+          beforeSerialize: root => this.options.inline ? root : wrap(root, node => node.type === "textDirective" && node.name === this.name),
         },
       },
       blockMenu: {

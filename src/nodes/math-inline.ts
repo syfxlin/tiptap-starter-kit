@@ -46,7 +46,6 @@ export const MathInline = Node.create<MathInlineOptions>({
   addStorage() {
     return {
       markdown: {
-        processor: processor => processor.use(remarkMath),
         parser: {
           match: node => node.type === "inlineMath",
           apply: (state, node, type) => {
@@ -61,6 +60,9 @@ export const MathInline = Node.create<MathInlineOptions>({
               value: node.attrs.value,
             });
           },
+        },
+        hooks: {
+          beforeInit: processor => processor.use(remarkMath),
         },
       },
       blockMenu: {

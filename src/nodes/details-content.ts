@@ -8,6 +8,7 @@ export interface DetailsContentOptions {
   };
 }
 
+// TODO: markdown support
 export const DetailsContent = Node.create<DetailsContentOptions>({
   name: "detailsContent",
   group: "block",

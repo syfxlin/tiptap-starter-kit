@@ -68,7 +68,6 @@ export const Highlight = THighlight.extend<HighlightOptions>({
     return {
       ...this.parent?.(),
       markdown: {
-        processor: processor => processor.use(remarkDecoration("highlight", "=", true)),
         parser: {
           match: node => node.type === "highlight",
           apply: (state, node, type) => {
@@ -87,6 +86,9 @@ export const Highlight = THighlight.extend<HighlightOptions>({
               data: { flags: mapping2.get(value) },
             });
           },
+        },
+        hooks: {
+          beforeInit: processor => processor.use(remarkDecoration("highlight", "=", true)),
         },
       },
       floatMenu: {

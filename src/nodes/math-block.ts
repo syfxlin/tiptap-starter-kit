@@ -45,7 +45,6 @@ export const MathBlock = Node.create<MathBlockOptions>({
   addStorage() {
     return {
       markdown: {
-        processor: processor => processor.use(remarkMath),
         parser: {
           match: node => node.type === "math",
           apply: (state, node, type) => {
@@ -61,6 +60,9 @@ export const MathBlock = Node.create<MathBlockOptions>({
               value: node.textContent,
             });
           },
+        },
+        hooks: {
+          beforeInit: processor => processor.use(remarkMath),
         },
       },
       blockMenu: {

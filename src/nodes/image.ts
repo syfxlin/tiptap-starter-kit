@@ -8,6 +8,7 @@ import { icon } from "../utils/icons";
 import { UploaderItemStorage, UploaderStorage } from "../extensions/uploader";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { InnerResizerView } from "../extensions/node-view/inner-resizer";
+import { unwrap, wrap } from "../extensions/markdown/plugins/wrap";
 
 export interface ImageOptions extends TImageOptions {
   dictionary: {
@@ -75,6 +76,10 @@ export const Image = TImage.extend<ImageOptions>({
               alt: node.attrs.alt,
             });
           },
+        },
+        hooks: {
+          afterParse: root => this.options.inline ? root : unwrap(root, node => node.type === "image"),
+          beforeSerialize: root => this.options.inline ? root : wrap(root, node => node.type === "image"),
         },
       },
       uploader: {

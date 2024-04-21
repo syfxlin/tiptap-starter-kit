@@ -17,7 +17,20 @@ export class SerializerState {
 
   public serialize(document: Node) {
     this.next(document);
-    return this.processor.stringify(this.stack.serialize()) as string;
+    let root = this.stack.serialize() as MarkdownNode;
+    for (const storage of Object.values(this.editor.storage as Record<string, NodeMarkdownStorage | MarkMarkdownStorage>)) {
+      if (storage?.markdown?.hooks?.beforeSerialize) {
+        root = storage.markdown.hooks.beforeSerialize(root);
+      }
+    }
+    console.log(root);
+    let markdown = this.processor.stringify(root) as string;
+    for (const storage of Object.values(this.editor.storage as Record<string, NodeMarkdownStorage | MarkMarkdownStorage>)) {
+      if (storage?.markdown?.hooks?.afterSerialize) {
+        markdown = storage.markdown.hooks.afterSerialize(markdown);
+      }
+    }
+    return markdown;
   }
 
   public next(nodes: Node | Fragment) {

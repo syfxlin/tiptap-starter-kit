@@ -8,6 +8,7 @@ import { parseAttributes } from "../utils/editor";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { UploaderStorage } from "../extensions/uploader";
 import { InnerResizerView } from "../extensions/node-view/inner-resizer";
+import { unwrap, wrap } from "../extensions/markdown/plugins/wrap";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -88,6 +89,10 @@ export const Video = Node.create<VideoOptions>({
               attributes: node.attrs,
             });
           },
+        },
+        hooks: {
+          afterParse: root => this.options.inline ? root : unwrap(root, node => node.type === "textDirective" && node.name === this.name),
+          beforeSerialize: root => this.options.inline ? root : wrap(root, node => node.type === "textDirective" && node.name === this.name),
         },
       },
       blockMenu: {

@@ -23,7 +23,6 @@ export const Underline = TUnderline.extend<UnderlineOptions>({
     return {
       ...this.parent?.(),
       markdown: {
-        processor: processor => processor.use(remarkDecoration("underline", "+")),
         parser: {
           match: node => node.type === "underline",
           apply: (state, node, type) => {
@@ -39,6 +38,9 @@ export const Underline = TUnderline.extend<UnderlineOptions>({
               type: "underline",
             });
           },
+        },
+        hooks: {
+          beforeInit: processor => processor.use(remarkDecoration("underline", "+")),
         },
       },
       floatMenu: {

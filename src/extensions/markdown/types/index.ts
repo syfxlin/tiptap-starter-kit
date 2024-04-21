@@ -17,7 +17,6 @@ export interface MarkdownNode extends UnistNode {
 
 export interface MarkMarkdownStorage {
   markdown?: {
-    processor?: (processor: Processor<any, any, any, any, any>) => Processor<any, any, any, any, any>;
     parser?: {
       match: (node: MarkdownNode) => boolean;
       apply: (state: ParserState, node: MarkdownNode, type: MarkType) => void;
@@ -26,12 +25,19 @@ export interface MarkMarkdownStorage {
       match: (mark: Mark) => boolean;
       apply: (state: SerializerState, mark: Mark, node: Node) => void | boolean;
     };
+    hooks?: {
+      beforeInit?: (processor: Processor) => Processor;
+      afterInit?: (processor: Processor) => Processor;
+      beforeParse?: (markdown: string) => string;
+      afterParse?: (root: MarkdownNode) => MarkdownNode;
+      beforeSerialize?: (root: MarkdownNode) => MarkdownNode;
+      afterSerialize?: (markdown: string) => string;
+    };
   };
 }
 
 export interface NodeMarkdownStorage {
   markdown?: {
-    processor?: (processor: Processor) => Processor;
     parser?: {
       match: (node: MarkdownNode) => boolean;
       apply: (state: ParserState, node: MarkdownNode, type: NodeType) => void;
@@ -39,6 +45,14 @@ export interface NodeMarkdownStorage {
     serializer?: {
       match: (node: Node) => boolean;
       apply: (state: SerializerState, node: Node) => void;
+    };
+    hooks?: {
+      beforeInit?: (processor: Processor) => Processor;
+      afterInit?: (processor: Processor) => Processor;
+      beforeParse?: (markdown: string) => string;
+      afterParse?: (root: MarkdownNode) => MarkdownNode;
+      beforeSerialize?: (root: MarkdownNode) => MarkdownNode;
+      afterSerialize?: (markdown: string) => string;
     };
   };
 }

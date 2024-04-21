@@ -113,9 +113,6 @@ dependencies:
   plyr:
     specifier: ^3.7.8
     version: 3.7.8
-  remark:
-    specifier: ^15.0.1
-    version: 15.0.1
   remark-directive:
     specifier: ^3.0.0
     version: 3.0.0
@@ -128,6 +125,12 @@ dependencies:
   remark-math:
     specifier: ^6.0.0
     version: 6.0.0
+  remark-parse:
+    specifier: ^11.0.0
+    version: 11.0.0
+  remark-stringify:
+    specifier: ^11.0.0
+    version: 11.0.0
   smooth-scroll-into-view-if-needed:
     specifier: ^2.0.2
     version: 2.0.2
@@ -5802,17 +5805,6 @@ packages:
       '@types/mdast': 4.0.3
       mdast-util-to-markdown: 2.1.0
       unified: 11.0.4
-    dev: false
-
-  /remark@15.0.1:
-    resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
-    dependencies:
-      '@types/mdast': 4.0.3
-      remark-parse: 11.0.0
-      remark-stringify: 11.0.0
-      unified: 11.0.4
-    transitivePeerDependencies:
-      - supports-color
     dev: false
 
   /require-directory@2.1.1:

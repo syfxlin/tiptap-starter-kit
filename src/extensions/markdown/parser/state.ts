@@ -16,7 +16,18 @@ export class ParserState {
   }
 
   public parse(markdown: string) {
-    this.next(this.processor.runSync(this.processor.parse(markdown)));
+    for (const storage of Object.values(this.editor.storage as Record<string, NodeMarkdownStorage | MarkMarkdownStorage>)) {
+      if (storage?.markdown?.hooks?.beforeParse) {
+        markdown = storage.markdown.hooks.beforeParse(markdown);
+      }
+    }
+    let root = this.processor.runSync(this.processor.parse(markdown));
+    for (const storage of Object.values(this.editor.storage as Record<string, NodeMarkdownStorage | MarkMarkdownStorage>)) {
+      if (storage?.markdown?.hooks?.afterParse) {
+        root = storage.markdown.hooks.afterParse(root);
+      }
+    }
+    this.next(root);
     return this.stack.parse();
   }
 
