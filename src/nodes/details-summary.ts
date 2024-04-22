@@ -1,5 +1,6 @@
 import { Node, defaultBlockAt, mergeAttributes } from "@tiptap/core";
 import { Selection } from "@tiptap/pm/state";
+import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
 
 export interface DetailsSummaryOptions {
   HTMLAttributes: Record<string, any>;
@@ -8,7 +9,6 @@ export interface DetailsSummaryOptions {
   };
 }
 
-// TODO: markdown support
 export const DetailsSummary = Node.create<DetailsSummaryOptions>({
   name: "detailsSummary",
   group: "block",
@@ -23,6 +23,41 @@ export const DetailsSummary = Node.create<DetailsSummaryOptions>({
         name: "Details Summary",
       },
     };
+  },
+  addStorage() {
+    return {
+      markdown: {
+        parser: {
+          match: node => node.type === "containerDirective" && node.name === this.name,
+          apply: (state, node, type) => {
+            const nodes: Array<MarkdownNode> = [];
+            for (const item of node.children ?? []) {
+              if (item.type === "paragraph") {
+                if (item.children) {
+                  nodes.push(...item.children);
+                }
+              } else if (item) {
+                nodes.push(item);
+              }
+            }
+            state.openNode(type, node.attributes).next(nodes).closeNode();
+          },
+        },
+        serializer: {
+          match: node => node.type.name === this.name,
+          apply: (state, node) => {
+            state
+              .openNode({
+                type: "containerDirective",
+                name: this.name,
+                attributes: node.attrs,
+              })
+              .next(node.content)
+              .closeNode();
+          },
+        },
+      },
+    } satisfies NodeMarkdownStorage;
   },
   parseHTML() {
     return [
