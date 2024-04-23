@@ -2,6 +2,8 @@ import { Extension, isActive } from "@tiptap/core";
 import { Slice } from "@tiptap/pm/model";
 import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 
+export interface ClipboardOptions {}
+
 export function isInCode(state: EditorState): boolean {
   try {
     return isActive(state, "codeBlock") || isActive(state, "code");
@@ -38,7 +40,7 @@ export function isMarkdown(value: string): boolean {
   return false;
 }
 
-export const Clipboard = Extension.create({
+export const Clipboard = Extension.create<ClipboardOptions>({
   name: "clipboard",
   addProseMirrorPlugins() {
     return [

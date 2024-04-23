@@ -1,7 +1,9 @@
-import { Paragraph as TParagraph } from "@tiptap/extension-paragraph";
+import { Paragraph as TParagraph, ParagraphOptions as TParagraphOptions } from "@tiptap/extension-paragraph";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 
-export const Paragraph = TParagraph.extend({
+export interface ParagraphOptions extends TParagraphOptions {}
+
+export const Paragraph = TParagraph.extend<ParagraphOptions>({
   addStorage() {
     return {
       ...this.parent?.(),

@@ -1,7 +1,9 @@
-import { HardBreak as THardBreak } from "@tiptap/extension-hard-break";
+import { HardBreak as THardBreak, HardBreakOptions as THardBreakOptions } from "@tiptap/extension-hard-break";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 
-export const HardBreak = THardBreak.extend({
+export interface HardBreakOptions extends THardBreakOptions {}
+
+export const HardBreak = THardBreak.extend<HardBreakOptions>({
   addStorage() {
     return {
       ...this.parent?.(),

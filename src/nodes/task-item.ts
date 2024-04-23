@@ -1,7 +1,9 @@
-import { TaskItem as TTaskItem } from "@tiptap/extension-task-item";
+import { TaskItem as TTaskItem, TaskItemOptions as TTaskItemOptions } from "@tiptap/extension-task-item";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 
-export const TaskItem = TTaskItem.extend({
+export interface TaskItemOptions extends TTaskItemOptions {}
+
+export const TaskItem = TTaskItem.extend<TaskItemOptions>({
   addOptions() {
     return {
       ...this.parent?.(),

@@ -24,6 +24,9 @@ export interface MarkdownStorage {
 
 export const Markdown = Extension.create<MarkdownOptions, MarkdownStorage>({
   name: "markdown",
+  addStorage() {
+    return {} as MarkdownStorage;
+  },
   onBeforeCreate() {
     // processor
     this.storage.processor = unified()
