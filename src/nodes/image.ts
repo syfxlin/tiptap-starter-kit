@@ -167,7 +167,7 @@ export const Image = TImage.extend<ImageOptions>({
   },
   addProseMirrorPlugins() {
     return [
-      ...this.parent?.() ?? [],
+      ...TImage.config.addProseMirrorPlugins?.apply(this) ?? [],
       new Plugin({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({

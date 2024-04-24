@@ -78,7 +78,7 @@ export const TableCell = TTableCell.extend<TableCellOptions>({
   },
   addProseMirrorPlugins() {
     return [
-      ...this.parent?.() ?? [],
+      ...TTableCell.config.addProseMirrorPlugins?.apply(this) ?? [],
       new Plugin({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({

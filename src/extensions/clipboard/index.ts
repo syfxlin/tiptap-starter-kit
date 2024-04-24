@@ -44,9 +44,8 @@ export const Clipboard = Extension.create<ClipboardOptions>({
   name: "clipboard",
   addProseMirrorPlugins() {
     return [
-      ...this.parent?.() ?? [],
       new Plugin({
-        key: new PluginKey("clipboard"),
+        key: new PluginKey(`${this.name}-handler`),
         props: {
           handlePaste: (view, event) => {
             const editable = this.editor.isEditable;

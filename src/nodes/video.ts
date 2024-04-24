@@ -178,7 +178,6 @@ export const Video = Node.create<VideoOptions>({
   },
   addProseMirrorPlugins() {
     return [
-      ...this.parent?.() ?? [],
       new Plugin({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({

@@ -72,7 +72,7 @@ export const TableHeader = TTableHeader.extend<TableHeaderOptions>({
   },
   addProseMirrorPlugins() {
     return [
-      ...this.parent?.() ?? [],
+      ...TTableHeader.config.addProseMirrorPlugins?.apply(this) ?? [],
       new Plugin({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({

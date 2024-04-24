@@ -80,10 +80,9 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
       return [];
     }
     return [
-      ...this.parent?.() ?? [],
       Suggestion({
         editor: this.editor,
-        pluginKey: new PluginKey("block-menu"),
+        pluginKey: new PluginKey(`${this.name}-suggestion`),
         char: "/",
         items: ({ query }) => {
           const filtered: Array<BlockMenuViewItem> = [];
@@ -151,7 +150,7 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
         }),
       }),
       new Plugin({
-        key: new PluginKey("block-menu-placeholder"),
+        key: new PluginKey(`${this.name}-placeholder`),
         props: {
           decorations: (state) => {
             const parent = findParentNode(node => node.type.name === "paragraph")(state.selection);

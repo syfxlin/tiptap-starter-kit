@@ -75,9 +75,8 @@ export const Uploader = Extension.create<UploaderOptions, UploaderStorage>({
       }));
     };
     return [
-      ...this.parent?.() ?? [],
       new Plugin({
-        key: new PluginKey("uploader"),
+        key: new PluginKey(`${this.name}-handler`),
         props: {
           handlePaste: (_view, event) => {
             const editable = this.editor.isEditable;

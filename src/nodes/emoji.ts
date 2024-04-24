@@ -131,7 +131,7 @@ export const Emoji = Node.create<EmojiOptions>({
     return [
       Suggestion({
         editor: this.editor,
-        pluginKey: new PluginKey(`${this.name}Suggestion`),
+        pluginKey: new PluginKey(`${this.name}-suggestion`),
         char: ":",
         items: ({ query }) => {
           const items: Array<BlockMenuViewItem> = [];
