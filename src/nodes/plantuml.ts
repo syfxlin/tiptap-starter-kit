@@ -81,7 +81,7 @@ export const Plantuml = Node.create<PlantumlOptions>({
             name: this.options.dictionary.name,
             icon: icon("plantuml"),
             keywords: "plantuml,graph",
-            action: editor => editor.chain().setPlantuml("").focus().run(),
+            action: editor => editor.chain().setPlantuml("@startuml\nBob -> Alice : hello\n@enduml").focus().run(),
           },
         ],
       },
@@ -130,7 +130,7 @@ export const Plantuml = Node.create<PlantumlOptions>({
   },
   addCommands() {
     return {
-      setMermaid: (code) => {
+      setPlantuml: (code) => {
         return ({ commands }) =>
           commands.insertContent({
             type: this.name,

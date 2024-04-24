@@ -85,7 +85,7 @@ export const Mermaid = Node.create<MermaidOptions>({
             name: this.options.dictionary.name,
             icon: icon("mermaid"),
             keywords: "mermaid,graph",
-            action: editor => editor.chain().setMermaid("").focus().run(),
+            action: editor => editor.chain().setMermaid("graph TD;\n  A-->B;  A-->C;\n  B-->D;\n  C-->D;").focus().run(),
           },
         ],
       },

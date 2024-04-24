@@ -132,21 +132,28 @@ export const Video = Node.create<VideoOptions>({
             vdo.setAttribute(key, value);
           }
         }
+
+        vdo.src = view.node.attrs.src ?? "";
+        vdo.title = view.node.attrs.title ?? "";
+
         view.$root.append(vdo);
         view.$root.classList.add("ProseMirror-selectedcard");
         // @ts-expect-error
         view.plyr = new Plyr(vdo);
       },
       onUpdate: ({ view }) => {
-        const vdo = view.$root.firstElementChild as HTMLVideoElement;
+        const vdo = view.$root.querySelector("video") as HTMLVideoElement;
         if (vdo) {
           const src = view.node.attrs.src ?? "";
-          if (vdo.getAttribute("src") !== src) {
-            vdo.src = src;
-          }
           const title = view.node.attrs.title ?? "";
-          if (vdo.getAttribute("title") !== title) {
-            vdo.title = title;
+          if (vdo.getAttribute("src") !== src || vdo.getAttribute("title") !== title) {
+            // @ts-expect-error
+            view.plyr?.destroy();
+            const dom = view.$root.querySelector("video") as HTMLVideoElement;
+            dom.src = src;
+            dom.title = title;
+            // @ts-expect-error
+            view.plyr = new Plyr(dom);
           }
         }
       },

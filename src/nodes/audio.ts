@@ -132,21 +132,28 @@ export const Audio = Node.create<AudioOptions>({
             ado.setAttribute(key, value);
           }
         }
+
+        ado.src = view.node.attrs.src ?? "";
+        ado.title = view.node.attrs.title ?? "";
+
         view.$root.append(ado);
         view.$root.classList.add("ProseMirror-selectedcard");
         // @ts-expect-error
         view.plyr = new Plyr(ado);
       },
       onUpdate: ({ view }) => {
-        const vdo = view.$root.firstElementChild as HTMLAudioElement;
-        if (vdo) {
+        const ado = view.$root.querySelector("audio") as HTMLAudioElement;
+        if (ado) {
           const src = view.node.attrs.src ?? "";
-          if (vdo.getAttribute("src") !== src) {
-            vdo.src = src;
-          }
           const title = view.node.attrs.title ?? "";
-          if (vdo.getAttribute("title") !== title) {
-            vdo.title = title;
+          if (ado.getAttribute("src") !== src || ado.getAttribute("title") !== title) {
+            // @ts-expect-error
+            view.plyr?.destroy();
+            const dom = view.$root.querySelector("audio") as HTMLAudioElement;
+            dom.src = src;
+            dom.title = title;
+            // @ts-expect-error
+            view.plyr = new Plyr(dom);
           }
         }
       },
