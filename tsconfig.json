@@ -1,26 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES2019",
+    "target": "ES2020",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "strict": true,
-    "jsx": "react",
-    "importHelpers": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "rootDir": ".",
-    "allowJs": true,
-    "checkJs": false,
-    "paths": {
-      "@syfxlin/*": ["packages/*/dist", "packages/*/src"]
-    },
-    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"]
-  },
-  "files": ["./env.d.ts"],
-  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["**/node_modules", "**/dist"]
+    "isolatedModules": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
+  }
 }
