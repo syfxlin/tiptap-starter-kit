@@ -1,4 +1,4 @@
-# Tiptap StarterKit 🚧WIP (Remake)
+# Tiptap StarterKit
 
 @syfxlin/tiptap-starter-kit is a collection of unofficial [Tiptap](https://tiptap.dev) extensions. Support for Markdown, Float Menu, Slash Menu and more.
 
