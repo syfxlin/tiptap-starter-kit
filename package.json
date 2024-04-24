@@ -35,6 +35,7 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "files": ["dist"],
   "scripts": {
     "dev": "vite",
     "style": "lessc ./src/styles.less ./src/styles.css --autoprefix=\"defaults\"",
