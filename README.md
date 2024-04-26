@@ -100,6 +100,13 @@ const editor = useEditor({
 });
 ```
 
+## Thanks
+
+- [Milkdown](https://github.com/Milkdown/milkdown)
+- [Outline](https://github.com/outline/outline)
+- [Notion](https://www.notion.so)
+- and more...
+
 ## Maintainer
 
 **@syfxlin/tiptap-starter-kit** is written and maintained with the help of [Otstar Lin](https://github.com/syfxlin) and the following [contributors](https://github.com/syfxlin/tiptap-starter-kit/graphs/contributors).
