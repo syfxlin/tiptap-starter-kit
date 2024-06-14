@@ -73,11 +73,11 @@
 ## Installation
 
 ```shell
-pnpm i @syfxlin/tiptap-starter-kit
+pnpm i @syfxlin/tiptap-starter-kit @tiptap/core @tiptap/pm
 # or
-npm i @syfxlin/tiptap-starter-kit
+npm i @syfxlin/tiptap-starter-kit @tiptap/core @tiptap/pm
 # or
-yarn add @syfxlin/tiptap-starter-kit
+yarn add @syfxlin/tiptap-starter-kit @tiptap/core @tiptap/pm
 ```
 
 ## Usage
@@ -99,6 +99,13 @@ const editor = useEditor({
   ],
 });
 ```
+
+## Thanks
+
+- [Milkdown](https://github.com/Milkdown/milkdown)
+- [Outline](https://github.com/outline/outline)
+- [Notion](https://www.notion.so)
+- and more...
 
 ## Maintainer
 
