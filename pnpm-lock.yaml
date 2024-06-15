@@ -188,7 +188,7 @@ importers:
         version: 9.4.0
       eslint-plugin-format:
         specifier: ^0.1.1
-        version: 0.1.1(eslint@9.4.0)
+        version: 0.1.2(eslint@9.4.0)
       less:
         specifier: ^4.2.0
         version: 4.2.0
@@ -292,11 +292,11 @@ packages:
     bundledDependencies:
       - is-unicode-supported
 
-  '@dprint/formatter@0.2.1':
-    resolution: {integrity: sha512-GCzgRt2o4mhZLy8L47k2A+q9EMG/jWhzZebE29EqKsxmjDrSfv2VisEj/Q+39OOf04jTkEfB/TRO+IZSyxHdYg==}
+  '@dprint/formatter@0.3.0':
+    resolution: {integrity: sha512-N9fxCxbaBOrDkteSOzaCqwWjso5iAe+WJPsHC021JfHNj2ThInPNEF13ORDKta3llq5D1TlclODCvOvipH7bWQ==}
 
-  '@dprint/markdown@0.16.4':
-    resolution: {integrity: sha512-WjsC4yLybR5/76+d/2s36nOBGjETe+jJR//ddFHohDXKdis+FTUv7dJ00kmd6g0AKQwDITayM1Nid10gFNG0Yg==}
+  '@dprint/markdown@0.17.1':
+    resolution: {integrity: sha512-Mk9C9tHHSScB3JOUd2PEP3keWnJZ8Kqcd99qaVhknzhxgZF/gGTx0CMyd+lpsIV+Moe+OtbRnqAjp+hKVtT1zQ==}
 
   '@dprint/toml@0.6.2':
     resolution: {integrity: sha512-Mk5unEANsL/L+WHYU3NpDXt1ARU5bNU5k5OZELxaJodDycKG6RoRnSlZXpW6+7UN2PSnETAFVUdKrh937ZwtHA==}
@@ -1637,8 +1637,8 @@ packages:
     peerDependencies:
       eslint: '>=4.19.1'
 
-  eslint-plugin-format@0.1.1:
-    resolution: {integrity: sha512-jzk70D3RbaseNIdMtimMqiJHDPUw9bzZjmZTT9tQ6x3HU9U9bGqnsieQK5H0FIZUpx4qC41CidLDWwVCylICRQ==}
+  eslint-plugin-format@0.1.2:
+    resolution: {integrity: sha512-ZrcO3aiumgJ6ENAv65IWkPjtW77ML/5mp0YrRK0jdvvaZJb+4kKWbaQTMr/XbJo6CtELRmCApAziEKh7L2NbdQ==}
     peerDependencies:
       eslint: ^8.40.0 || ^9.0.0
 
@@ -3295,7 +3295,7 @@ packages:
 
 snapshots:
 
-  '@antfu/eslint-config@2.21.1(@eslint-react/eslint-plugin@1.5.15(eslint@9.4.0)(typescript@5.4.5))(@unocss/eslint-plugin@0.60.4(eslint@9.4.0)(typescript@5.4.5))(@vue/compiler-sfc@3.4.27)(eslint-plugin-format@0.1.1(eslint@9.4.0))(eslint-plugin-react-hooks@4.6.2(eslint@9.4.0))(eslint-plugin-react-refresh@0.4.7(eslint@9.4.0))(eslint-plugin-svelte@2.39.3(eslint@9.4.0))(eslint@9.4.0)(svelte-eslint-parser@0.36.0)(typescript@5.4.5)':
+  '@antfu/eslint-config@2.21.1(@eslint-react/eslint-plugin@1.5.15(eslint@9.4.0)(typescript@5.4.5))(@unocss/eslint-plugin@0.60.4(eslint@9.4.0)(typescript@5.4.5))(@vue/compiler-sfc@3.4.27)(eslint-plugin-format@0.1.2(eslint@9.4.0))(eslint-plugin-react-hooks@4.6.2(eslint@9.4.0))(eslint-plugin-react-refresh@0.4.7(eslint@9.4.0))(eslint-plugin-svelte@2.39.3(eslint@9.4.0))(eslint@9.4.0)(svelte-eslint-parser@0.36.0)(typescript@5.4.5)':
     dependencies:
       '@antfu/install-pkg': 0.3.3
       '@clack/prompts': 0.7.0
@@ -3336,7 +3336,7 @@ snapshots:
     optionalDependencies:
       '@eslint-react/eslint-plugin': 1.5.15(eslint@9.4.0)(typescript@5.4.5)
       '@unocss/eslint-plugin': 0.60.4(eslint@9.4.0)(typescript@5.4.5)
-      eslint-plugin-format: 0.1.1(eslint@9.4.0)
+      eslint-plugin-format: 0.1.2(eslint@9.4.0)
       eslint-plugin-react-hooks: 4.6.2(eslint@9.4.0)
       eslint-plugin-react-refresh: 0.4.7(eslint@9.4.0)
       eslint-plugin-svelte: 2.39.3(eslint@9.4.0)
@@ -3393,9 +3393,9 @@ snapshots:
       picocolors: 1.0.1
       sisteransi: 1.0.5
 
-  '@dprint/formatter@0.2.1': {}
+  '@dprint/formatter@0.3.0': {}
 
-  '@dprint/markdown@0.16.4': {}
+  '@dprint/markdown@0.17.1': {}
 
   '@dprint/toml@0.6.2': {}
 
@@ -3853,11 +3853,11 @@ snapshots:
 
   '@syfxlin/eslint-config@1.0.7(@vue/compiler-sfc@3.4.27)(eslint@9.4.0)(typescript@5.4.5)':
     dependencies:
-      '@antfu/eslint-config': 2.21.1(@eslint-react/eslint-plugin@1.5.15(eslint@9.4.0)(typescript@5.4.5))(@unocss/eslint-plugin@0.60.4(eslint@9.4.0)(typescript@5.4.5))(@vue/compiler-sfc@3.4.27)(eslint-plugin-format@0.1.1(eslint@9.4.0))(eslint-plugin-react-hooks@4.6.2(eslint@9.4.0))(eslint-plugin-react-refresh@0.4.7(eslint@9.4.0))(eslint-plugin-svelte@2.39.3(eslint@9.4.0))(eslint@9.4.0)(svelte-eslint-parser@0.36.0)(typescript@5.4.5)
+      '@antfu/eslint-config': 2.21.1(@eslint-react/eslint-plugin@1.5.15(eslint@9.4.0)(typescript@5.4.5))(@unocss/eslint-plugin@0.60.4(eslint@9.4.0)(typescript@5.4.5))(@vue/compiler-sfc@3.4.27)(eslint-plugin-format@0.1.2(eslint@9.4.0))(eslint-plugin-react-hooks@4.6.2(eslint@9.4.0))(eslint-plugin-react-refresh@0.4.7(eslint@9.4.0))(eslint-plugin-svelte@2.39.3(eslint@9.4.0))(eslint@9.4.0)(svelte-eslint-parser@0.36.0)(typescript@5.4.5)
       '@eslint-react/eslint-plugin': 1.5.15(eslint@9.4.0)(typescript@5.4.5)
       '@unocss/eslint-plugin': 0.60.4(eslint@9.4.0)(typescript@5.4.5)
       eslint: 9.4.0
-      eslint-plugin-format: 0.1.1(eslint@9.4.0)
+      eslint-plugin-format: 0.1.2(eslint@9.4.0)
       eslint-plugin-react-hooks: 4.6.2(eslint@9.4.0)
       eslint-plugin-react-refresh: 0.4.7(eslint@9.4.0)
       eslint-plugin-svelte: 2.39.3(eslint@9.4.0)
@@ -4771,10 +4771,10 @@ snapshots:
       eslint: 9.4.0
       ignore: 5.3.1
 
-  eslint-plugin-format@0.1.1(eslint@9.4.0):
+  eslint-plugin-format@0.1.2(eslint@9.4.0):
     dependencies:
-      '@dprint/formatter': 0.2.1
-      '@dprint/markdown': 0.16.4
+      '@dprint/formatter': 0.3.0
+      '@dprint/markdown': 0.17.1
       '@dprint/toml': 0.6.2
       eslint: 9.4.0
       eslint-formatting-reporter: 0.0.0(eslint@9.4.0)
