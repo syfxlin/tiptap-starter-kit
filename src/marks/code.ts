@@ -1,7 +1,11 @@
 import { Code as TCode, CodeOptions as TCodeOptions } from "@tiptap/extension-code";
+import { markInputRule, markPasteRule } from "@tiptap/core";
 import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { icon } from "../utils/icons";
+
+const INPUT_REGEX = /(?:^|[^`])(`(?!\s+`)([^`]+)`)$/;
+const PASTE_REGEX = /(?:^|[^`])(`(?!\s+`)([^`]+)`(?!\s+`))/g;
 
 export interface CodeOptions extends TCodeOptions {
   dictionary: {
@@ -54,5 +58,21 @@ export const Code = TCode.extend<CodeOptions>({
         ],
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
+  },
+  addInputRules() {
+    return [
+      markInputRule({
+        find: INPUT_REGEX,
+        type: this.type,
+      }),
+    ];
+  },
+  addPasteRules() {
+    return [
+      markPasteRule({
+        find: PASTE_REGEX,
+        type: this.type,
+      }),
+    ];
   },
 });

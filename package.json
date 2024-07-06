@@ -81,7 +81,7 @@
     "@tiptap/extension-underline": "^2.4.0",
     "@tiptap/suggestion": "^2.4.0",
     "gemoji": "^8.1.0",
-    "katex": "^0.16.10",
+    "katex": "^0.16.11",
     "lowlight": "^3.1.0",
     "mdast-util-from-markdown": "^2.0.1",
     "mdast-util-to-markdown": "^2.1.0",
@@ -96,24 +96,24 @@
     "remark-stringify": "^11.0.0",
     "smooth-scroll-into-view-if-needed": "^2.0.2",
     "tippy.js": "^6.3.7",
-    "unified": "^11.0.4",
+    "unified": "^11.0.5",
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@syfxlin/eslint-config": "^1.0.7",
+    "@syfxlin/eslint-config": "^1.0.8",
     "@tiptap/core": "^2.4.0",
     "@tiptap/pm": "^2.4.0",
     "@types/katex": "^0.16.7",
     "@types/mdast": "^4.0.4",
     "@types/plantuml-encoder": "^1.4.2",
     "@types/unist": "^3.0.2",
-    "bunchee": "^5.2.0",
-    "eslint": "^9.4.0",
-    "eslint-plugin-format": "^0.1.1",
+    "bunchee": "^5.2.2",
+    "eslint": "^9.6.0",
+    "eslint-plugin-format": "^0.1.2",
     "less": "^4.2.0",
     "less-plugin-autoprefix": "^2.0.0",
-    "typescript": "^5.4.5",
-    "vite": "^5.3.0"
+    "typescript": "^5.5.3",
+    "vite": "^5.3.3"
   }
 }
