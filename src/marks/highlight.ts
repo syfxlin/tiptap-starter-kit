@@ -1,10 +1,14 @@
 import { Highlight as THighlight, HighlightOptions as THighlightOptions } from "@tiptap/extension-highlight";
 import tippy from "tippy.js";
+import { markInputRule, markPasteRule } from "@tiptap/core";
 import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { DecorationData, remarkDecoration } from "../extensions/markdown/plugins/decoration";
 import { icon } from "../utils/icons";
 import { colors } from "../utils/colors";
+
+const INPUT_REGEX = /(?:^|[^=])(==(?!\s+==)([^=]+)==)$/;
+const PASTE_REGEX = /(?:^|[^=])(==(?!\s+==)([^=]+)==(?!\s+==))/g;
 
 export interface HighlightOptions extends Omit<THighlightOptions, "multicolor"> {
   dictionary: Record<typeof colors[number][0], string> & {
@@ -146,5 +150,21 @@ export const Highlight = THighlight.extend<HighlightOptions>({
         ],
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
+  },
+  addInputRules() {
+    return [
+      markInputRule({
+        find: INPUT_REGEX,
+        type: this.type,
+      }),
+    ];
+  },
+  addPasteRules() {
+    return [
+      markPasteRule({
+        find: PASTE_REGEX,
+        type: this.type,
+      }),
+    ];
   },
 });

@@ -1,7 +1,11 @@
 import { Strike as TStrike, StrikeOptions as TStrikeOptions } from "@tiptap/extension-strike";
+import { markInputRule, markPasteRule } from "@tiptap/core";
 import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { icon } from "../utils/icons";
+
+const INPUT_REGEX = /(?:^|[^~])(~~(?!\s+~~)([^~]+)~~)$/;
+const PASTE_REGEX = /(?:^|[^~])(~~(?!\s+~~)([^~]+)~~(?!\s+~~))/g;
 
 export interface StrikeOptions extends TStrikeOptions {
   dictionary: {
@@ -52,5 +56,21 @@ export const Strike = TStrike.extend<StrikeOptions>({
         ],
       },
     } satisfies MarkMarkdownStorage & FloatMenuItemStorage;
+  },
+  addInputRules() {
+    return [
+      markInputRule({
+        find: INPUT_REGEX,
+        type: this.type,
+      }),
+    ];
+  },
+  addPasteRules() {
+    return [
+      markPasteRule({
+        find: PASTE_REGEX,
+        type: this.type,
+      }),
+    ];
   },
 });
