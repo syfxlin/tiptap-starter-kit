@@ -21,6 +21,7 @@ export interface TableHeaderOptions extends TTableHeaderOptions {
 }
 
 export const TableHeader = TTableHeader.extend<TableHeaderOptions>({
+  name: "tableHeader",
   addOptions() {
     return {
       ...this.parent?.(),

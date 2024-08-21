@@ -21,6 +21,7 @@ export interface TableRowOptions extends TTableRowOptions {
 }
 
 export const TableRow = TTableRow.extend<TableRowOptions>({
+  name: "tableRow",
   addOptions() {
     return {
       ...this.parent?.(),

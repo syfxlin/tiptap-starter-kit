@@ -13,6 +13,7 @@ export interface HorizontalRuleOptions extends THorizontalRuleOptions {
 }
 
 export const HorizontalRule = THorizontalRule.extend<HorizontalRuleOptions>({
+  name: "horizontalRule",
   addOptions() {
     return {
       ...this.parent?.(),

@@ -16,6 +16,7 @@ export interface BoldOptions extends TBoldOptions {
 }
 
 export const Bold = TBold.extend<BoldOptions>({
+  name: "bold",
   addOptions() {
     return {
       ...this.parent?.(),
