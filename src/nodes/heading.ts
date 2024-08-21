@@ -10,6 +10,7 @@ export interface HeadingOptions extends THeadingOptions {
 }
 
 export const Heading = THeading.extend<HeadingOptions>({
+  name: "heading",
   addOptions() {
     return {
       ...this.parent?.(),

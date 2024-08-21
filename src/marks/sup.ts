@@ -10,6 +10,7 @@ export interface SuperscriptOptions extends SuperscriptExtensionOptions {
 }
 
 export const Superscript = TSuperscript.extend<SuperscriptOptions>({
+  name: "superscript",
   addOptions() {
     return {
       ...this.parent?.(),

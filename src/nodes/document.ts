@@ -2,6 +2,7 @@ import { Document as TDocument } from "@tiptap/extension-document";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 
 export const Document = TDocument.extend({
+  name: "doc",
   addStorage() {
     return {
       ...this.parent?.(),

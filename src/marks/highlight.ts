@@ -17,6 +17,7 @@ export interface HighlightOptions extends Omit<THighlightOptions, "multicolor"> 
 }
 
 export const Highlight = THighlight.extend<HighlightOptions>({
+  name: "highlight",
   addOptions() {
     return {
       ...this.parent?.(),

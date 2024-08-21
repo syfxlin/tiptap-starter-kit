@@ -10,6 +10,7 @@ export interface OrderedListOptions extends TOrderedListOptions {
 }
 
 export const OrderedList = TOrderedList.extend<OrderedListOptions>({
+  name: "orderedList",
   addOptions() {
     return {
       ...this.parent?.(),

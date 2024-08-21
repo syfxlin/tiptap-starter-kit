@@ -28,6 +28,7 @@ export interface TableCellOptions extends TTableCellOptions {
 }
 
 export const TableCell = TTableCell.extend<TableCellOptions>({
+  name: "tableCell",
   addOptions() {
     return {
       ...this.parent?.(),

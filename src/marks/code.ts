@@ -14,6 +14,7 @@ export interface CodeOptions extends TCodeOptions {
 }
 
 export const Code = TCode.extend<CodeOptions>({
+  name: "code",
   addOptions() {
     return {
       ...this.parent?.(),

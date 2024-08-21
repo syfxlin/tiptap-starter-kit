@@ -10,6 +10,7 @@ export interface TaskListOptions extends TTaskListOptions {
 }
 
 export const TaskList = TTaskList.extend<TaskListOptions>({
+  name: "taskList",
   addOptions() {
     return {
       ...this.parent?.(),

@@ -29,6 +29,7 @@ export interface ImageOptions extends TImageOptions {
 }
 
 export const Image = TImage.extend<ImageOptions>({
+  name: "image",
   addOptions() {
     return {
       ...this.parent?.(),

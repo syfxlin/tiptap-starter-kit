@@ -10,6 +10,7 @@ export interface BlockquoteOptions extends TBlockquoteOptions {
 }
 
 export const Blockquote = IBlockquote.extend<BlockquoteOptions>({
+  name: "blockquote",
   addOptions() {
     return {
       ...this.parent?.(),

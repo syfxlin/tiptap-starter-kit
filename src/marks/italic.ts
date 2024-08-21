@@ -16,6 +16,7 @@ export interface ItalicOptions extends TItalicOptions {
 }
 
 export const Italic = TItalic.extend<ItalicOptions>({
+  name: "italic",
   addOptions() {
     return {
       ...this.parent?.(),

@@ -10,6 +10,7 @@ export interface SubscriptOptions extends SubscriptExtensionOptions {
 }
 
 export const Subscript = TSubscript.extend<SubscriptOptions>({
+  name: "subscript",
   addOptions() {
     return {
       ...this.parent?.(),

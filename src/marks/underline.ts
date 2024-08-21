@@ -11,6 +11,7 @@ export interface UnderlineOptions extends TUnderlineOptions {
 }
 
 export const Underline = TUnderline.extend<UnderlineOptions>({
+  name: "underline",
   addOptions() {
     return {
       ...this.parent?.(),

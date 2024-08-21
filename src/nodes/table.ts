@@ -24,6 +24,7 @@ export interface TableOptions extends TTableOptions {
 // TODO: drag row or column
 // TODO: serialize custom properties to markdown
 export const Table = TTable.extend<TableOptions>({
+  name: "table",
   addOptions() {
     return {
       ...this.parent?.(),

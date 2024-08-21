@@ -14,6 +14,7 @@ export interface StrikeOptions extends TStrikeOptions {
 }
 
 export const Strike = TStrike.extend<StrikeOptions>({
+  name: "strike",
   addOptions() {
     return {
       ...this.parent?.(),

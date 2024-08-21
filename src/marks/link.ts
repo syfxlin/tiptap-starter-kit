@@ -15,6 +15,7 @@ export interface LinkOptions extends TLinkOptions {
 }
 
 export const Link = TLink.extend<LinkOptions>({
+  name: "link",
   addOptions() {
     return {
       ...this.parent?.(),

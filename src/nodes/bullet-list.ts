@@ -10,6 +10,7 @@ export interface BulletListOptions extends TBulletListOptions {
 }
 
 export const BulletList = TBulletList.extend<BulletListOptions>({
+  name: "bulletList",
   addOptions() {
     return {
       ...this.parent?.(),
