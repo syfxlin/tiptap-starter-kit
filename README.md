@@ -63,9 +63,9 @@
 
 ### Extensions
 
-- Uploader
+- [Uploader](./docs/extensions/uploader.md)
 - Markdown
-- Clipboard
+- [Clipboard](./docs/extensions/clipboard.md)
 - BlockMenu
 - FloatMenu
 - ClickMenu
