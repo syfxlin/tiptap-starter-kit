@@ -64,7 +64,7 @@
 ### Extensions
 
 - [Uploader](./docs/extensions/uploader.md)
-- Markdown
+- [Markdown](./docs/extensions/markdown.md)
 - [Clipboard](./docs/extensions/clipboard.md)
 - BlockMenu
 - FloatMenu
