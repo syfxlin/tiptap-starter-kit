@@ -12,6 +12,10 @@
 - Supports copy and paste Markdown or upload files on paste.
 - More content block support, such as emoji, mermaid, formulas, etc.
 
+## Theme
+
+[Theme configuration](./docs/styles/theme.md)
+
 ## Included extensions
 
 > Some of the extensions are inherited from the official Tiptap extensions, and the changes are minor,
@@ -66,9 +70,9 @@
 - [Uploader](./docs/extensions/uploader.md)
 - [Markdown](./docs/extensions/markdown.md)
 - [Clipboard](./docs/extensions/clipboard.md)
-- BlockMenu
-- FloatMenu
-- ClickMenu
+- [BlockMenu](./docs/extensions/block-menu.md)
+- [FloatMenu](./docs/extensions/float-menu.md)
+- [ClickMenu](./docs/extensions/click-menu.md)
 - [History](https://tiptap.dev/docs/editor/extensions/functionality/undo-redo)
 - [Gapcursor](https://tiptap.dev/docs/editor/extensions/functionality/gapcursor)
 - [Dropcursor](https://tiptap.dev/docs/editor/extensions/functionality/dropcursor)

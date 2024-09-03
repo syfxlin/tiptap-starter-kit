@@ -1,6 +1,6 @@
 # Markdown extension
 
-Markdown extension is used for parsing or serializing the content of a document. Other extensions can place upload processing configuration on storage to activate parsing or serializing support.
+Markdown extension is used for parsing or serializing the content of a document. Other extensions can place markdown configuration on storage to activate parsing or serializing support.
 
 Markdown parser and serializer are using the [remark](https://github.com/remarkjs/remark).
 
