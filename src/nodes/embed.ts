@@ -1,13 +1,13 @@
-import { Editor, Node, mergeAttributes, nodeInputRule } from "@tiptap/core";
+import { Editor, mergeAttributes, Node, nodeInputRule } from "@tiptap/core";
 import { Node as PNode } from "@tiptap/pm/model";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { NodeMarkdownStorage } from "../extensions/markdown";
-import { parseAttributes } from "../utils/editor";
-import { FloatMenuView } from "../extensions/float-menu/view";
-import { icon } from "../utils/icons";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { InnerResizerView } from "../extensions/node-view/inner-resizer";
+import { FloatMenuView } from "../extensions/float-menu/view";
+import { NodeMarkdownStorage } from "../extensions/markdown";
 import { unwrap, wrap } from "../extensions/markdown/plugins/wrap";
+import { InnerResizerView } from "../extensions/node-view/inner-resizer";
+import { parseAttributes, setAttributes } from "../utils/editor";
+import { icon } from "../utils/icons";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -19,8 +19,8 @@ declare module "@tiptap/core" {
 
 export interface EmbedItem {
   name: string;
-  match: (props: { editor: Editor; node: PNode; element: HTMLIFrameElement }) => string | boolean | undefined | null;
-  render: (props: { editor: Editor; node: PNode; element: HTMLIFrameElement }) => void;
+  match: (props: { editor: Editor; view: InnerResizerView; node: PNode; element: HTMLIFrameElement }) => string | boolean | undefined | null;
+  render: (props: { editor: Editor; view: InnerResizerView; node: PNode; element: HTMLIFrameElement }) => void;
 }
 
 export interface EmbedOptions {
@@ -48,7 +48,45 @@ export const Embed = Node.create<EmbedOptions>({
   },
   addOptions() {
     return {
-      items: [],
+      items: [
+        {
+          name: "GitHub Gist",
+          match: ({ node }) => {
+            return node.attrs.src?.match(/(?:https?:\/\/)?gist\.github\.?com\/?(.*)$/i);
+          },
+          render: ({ editor, view, node, element }) => {
+            const match = node.attrs.src?.match(/(?:https?:\/\/)?gist\.github\.?com\/?(.*)$/i);
+            if (!match) {
+              return;
+            }
+            window.addEventListener("message", (e) => {
+              if (e.data?.type === "resize" && e.data?.value) {
+                if (Math.abs(node.attrs.height - e.data.value) > 5) {
+                  setAttributes(editor, view.getPos, {
+                    ...node.attrs,
+                    height: e.data.value,
+                  });
+                }
+              }
+            });
+            element.src = `
+              data:text/html;charset=utf-8,
+              <head>
+                <base target='_blank' />
+                <title>GitHub Gist</title>
+              </head>
+              <body>
+                <script src="https://gist.github.com/${match[1]}.js"></script>
+                <script>
+                  window.addEventListener("load", () => {
+                    window.parent.postMessage({ type: "resize", value: document.body.scrollHeight }, "*");
+                  });
+                </script>
+              </body>
+            `;
+          },
+        },
+      ],
       inline: false,
       HTMLAttributes: {},
       dictionary: {
@@ -131,7 +169,7 @@ export const Embed = Node.create<EmbedOptions>({
   addNodeView() {
     return InnerResizerView.create({
       HTMLAttributes: this.options.HTMLAttributes,
-      onInit: ({ view }) => {
+      onInit: ({ editor, view }) => {
         const ifr = document.createElement("iframe");
         for (const [key, value] of Object.entries(mergeAttributes(view.HTMLAttributes))) {
           if (value !== undefined && value !== null) {
@@ -140,13 +178,25 @@ export const Embed = Node.create<EmbedOptions>({
         }
         ifr.src = view.node.attrs.src ?? "";
         view.$root.append(ifr);
+        for (const item of this.options.items) {
+          if (item.match({ editor, view, node: view.node, element: ifr })) {
+            item.render({ editor, view, node: view.node, element: ifr });
+            break;
+          }
+        }
       },
-      onUpdate: ({ view }) => {
+      onUpdate: ({ editor, view }) => {
         const ifr = view.$root.firstElementChild as HTMLIFrameElement;
         if (ifr) {
           const src = view.node.attrs.src ?? "";
           if (ifr.getAttribute("src") !== src) {
             ifr.src = src;
+          }
+          for (const item of this.options.items) {
+            if (item.match({ editor, view, node: view.node, element: ifr })) {
+              item.render({ editor, view, node: view.node, element: ifr });
+              break;
+            }
           }
         }
       },
@@ -165,7 +215,7 @@ export const Embed = Node.create<EmbedOptions>({
   addInputRules() {
     return [
       nodeInputRule({
-        find: /(:embed{([^}]+)})/,
+        find: /(:embed\{([^}]+)\})/,
         type: this.type,
         getAttributes: match => parseAttributes(match[2]),
       }),
