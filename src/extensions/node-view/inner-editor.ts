@@ -1,10 +1,10 @@
-import { Editor, NodeViewRendererProps, mergeAttributes } from "@tiptap/core";
-import { Node } from "@tiptap/pm/model";
-import { keymap } from "@tiptap/pm/keymap";
-import { StepMap } from "@tiptap/pm/transform";
+import { Editor, mergeAttributes, NodeViewRendererProps } from "@tiptap/core";
 import { newlineInCode } from "@tiptap/pm/commands";
-import { EditorView, NodeView } from "@tiptap/pm/view";
+import { keymap } from "@tiptap/pm/keymap";
+import { Node } from "@tiptap/pm/model";
 import { EditorState, TextSelection } from "@tiptap/pm/state";
+import { StepMap } from "@tiptap/pm/transform";
+import { EditorView, NodeView } from "@tiptap/pm/view";
 
 export interface InnerEditorViewOptions extends NodeViewRendererProps {
   id?: string;
@@ -242,7 +242,6 @@ export class InnerEditorView implements NodeView {
           const $view = this.editor.view;
           const $state = $view.state;
           const $tr = $state.tr;
-          // @ts-expect-error
           const $offset = StepMap.offset(this.options.getPos() + 1);
           transactions.forEach((transaction) => {
             transaction.steps.forEach((step) => {
