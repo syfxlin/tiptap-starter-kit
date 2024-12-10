@@ -1,7 +1,7 @@
-import { Node as UnistNode } from "unist";
-import { Processor } from "unified";
 import { Mark, MarkType, Node, NodeType } from "@tiptap/pm/model";
 import { Data } from "mdast";
+import { Processor } from "unified";
+import { Node as UnistNode } from "unist";
 import { ParserState } from "../parser/state";
 import { SerializerState } from "../serializer/state";
 

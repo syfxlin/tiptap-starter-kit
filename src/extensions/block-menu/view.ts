@@ -1,7 +1,7 @@
-import tippy, { Instance, Props } from "tippy.js";
-import scrollIntoView from "smooth-scroll-into-view-if-needed";
 import { Editor, Range } from "@tiptap/core";
 import { SuggestionKeyDownProps, SuggestionProps } from "@tiptap/suggestion";
+import scrollIntoView from "smooth-scroll-into-view-if-needed";
+import tippy, { Instance, Props } from "tippy.js";
 
 export type BlockMenuViewItem = "|" | {
   action: (props: { editor: Editor; view: BlockMenuView; range: Range; element: HTMLElement }) => void;

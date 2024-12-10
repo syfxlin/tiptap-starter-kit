@@ -1,10 +1,10 @@
-import { Processor, unified } from "unified";
+import { Extension } from "@tiptap/core";
+import { Node } from "@tiptap/pm/model";
+import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
-import remarkDirective from "remark-directive";
-import { Node } from "@tiptap/pm/model";
-import { Extension } from "@tiptap/core";
+import { Processor, unified } from "unified";
 import { ParserState } from "./parser/state";
 import { SerializerState } from "./serializer/state";
 import { MarkMarkdownStorage, NodeMarkdownStorage } from "./types";

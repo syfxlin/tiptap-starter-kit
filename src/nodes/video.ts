@@ -1,14 +1,14 @@
-import { Node, mergeAttributes, nodeInputRule } from "@tiptap/core";
+import { mergeAttributes, Node, nodeInputRule } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import Plyr from "plyr";
-import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { icon } from "../utils/icons";
-import { parseAttributes } from "../utils/editor";
 import { FloatMenuView } from "../extensions/float-menu/view";
-import { UploaderStorage } from "../extensions/uploader";
-import { InnerResizerView } from "../extensions/node-view/inner-resizer";
+import { NodeMarkdownStorage } from "../extensions/markdown";
 import { unwrap, wrap } from "../extensions/markdown/plugins/wrap";
+import { InnerResizerView } from "../extensions/node-view/inner-resizer";
+import { UploaderStorage } from "../extensions/uploader";
+import { parseAttributes } from "../utils/editor";
+import { icon } from "../utils/icons";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -177,7 +177,7 @@ export const Video = Node.create<VideoOptions>({
   addInputRules() {
     return [
       nodeInputRule({
-        find: /(:video{([^}]+)})/,
+        find: /(:video\{([^}]+)\})/,
         type: this.type,
         getAttributes: match => parseAttributes(match[2]),
       }),

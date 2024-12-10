@@ -1,7 +1,7 @@
-import { Italic as TItalic, ItalicOptions as TItalicOptions } from "@tiptap/extension-italic";
 import { markInputRule, markPasteRule } from "@tiptap/core";
-import { MarkMarkdownStorage } from "../extensions/markdown";
+import { Italic as TItalic, ItalicOptions as TItalicOptions } from "@tiptap/extension-italic";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { MarkMarkdownStorage } from "../extensions/markdown";
 import { icon } from "../utils/icons";
 
 const STAR_INPUT_REGEX = /(?:^|[^*])(\*(?!\s+\*)([^*]+)\*)$/;

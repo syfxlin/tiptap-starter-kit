@@ -1,6 +1,6 @@
 import { Underline as TUnderline, UnderlineOptions as TUnderlineOptions } from "@tiptap/extension-underline";
-import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { MarkMarkdownStorage } from "../extensions/markdown";
 import { remarkDecoration } from "../extensions/markdown/plugins/decoration";
 import { icon } from "../utils/icons";
 

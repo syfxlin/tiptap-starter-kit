@@ -1,5 +1,5 @@
-import { SKIP, Visitor, visit } from "unist-util-visit";
 import { Paragraph, RootContent } from "mdast";
+import { SKIP, visit, Visitor } from "unist-util-visit";
 import { MarkdownNode } from "../types";
 
 export function wrap(root: MarkdownNode, match: (node: MarkdownNode) => boolean) {

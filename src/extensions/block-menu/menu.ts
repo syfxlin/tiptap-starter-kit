@@ -1,7 +1,7 @@
 import { Editor, Extension, findParentNode } from "@tiptap/core";
-import { Suggestion } from "@tiptap/suggestion";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
+import { Suggestion } from "@tiptap/suggestion";
 import { BlockMenuView, BlockMenuViewItem } from "./view";
 
 export interface BlockMenuItem {

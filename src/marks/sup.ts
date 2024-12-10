@@ -1,6 +1,6 @@
 import { SuperscriptExtensionOptions, Superscript as TSuperscript } from "@tiptap/extension-superscript";
-import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { MarkMarkdownStorage } from "../extensions/markdown";
 import { icon } from "../utils/icons";
 
 export interface SuperscriptOptions extends SuperscriptExtensionOptions {

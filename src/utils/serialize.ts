@@ -1,6 +1,6 @@
+import { DOMSerializer, NodeType, Slice } from "@tiptap/pm/model";
 // Copy from: https://github.com/ProseMirror/prosemirror-view/blob/master/src/clipboard.ts
 import { EditorView } from "@tiptap/pm/view";
-import { DOMSerializer, NodeType, Slice } from "@tiptap/pm/model";
 
 let _detachedDoc: Document | null = null;
 
@@ -56,7 +56,7 @@ export function serializeForClipboard(view: EditorView, slice: Slice) {
   if (firstChild && firstChild.nodeType === 1) {
     (firstChild as HTMLElement).setAttribute(
       "data-pm-slice",
-        `${openStart} ${openEnd}${wrappers ? ` -${wrappers}` : ""} ${JSON.stringify(context)}`,
+      `${openStart} ${openEnd}${wrappers ? ` -${wrappers}` : ""} ${JSON.stringify(context)}`,
     );
   }
 

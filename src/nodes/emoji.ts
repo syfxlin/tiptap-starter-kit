@@ -1,11 +1,11 @@
-import remarkGemoji from "remark-gemoji";
-import { InputRule, Node, mergeAttributes } from "@tiptap/core";
-import { nameToEmoji } from "gemoji";
-import { Suggestion } from "@tiptap/suggestion";
+import { InputRule, mergeAttributes, Node } from "@tiptap/core";
 import { PluginKey } from "@tiptap/pm/state";
+import { Suggestion } from "@tiptap/suggestion";
+import { nameToEmoji } from "gemoji";
+import remarkGemoji from "remark-gemoji";
+import { BlockMenuView, BlockMenuViewItem } from "../extensions/block-menu/view";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { InnerRenderView } from "../extensions/node-view/inner-render";
-import { BlockMenuView, BlockMenuViewItem } from "../extensions/block-menu/view";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -110,7 +110,7 @@ export const Emoji = Node.create<EmojiOptions>({
   addInputRules() {
     return [
       new InputRule({
-        find: /:([a-zA-Z0-9_+]+):/,
+        find: /:([\w+]+):/,
         handler: ({ state, range, match }) => {
           const { from, to } = range;
           const $start = state.doc.resolve(from);

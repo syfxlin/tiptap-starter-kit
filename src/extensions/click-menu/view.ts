@@ -1,9 +1,9 @@
-import tippy, { Instance, Props } from "tippy.js";
 import { Editor } from "@tiptap/core";
-import { NodeSelection } from "@tiptap/pm/state";
 import { Node, ResolvedPos } from "@tiptap/pm/model";
-import { serializeForClipboard } from "../../utils/serialize";
+import { NodeSelection } from "@tiptap/pm/state";
+import tippy, { Instance, Props } from "tippy.js";
 import { icon } from "../../utils/icons";
+import { serializeForClipboard } from "../../utils/serialize";
 
 export interface ClickMenuViewOptions {
   editor: Editor;

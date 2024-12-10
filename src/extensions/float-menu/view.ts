@@ -1,7 +1,7 @@
-import tippy, { Instance, Props } from "tippy.js";
-import { EditorView } from "@tiptap/pm/view";
+import { Editor, isNodeSelection, posToDOMRect, Range } from "@tiptap/core";
 import { EditorState, PluginView } from "@tiptap/pm/state";
-import { Editor, Range, isNodeSelection, posToDOMRect } from "@tiptap/core";
+import { EditorView } from "@tiptap/pm/view";
+import tippy, { Instance, Props } from "tippy.js";
 
 export interface FloatMenuInputViewOptions {
   id?: string;

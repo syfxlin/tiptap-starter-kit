@@ -1,12 +1,12 @@
+import { InputRule, mergeAttributes, Node } from "@tiptap/core";
+import { Plugin, PluginKey } from "@tiptap/pm/state";
 import katex from "katex";
 import remarkMath from "remark-math";
-import { InputRule, Node, mergeAttributes } from "@tiptap/core";
-import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { icon } from "../utils/icons";
+import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { InnerRenderView } from "../extensions/node-view/inner-render";
-import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
+import { icon } from "../utils/icons";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {

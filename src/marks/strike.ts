@@ -1,7 +1,7 @@
-import { Strike as TStrike, StrikeOptions as TStrikeOptions } from "@tiptap/extension-strike";
 import { markInputRule, markPasteRule } from "@tiptap/core";
-import { MarkMarkdownStorage } from "../extensions/markdown";
+import { Strike as TStrike, StrikeOptions as TStrikeOptions } from "@tiptap/extension-strike";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { MarkMarkdownStorage } from "../extensions/markdown";
 import { icon } from "../utils/icons";
 
 const INPUT_REGEX = /(?:^|[^~])(~~(?!\s+~~)([^~]+)~~)$/;

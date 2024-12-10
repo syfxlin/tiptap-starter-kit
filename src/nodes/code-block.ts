@@ -1,12 +1,12 @@
-import { common, createLowlight } from "lowlight";
-import { CodeBlockLowlight, CodeBlockLowlightOptions } from "@tiptap/extension-code-block-lowlight";
-import tippy from "tippy.js";
 import { mergeAttributes } from "@tiptap/core";
-import { NodeMarkdownStorage } from "../extensions/markdown";
+import { CodeBlockLowlight, CodeBlockLowlightOptions } from "@tiptap/extension-code-block-lowlight";
+import { common, createLowlight } from "lowlight";
+import tippy from "tippy.js";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { icon } from "../utils/icons";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { NodeMarkdownStorage } from "../extensions/markdown";
 import { setAttributes } from "../utils/editor";
+import { icon } from "../utils/icons";
 
 export interface CodeBlockOptions extends CodeBlockLowlightOptions {
   dictionary: Record<string, string>;

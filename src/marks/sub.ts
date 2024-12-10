@@ -1,6 +1,6 @@
 import { SubscriptExtensionOptions, Subscript as TSubscript } from "@tiptap/extension-subscript";
-import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { MarkMarkdownStorage } from "../extensions/markdown";
 import { icon } from "../utils/icons";
 
 export interface SubscriptOptions extends SubscriptExtensionOptions {

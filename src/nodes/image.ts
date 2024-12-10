@@ -1,14 +1,14 @@
+import { mergeAttributes } from "@tiptap/core";
 import { Image as TImage, ImageOptions as TImageOptions } from "@tiptap/extension-image";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { mergeAttributes } from "@tiptap/core";
-import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { FloatMenuView } from "../extensions/float-menu/view";
-import { icon } from "../utils/icons";
-import { UploaderItemStorage, UploaderStorage } from "../extensions/uploader";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
-import { InnerResizerView } from "../extensions/node-view/inner-resizer";
+import { FloatMenuView } from "../extensions/float-menu/view";
+import { NodeMarkdownStorage } from "../extensions/markdown";
 import { unwrap, wrap } from "../extensions/markdown/plugins/wrap";
+import { InnerResizerView } from "../extensions/node-view/inner-resizer";
+import { UploaderItemStorage, UploaderStorage } from "../extensions/uploader";
+import { icon } from "../utils/icons";
 
 export interface ImageOptions extends TImageOptions {
   dictionary: {

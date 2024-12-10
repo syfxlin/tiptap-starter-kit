@@ -1,13 +1,13 @@
+import { posToDOMRect } from "@tiptap/core";
 import { TableRow as TTableRow, TableRowOptions as TTableRowOptions } from "@tiptap/extension-table-row";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
-import { posToDOMRect } from "@tiptap/core";
+import { ClickMenuItemStorage } from "../extensions/click-menu/menu";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { getCellsInColumn, isCellSelection, isRowSelected, isTableSelected, selectRow } from "../utils/editor";
-import { icon } from "../utils/icons";
 
-import { ClickMenuItemStorage } from "../extensions/click-menu/menu";
+import { icon } from "../utils/icons";
 
 export interface TableRowOptions extends TTableRowOptions {
   dictionary: {

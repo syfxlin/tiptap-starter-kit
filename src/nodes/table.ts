@@ -1,13 +1,13 @@
+import { posToDOMRect } from "@tiptap/core";
 import { Table as TTable, TableOptions as TTableOptions } from "@tiptap/extension-table";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { posToDOMRect } from "@tiptap/core";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
-import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { icon } from "../utils/icons";
-import { FloatMenuView } from "../extensions/float-menu/view";
-import { findTable, getCellInTable, isTableSelected } from "../utils/editor";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { FloatMenuView } from "../extensions/float-menu/view";
+import { NodeMarkdownStorage } from "../extensions/markdown";
+import { findTable, getCellInTable, isTableSelected } from "../utils/editor";
+import { icon } from "../utils/icons";
 
 export interface TableOptions extends TTableOptions {
   dictionary: {

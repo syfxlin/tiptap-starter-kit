@@ -1,4 +1,4 @@
-import { Editor, Extension, Range, isActive, isNodeSelection, isTextSelection } from "@tiptap/core";
+import { Editor, Extension, isActive, isNodeSelection, isTextSelection, Range } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { FloatMenuView } from "./view";
 

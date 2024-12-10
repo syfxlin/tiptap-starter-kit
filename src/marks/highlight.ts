@@ -1,11 +1,11 @@
+import { markInputRule, markPasteRule } from "@tiptap/core";
 import { Highlight as THighlight, HighlightOptions as THighlightOptions } from "@tiptap/extension-highlight";
 import tippy from "tippy.js";
-import { markInputRule, markPasteRule } from "@tiptap/core";
-import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { MarkMarkdownStorage } from "../extensions/markdown";
 import { DecorationData, remarkDecoration } from "../extensions/markdown/plugins/decoration";
-import { icon } from "../utils/icons";
 import { colors } from "../utils/colors";
+import { icon } from "../utils/icons";
 
 const INPUT_REGEX = /(?:^|[^=])(==(?!\s+==)([^=]+)==)$/;
 const PASTE_REGEX = /(?:^|[^=])(==(?!\s+==)([^=]+)==(?!\s+==))/g;

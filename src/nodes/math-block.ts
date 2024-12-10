@@ -1,9 +1,9 @@
+import { mergeAttributes, Node, textblockTypeInputRule } from "@tiptap/core";
 import katex from "katex";
 import remarkMath from "remark-math";
-import { Node, mergeAttributes, textblockTypeInputRule } from "@tiptap/core";
+import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 import { InnerEditorView } from "../extensions/node-view/inner-editor";
-import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
 import { icon } from "../utils/icons";
 
 declare module "@tiptap/core" {

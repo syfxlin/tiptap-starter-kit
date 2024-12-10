@@ -1,13 +1,13 @@
-import { TableHeader as TTableHeader, TableHeaderOptions as TTableHeaderOptions } from "@tiptap/extension-table-header";
 import { posToDOMRect } from "@tiptap/core";
+import { TableHeader as TTableHeader, TableHeaderOptions as TTableHeaderOptions } from "@tiptap/extension-table-header";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
+import { ClickMenuItemStorage } from "../extensions/click-menu/menu";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { NodeMarkdownStorage } from "../extensions/markdown";
-import { icon } from "../utils/icons";
 import { getCellsInRow, isCellSelection, isColumnSelected, isTableSelected, selectColumn } from "../utils/editor";
 
-import { ClickMenuItemStorage } from "../extensions/click-menu/menu";
+import { icon } from "../utils/icons";
 
 export interface TableHeaderOptions extends TTableHeaderOptions {
   dictionary: {

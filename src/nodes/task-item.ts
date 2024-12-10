@@ -1,7 +1,6 @@
 import { TaskItem as TTaskItem, TaskItemOptions as TTaskItemOptions } from "@tiptap/extension-task-item";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 
-// eslint-disable-next-line ts/no-empty-object-type
 export interface TaskItemOptions extends TTaskItemOptions {
 }
 

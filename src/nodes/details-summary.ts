@@ -1,4 +1,4 @@
-import { Node, defaultBlockAt, mergeAttributes } from "@tiptap/core";
+import { defaultBlockAt, mergeAttributes, Node } from "@tiptap/core";
 import { Selection } from "@tiptap/pm/state";
 import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
 

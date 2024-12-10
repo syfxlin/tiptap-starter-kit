@@ -7,7 +7,7 @@ export interface ClipboardOptions {}
 export function isInCode(state: EditorState): boolean {
   try {
     return isActive(state, "codeBlock") || isActive(state, "code");
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -19,10 +19,10 @@ export function isMarkdown(value: string): boolean {
   }
 
   // link-ish
-  if (value.match(/\[[^]+]\(https?:\/\/\S+\)/gm)) {
+  if (value.match(/\[[\s\S]+\]\(https?:\/\/\S+\)/g)) {
     return true;
   }
-  if (value.match(/\[[^]+]\(\/\S+\)/gm)) {
+  if (value.match(/\[[\s\S]+\]\(\/\S+\)/g)) {
     return true;
   }
 
@@ -33,7 +33,7 @@ export function isMarkdown(value: string): boolean {
 
   // list-ish
   // noinspection RedundantIfStatementJS
-  if (value.match(/^[\d-*].?\s\S+/gm)) {
+  if (value.match(/^[-*\d].?\s\S+/gm)) {
     return true;
   }
 

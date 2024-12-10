@@ -1,8 +1,8 @@
 import { Link as TLink, LinkOptions as TLinkOptions } from "@tiptap/extension-link";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
+import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { FloatMenuView } from "../extensions/float-menu/view";
 import { MarkMarkdownStorage } from "../extensions/markdown";
-import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
 import { icon } from "../utils/icons";
 
 export interface LinkOptions extends TLinkOptions {

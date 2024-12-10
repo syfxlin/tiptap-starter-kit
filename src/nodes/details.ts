@@ -1,8 +1,8 @@
-import { Node, findChildren, findParentNode, mergeAttributes, wrappingInputRule } from "@tiptap/core";
-import { NodeMarkdownStorage } from "../extensions/markdown";
-import { icon } from "../utils/icons";
+import { findChildren, findParentNode, mergeAttributes, Node, wrappingInputRule } from "@tiptap/core";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
+import { NodeMarkdownStorage } from "../extensions/markdown";
 import { setAttributes } from "../utils/editor";
+import { icon } from "../utils/icons";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {

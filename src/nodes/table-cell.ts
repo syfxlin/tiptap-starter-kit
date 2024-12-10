@@ -1,10 +1,11 @@
+import { posToDOMRect } from "@tiptap/core";
 import { TableCell as TTableCell, TableCellOptions as TTableCellOptions } from "@tiptap/extension-table-cell";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { Decoration, DecorationSet } from "@tiptap/pm/view";
 import { TableMap } from "@tiptap/pm/tables";
-import { posToDOMRect } from "@tiptap/core";
-import { NodeMarkdownStorage } from "../extensions/markdown";
+import { Decoration, DecorationSet } from "@tiptap/pm/view";
+import { ClickMenuItemStorage } from "../extensions/click-menu/menu";
 import { FloatMenuView } from "../extensions/float-menu/view";
+import { NodeMarkdownStorage } from "../extensions/markdown";
 import {
   findTable,
   getCellsInColumn,
@@ -15,7 +16,6 @@ import {
   isTableSelected,
 } from "../utils/editor";
 import { icon } from "../utils/icons";
-import { ClickMenuItemStorage } from "../extensions/click-menu/menu";
 
 export interface TableCellOptions extends TTableCellOptions {
   dictionary: {

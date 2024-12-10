@@ -1,7 +1,7 @@
 import { Editor } from "@tiptap/core";
-import { Processor } from "unified";
 import { Fragment, Mark, Node } from "@tiptap/pm/model";
-import { MarkMarkdownStorage, MarkdownNode, NodeMarkdownStorage } from "../types";
+import { Processor } from "unified";
+import { MarkdownNode, MarkMarkdownStorage, NodeMarkdownStorage } from "../types";
 import { SerializerStack } from "./stack";
 
 export class SerializerState {

@@ -1,7 +1,6 @@
 import { ListItem as TListItem, ListItemOptions as TListItemOptions } from "@tiptap/extension-list-item";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 
-// eslint-disable-next-line ts/no-empty-object-type
 export interface ListItemOptions extends TListItemOptions {
 }
 

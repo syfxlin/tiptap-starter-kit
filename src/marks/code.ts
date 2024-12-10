@@ -1,7 +1,7 @@
-import { Code as TCode, CodeOptions as TCodeOptions } from "@tiptap/extension-code";
 import { markInputRule, markPasteRule } from "@tiptap/core";
-import { MarkMarkdownStorage } from "../extensions/markdown";
+import { Code as TCode, CodeOptions as TCodeOptions } from "@tiptap/extension-code";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { MarkMarkdownStorage } from "../extensions/markdown";
 import { icon } from "../utils/icons";
 
 const INPUT_REGEX = /(?:^|[^`])(`(?!\s+`)([^`]+)`)$/;

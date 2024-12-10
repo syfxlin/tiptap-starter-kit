@@ -1,11 +1,11 @@
-import { Node, mergeAttributes, textblockTypeInputRule } from "@tiptap/core";
+import { mergeAttributes, Node, textblockTypeInputRule } from "@tiptap/core";
 import { encode } from "plantuml-encoder";
-import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
-import { icon } from "../utils/icons";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
+import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
 import { InnerEditorView } from "../extensions/node-view/inner-editor";
-
 import { debounce } from "../utils/functions";
+
+import { icon } from "../utils/icons";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {

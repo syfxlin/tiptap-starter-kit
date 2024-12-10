@@ -1,11 +1,11 @@
+import { mergeAttributes, Node, textblockTypeInputRule } from "@tiptap/core";
 import mermaid from "mermaid";
-import { Node, mergeAttributes, textblockTypeInputRule } from "@tiptap/core";
-import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { icon } from "../utils/icons";
+import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
 import { InnerEditorView } from "../extensions/node-view/inner-editor";
-
 import { debounce } from "../utils/functions";
+
+import { icon } from "../utils/icons";
 
 mermaid.initialize({
   startOnLoad: false,
