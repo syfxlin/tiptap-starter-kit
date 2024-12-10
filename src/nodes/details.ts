@@ -121,7 +121,14 @@ export const Details = Node.create<DetailsOptions>({
       ico.innerHTML = icon("right-line");
       btn.addEventListener("click", () => {
         const open = !dom.hasAttribute("open");
-        setAttributes(editor, getPos, { ...node.attrs, open });
+        if (open) {
+          dom.setAttribute("open", "true");
+        } else {
+          dom.removeAttribute("open");
+        }
+        if (editor.isEditable) {
+          setAttributes(editor, getPos, { ...node.attrs, open });
+        }
       });
 
       btn.append(ico);
