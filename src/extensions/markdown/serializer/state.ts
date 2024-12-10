@@ -23,7 +23,6 @@ export class SerializerState {
         root = storage.markdown.hooks.beforeSerialize(root);
       }
     }
-    console.log(root);
     let markdown = this.processor.stringify(root) as string;
     for (const storage of Object.values(this.editor.storage as Record<string, NodeMarkdownStorage | MarkMarkdownStorage>)) {
       if (storage?.markdown?.hooks?.afterSerialize) {
