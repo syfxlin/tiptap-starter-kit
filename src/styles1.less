@@ -46,6 +46,7 @@
   // size
   --tiptap-radius: calc(var(--radius, 0.5rem) - 4px);
   // color
+  --tiptap-border: hsl(var(--border, 240 5.9% 90%));
   --tiptap-foreground: hsl(var(--foreground, 240 10% 3.9%));
   --tiptap-background: hsl(var(--background, 0 0% 100%));
   --tiptap-muted-foreground: hsl(var(--muted-foreground, 240 3.8% 46.1%));
@@ -55,6 +56,36 @@
   --tiptap-popover-foreground: hsl(var(--popover-foreground, 240 10% 3.9%));
   --tiptap-popover-background: hsl(var(--popover, 0 0% 100%));
 }
+
+// region scrollbar
+
+::-webkit-scrollbar {
+  .ProseMirror-bm& {
+    width: 5px;
+  }
+}
+
+::-webkit-scrollbar-track {
+  .ProseMirror-bm& {
+    background: transparent;
+  }
+}
+
+::-webkit-scrollbar-thumb {
+  .ProseMirror-bm& {
+    background: var(--tiptap-border);
+    border-radius: 5px;
+  }
+}
+
+.ProseMirror-bm * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--tiptap-border) transparent;
+}
+
+// endregion
+
+// region block-menu
 
 .ProseMirror-bm {
   white-space: nowrap;
@@ -155,3 +186,5 @@
     opacity: 0;
   }
 }
+
+// endregion
