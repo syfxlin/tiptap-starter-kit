@@ -146,7 +146,7 @@ export const Emoji = Node.create<EmojiOptions>({
               action: ({ editor, range }) => {
                 editor.chain().deleteRange(range).setEmoji(name).focus().run();
               },
-              render: ({ view, element }) => view.createButton(element, {
+              render: ({ view }) => view.createButton({
                 id: name,
                 name: `${name} - ${html}`,
               }),

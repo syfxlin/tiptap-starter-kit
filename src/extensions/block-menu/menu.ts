@@ -10,7 +10,7 @@ export interface BlockMenuItem {
   icon: string;
   keywords: string;
   shortcut?: string;
-  action: (editor: Editor, view: BlockMenuView) => void;
+  action: (editor: Editor) => void;
 }
 
 export interface BlockMenuItemStorage {
@@ -102,23 +102,23 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
               }
             }
             filtered.push({
-              action: ({ editor, view }) => {
+              render: ({ view }) => view.createButton({
+                id: name,
+                name: item.name,
+                icon: item.icon,
+                shortcut: item.shortcut,
+              }),
+              action: ({ editor }) => {
                 // clear search
                 const { state, dispatch } = editor.view;
                 const from = state.selection.$from;
                 const tr = state.tr.deleteRange(from.start(), from.pos);
                 dispatch(tr);
                 // command
-                item.action(editor, view);
+                item.action(editor);
                 // focus
                 editor.view.focus();
               },
-              render: ({ view, element }) => view.createButton(element, {
-                id: name,
-                name: item.name,
-                icon: item.icon,
-                shortcut: item.shortcut,
-              }),
             });
           }
           const items: Array<BlockMenuViewItem> = [];

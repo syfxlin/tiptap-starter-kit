@@ -1,6 +1,7 @@
 import { Editor } from "@tiptap/core";
 import { StarterKit } from "../src";
 import "../src/styles.less";
+import "../src/styles1.less";
 
 const editor = new Editor({
   element: document.querySelector("#editor")!,
