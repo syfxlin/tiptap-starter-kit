@@ -46,10 +46,10 @@ export const Superscript = TSuperscript.extend<SuperscriptOptions>({
           {
             id: this.name,
             name: this.options.dictionary.name,
-            view: icon("sup"),
+            icon: icon("sup"),
             shortcut: "Mod-.",
-            active: ({ editor }) => editor.isActive(this.name),
-            action: ({ editor }) => editor.chain().toggleSuperscript().focus().run(),
+            active: editor => editor.isActive(this.name),
+            action: editor => editor.chain().toggleSuperscript().run(),
           },
         ],
       },

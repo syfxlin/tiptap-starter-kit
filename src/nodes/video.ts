@@ -189,9 +189,10 @@ export const Video = Node.create<VideoOptions>({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({
           editor: this.editor,
-          show: ({ editor }) => editor.isEditable && editor.isActive(this.name),
-          tippy: ({ options }) => ({ ...options, onMount: i => (i.popper.querySelector(`input[name="src"]`) as HTMLInputElement)?.focus() }),
-          onInit: ({ view, editor, element }) => {
+          show: ({ editor }) => {
+            return editor.isEditable && editor.isActive(this.name);
+          },
+          onInit: ({ view, editor, root }) => {
             const group = view.createGroup("column");
 
             const src = view.createInput({
@@ -199,7 +200,7 @@ export const Video = Node.create<VideoOptions>({
               name: this.options.dictionary.inputSrc,
               onKey: ({ key }) => {
                 if (key === "ArrowDown") {
-                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
@@ -208,7 +209,7 @@ export const Video = Node.create<VideoOptions>({
                   editor.chain().focus().run();
                 }
                 if (boundary === "right") {
-                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
@@ -218,21 +219,21 @@ export const Video = Node.create<VideoOptions>({
               name: this.options.dictionary.inputAlt,
               onKey: ({ key }) => {
                 if (key === "ArrowUp") {
-                  const node = element.querySelector(`input[name="src"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="src"]`) as HTMLInputElement;
                   node?.focus();
                 }
                 if (key === "ArrowDown") {
-                  const node = element.querySelector(`input[name="title"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="title"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
               onBoundary: (boundary) => {
                 if (boundary === "left") {
-                  const node = element.querySelector(`input[name="src"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="src"]`) as HTMLInputElement;
                   node?.focus();
                 }
                 if (boundary === "right") {
-                  const node = element.querySelector(`input[name="title"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="title"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
@@ -242,13 +243,13 @@ export const Video = Node.create<VideoOptions>({
               name: this.options.dictionary.inputTitle,
               onKey: ({ key }) => {
                 if (key === "ArrowUp") {
-                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
               onBoundary: (boundary) => {
                 if (boundary === "left") {
-                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
                   node?.focus();
                 }
                 if (boundary === "right") {
@@ -260,7 +261,7 @@ export const Video = Node.create<VideoOptions>({
             const open = view.createButton({
               id: "open",
               name: this.options.dictionary.videoOpen,
-              view: icon("open"),
+              icon: icon("open"),
               onClick: () => {
                 const attrs = editor.getAttributes(this.name);
                 if (attrs.src) {
@@ -271,7 +272,7 @@ export const Video = Node.create<VideoOptions>({
             const upload = view.createUpload({
               id: "upload",
               name: this.options.dictionary.videoUpload,
-              view: icon("upload"),
+              icon: icon("upload"),
               accept: "video/*",
               onUpload: (element) => {
                 const uploader = this.editor.storage.uploader as UploaderStorage;
@@ -287,7 +288,7 @@ export const Video = Node.create<VideoOptions>({
             const remove = view.createButton({
               id: "remove",
               name: this.options.dictionary.videoDelete,
-              view: icon("remove"),
+              icon: icon("remove"),
               onClick: () => {
                 editor.chain().deleteSelection().run();
               },
@@ -298,29 +299,35 @@ export const Video = Node.create<VideoOptions>({
                 editor
                   .chain()
                   .updateAttributes(this.name, {
-                    src: src.input.value,
-                    alt: alt.input.value,
-                    title: title.input.value,
+                    src: src.value,
+                    alt: alt.value,
+                    title: title.value,
                   })
                   .focus()
                   .run();
               }
             });
 
-            group.append(src.input);
-            group.append(alt.input);
-            group.append(title.input);
-            element.append(group);
-            element.append(open.button);
-            element.append(upload.button);
-            element.append(remove.button);
+            group.append(src);
+            group.append(alt);
+            group.append(title);
+            root.append(group);
+            root.append(open);
+            root.append(upload);
+            root.append(remove);
           },
-          onUpdate: ({ editor, element }) => {
+          onMount: ({ root }) => {
+            const src = root.querySelector(`input[name="src"]`) as HTMLInputElement;
+            if (src) {
+              src.focus();
+            }
+          },
+          onUpdate: ({ editor, root }) => {
             const attrs = editor.getAttributes(this.name);
 
-            const src = element.querySelector(`input[name="src"]`) as HTMLInputElement;
-            const alt = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
-            const title = element.querySelector(`input[name="title"]`) as HTMLInputElement;
+            const src = root.querySelector(`input[name="src"]`) as HTMLInputElement;
+            const alt = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
+            const title = root.querySelector(`input[name="title"]`) as HTMLInputElement;
 
             src.value = attrs.src ?? "";
             alt.value = attrs.alt ?? "";

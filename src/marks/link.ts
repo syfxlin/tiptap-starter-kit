@@ -65,15 +65,14 @@ export const Link = TLink.extend<LinkOptions>({
         },
       },
       floatMenu: {
-        hide: true,
         items: [
           {
             id: this.name,
             name: this.options.dictionary.name,
-            view: icon("link"),
+            icon: icon("link"),
             shortcut: "Mod-K",
-            active: ({ editor }) => editor.isActive(this.name),
-            action: ({ editor }) => editor.chain().toggleLink({ href: "" }).setTextSelection(editor.state.selection.to - 1).run(),
+            active: editor => editor.isActive(this.name),
+            action: editor => editor.chain().toggleLink({ href: "" }).setTextSelection(editor.state.selection.to - 1).run(),
           },
         ],
       },
@@ -86,10 +85,15 @@ export const Link = TLink.extend<LinkOptions>({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({
           editor: this.editor,
-          show: ({ editor }) => editor.isEditable && editor.state.selection.empty && editor.isActive(this.name),
-          tippy: ({ options }) => ({ ...options, onMount: i => i.popper.querySelector("input")?.focus() }),
-          onInit: ({ view, editor, element }) => {
+          tippy: {
+            placement: "bottom",
+          },
+          show: ({ editor }) => {
+            return editor.isEditable && editor.isActive(this.name);
+          },
+          onInit: ({ view, editor, root }) => {
             const href = view.createInput({
+              id: "href",
               name: this.options.dictionary.inputLink,
               onEnter: (value) => {
                 editor.chain()
@@ -108,8 +112,9 @@ export const Link = TLink.extend<LinkOptions>({
             });
 
             const open = view.createButton({
+              id: "open",
               name: this.options.dictionary.openLink,
-              view: icon("open"),
+              icon: icon("open"),
               onClick: () => {
                 const attrs = editor.getAttributes(this.name);
                 if (attrs.href) {
@@ -119,19 +124,20 @@ export const Link = TLink.extend<LinkOptions>({
             });
 
             const remove = view.createButton({
+              id: "remove",
               name: this.options.dictionary.deleteLink,
-              view: icon("remove"),
+              icon: icon("remove"),
               onClick: () => {
                 editor.chain().unsetLink().run();
               },
             });
 
-            element.append(href.input);
-            element.append(open.button);
-            element.append(remove.button);
+            root.append(href);
+            root.append(open);
+            root.append(remove);
           },
-          onUpdate: ({ editor, element }) => {
-            const href = element.querySelector("input") as HTMLInputElement;
+          onUpdate: ({ editor, root }) => {
+            const href = root.querySelector("input") as HTMLInputElement;
             if (href) {
               href.value = editor.getAttributes(this.name).href ?? "";
             }

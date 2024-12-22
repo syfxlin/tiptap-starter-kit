@@ -102,13 +102,11 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
               }
             }
             filtered.push({
-              render: ({ view }) => view.createButton({
-                id: name,
-                name: item.name,
-                icon: item.icon,
-                shortcut: item.shortcut,
-              }),
-              action: ({ editor }) => {
+              id: name,
+              name: item.name,
+              icon: item.icon,
+              shortcut: item.shortcut,
+              action: (editor) => {
                 // clear search
                 const { state, dispatch } = editor.view;
                 const from = state.selection.$from;

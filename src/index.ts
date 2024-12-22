@@ -1,7 +1,7 @@
 import "./styles.css";
 
-export * from "./extensions/block-menu/menu";
 // views
+export * from "./extensions/block-menu/menu";
 export * from "./extensions/block-menu/view";
 export * from "./extensions/click-menu/menu";
 export * from "./extensions/click-menu/view";
@@ -43,7 +43,6 @@ export * from "./nodes/hard-break";
 export * from "./nodes/heading";
 export * from "./nodes/horizontal-rule";
 export * from "./nodes/image";
-
 export * from "./nodes/list-item";
 export * from "./nodes/math-block";
 export * from "./nodes/math-inline";
@@ -54,7 +53,6 @@ export * from "./nodes/paragraph";
 export * from "./nodes/table";
 export * from "./nodes/table-cell";
 export * from "./nodes/table-header";
-
 export * from "./nodes/table-row";
 export * from "./nodes/task-item";
 export * from "./nodes/task-list";
@@ -62,7 +60,6 @@ export * from "./nodes/task-list";
 export * from "./nodes/text";
 export * from "./nodes/video";
 export * from "./utils/colors";
-
 export * from "./utils/editor";
 export * from "./utils/functions";
 

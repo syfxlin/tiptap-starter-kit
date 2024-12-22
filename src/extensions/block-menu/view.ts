@@ -1,29 +1,25 @@
 import { Editor, Range } from "@tiptap/core";
 import { SuggestionKeyDownProps, SuggestionOptions, SuggestionProps } from "@tiptap/suggestion";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
-import tippy, { Instance } from "tippy.js";
+import tippy, { Instance, Props } from "tippy.js";
 
 export type BlockMenuViewItem = "|" | {
-  render: (props: { editor: Editor; view: BlockMenuView; range: Range }) => HTMLElement;
-  action: (props: { editor: Editor; view: BlockMenuView; range: Range }) => void;
-};
-
-export interface BlockMenuButtonViewOptions {
   id: string;
   name: string;
-  icon?: string;
+  icon: string;
   shortcut?: string;
-  attributes?: Record<string, string>;
-}
+  action: (editor: Editor) => void;
+};
 
 export interface BlockMenuViewOptions {
   editor: Editor;
+  tippy?: Partial<Props>;
   onInit?: (props: { editor: Editor; view: BlockMenuView; range: Range; root: HTMLElement }) => void;
   onMount?: (props: { editor: Editor; view: BlockMenuView; range: Range; root: HTMLElement }) => void;
   onUpdate?: (props: { editor: Editor; view: BlockMenuView; range: Range; root: HTMLElement }) => void;
   onDestroy?: (props: { editor: Editor; view: BlockMenuView; range: Range; root: HTMLElement }) => void;
-  dictionary: {
-    empty: string;
+  dictionary?: {
+    empty?: string;
   };
   attributes?: {
     [key: string]: string;
@@ -57,10 +53,10 @@ export class BlockMenuView implements ReturnType<NonNullable<SuggestionOptions["
 
     // Create root element
     this._element = document.createElement("div");
-    this._element.classList.add("ProseMirror-bm");
     for (const [key, val] of Object.entries(this.options.attributes ?? {})) {
       this._element.setAttribute(key, val);
     }
+    this._element.classList.add("ProseMirror-bm");
 
     // On init
     if (this.options.onInit) {
@@ -83,7 +79,11 @@ export class BlockMenuView implements ReturnType<NonNullable<SuggestionOptions["
       trigger: "manual",
       placement: "top-start",
       maxWidth: "none",
-      onMount: () => {
+      ...this.options.tippy,
+      onMount: (i) => {
+        if (this.options.tippy?.onMount) {
+          this.options.tippy.onMount(i);
+        }
         if (this._element && this.options.onMount) {
           this.options.onMount({
             view: this,
@@ -116,7 +116,7 @@ export class BlockMenuView implements ReturnType<NonNullable<SuggestionOptions["
     }
 
     // Render items
-    this._render(props.range);
+    this._render();
 
     // Set client rect
     // @ts-expect-error
@@ -136,8 +136,9 @@ export class BlockMenuView implements ReturnType<NonNullable<SuggestionOptions["
     }
     if (props.event.key === "Enter") {
       const item = this._items[this._index];
-      if (item && typeof item !== "string" && item.action) {
-        item.action({ view: this, range: props.range, editor: this.editor });
+      const node = this._nodes[this._index];
+      if (item && node && typeof item !== "string" && item.action) {
+        item.action(this.editor);
       }
       return true;
     }
@@ -179,42 +180,6 @@ export class BlockMenuView implements ReturnType<NonNullable<SuggestionOptions["
     this._popover = undefined;
   }
 
-  public createButton(options: BlockMenuButtonViewOptions) {
-    // root
-    const root = document.createElement("button");
-    root.classList.add("ProseMirror-bm-button");
-    root.setAttribute("name", options.id);
-    for (const [key, val] of Object.entries(options.attributes ?? {})) {
-      root.setAttribute(key, val);
-    }
-    // icon
-    if (options.icon) {
-      const icon = document.createElement("div");
-      icon.classList.add("ProseMirror-bm-button-icon");
-      icon.innerHTML = options.icon;
-      root.append(icon);
-    }
-    // name
-    const name = document.createElement("div");
-    name.classList.add("ProseMirror-bm-button-name");
-    name.textContent = options.name;
-    root.append(name);
-    // shortcut
-    if (options.shortcut) {
-      const shortcut = document.createElement("div");
-      shortcut.classList.add("ProseMirror-bm-button-shortcut");
-      shortcut.textContent = options.shortcut
-        .replace(/mod/i, navigator.userAgent.includes("Mac") ? "⌘" : "⌃")
-        .replace(/ctrl|control/i, "⌃")
-        .replace(/cmd|command/i, "⌘")
-        .replace(/shift/i, "⇧")
-        .replace(/alt|option/i, "⌥")
-        .replace(/[-\s]+/g, "");
-      root.append(shortcut);
-    }
-    return root;
-  }
-
   private _select(index: number, scroll?: boolean) {
     if (this._element === undefined || this._popover === undefined || this._index === undefined || this._nodes === undefined || this._items === undefined) {
       return;
@@ -243,7 +208,7 @@ export class BlockMenuView implements ReturnType<NonNullable<SuggestionOptions["
     }
   }
 
-  private _render(range: Range) {
+  private _render() {
     if (this._element === undefined || this._popover === undefined || this._index === undefined || this._nodes === undefined || this._items === undefined) {
       return;
     }
@@ -263,26 +228,52 @@ export class BlockMenuView implements ReturnType<NonNullable<SuggestionOptions["
       for (let i = 0; i < this._items.length; i++) {
         const item = this._items[i];
         if (item === "|") {
-          const view = document.createElement("div");
-          view.classList.add("ProseMirror-bm-divider");
-          this._nodes.push(view);
+          const root = document.createElement("span");
+          root.classList.add("ProseMirror-bm-divider");
+          this._nodes.push(root);
         } else {
-          const view = item.render({ range, view: this, editor: this.editor });
-          view.classList.add("ProseMirror-bm-item");
-          if (i === this._index) {
-            view.setAttribute("data-active", "true");
+          const root = document.createElement("button");
+          root.name = item.id;
+          root.classList.add("ProseMirror-bm-button");
+          // icon
+          if (item.icon) {
+            const icon = document.createElement("div");
+            icon.classList.add("ProseMirror-bm-button-icon");
+            icon.innerHTML = item.icon;
+            root.append(icon);
           }
-          view.addEventListener("click", () => {
+          // name
+          const name = document.createElement("div");
+          name.classList.add("ProseMirror-bm-button-name");
+          name.textContent = item.name;
+          root.append(name);
+          // shortcut
+          if (item.shortcut) {
+            const shortcut = document.createElement("div");
+            shortcut.classList.add("ProseMirror-bm-button-shortcut");
+            shortcut.textContent = item.shortcut
+              .replace(/mod/i, navigator.userAgent.includes("Mac") ? "⌘" : "⌃")
+              .replace(/ctrl|control/i, "⌃")
+              .replace(/cmd|command/i, "⌘")
+              .replace(/shift/i, "⇧")
+              .replace(/alt|option/i, "⌥")
+              .replace(/[-\s]+/g, "");
+            root.append(shortcut);
+          }
+          if (i === this._index) {
+            root.setAttribute("data-active", "true");
+          }
+          root.addEventListener("click", () => {
             if (this._element) {
-              item.action({ range, view: this, editor: this.editor });
+              item.action(this.editor);
             }
           });
-          view.addEventListener("mouseover", () => {
+          root.addEventListener("mouseover", () => {
             if (this._element && this._index !== i) {
               this._select(i);
             }
           });
-          this._nodes.push(view);
+          this._nodes.push(root);
         }
       }
       this._element.append(...this._nodes);
@@ -295,7 +286,7 @@ export class BlockMenuView implements ReturnType<NonNullable<SuggestionOptions["
     } else {
       const view = document.createElement("div");
       view.classList.add("ProseMirror-bm-empty");
-      view.textContent = this.options.dictionary.empty;
+      view.textContent = this.options.dictionary?.empty || "No results found";
       this._element.append(view);
     }
     this._popover.show();

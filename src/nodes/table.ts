@@ -110,44 +110,50 @@ export const Table = TTable.extend<TableOptions>({
             }
             return posToDOMRect(view, state.selection.from, state.selection.to);
           },
-          onInit: ({ view, editor, element }) => {
+          onInit: ({ view, editor, root }) => {
             const alignLeft = view.createButton({
+              id: "align-left",
               name: this.options.dictionary.alignLeft,
-              view: icon("align-left"),
+              icon: icon("align-left"),
               onClick: () => editor.chain().setCellAttribute("align", "left").run(),
             });
             const alignCenter = view.createButton({
+              id: "align-center",
               name: this.options.dictionary.alignCenter,
-              view: icon("align-center"),
+              icon: icon("align-center"),
               onClick: () => editor.chain().setCellAttribute("align", "center").run(),
             });
             const alignRight = view.createButton({
+              id: "align-right",
               name: this.options.dictionary.alignRight,
-              view: icon("align-right"),
+              icon: icon("align-right"),
               onClick: () => editor.chain().setCellAttribute("align", "right").run(),
             });
             const toggleHeaderRow = view.createButton({
+              id: "header-row",
               name: this.options.dictionary.toggleHeaderRow,
-              view: icon("header-row"),
+              icon: icon("header-row"),
               onClick: () => editor.chain().toggleHeaderRow().run(),
             });
             const toggleHeaderCol = view.createButton({
+              id: "header-col",
               name: this.options.dictionary.toggleHeaderCol,
-              view: icon("header-col"),
+              icon: icon("header-col"),
               onClick: () => editor.chain().toggleHeaderColumn().run(),
             });
             const deleteTable = view.createButton({
+              id: "remove",
               name: this.options.dictionary.deleteTable,
-              view: icon("remove"),
+              icon: icon("remove"),
               onClick: () => editor.chain().deleteTable().run(),
             });
 
-            element.append(alignLeft.button);
-            element.append(alignCenter.button);
-            element.append(alignRight.button);
-            element.append(toggleHeaderRow.button);
-            element.append(toggleHeaderCol.button);
-            element.append(deleteTable.button);
+            root.append(alignLeft);
+            root.append(alignCenter);
+            root.append(alignRight);
+            root.append(toggleHeaderRow);
+            root.append(toggleHeaderCol);
+            root.append(deleteTable);
           },
         }),
         props: {

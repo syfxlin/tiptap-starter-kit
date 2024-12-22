@@ -49,10 +49,10 @@ export const Strike = TStrike.extend<StrikeOptions>({
           {
             id: this.name,
             name: this.options.dictionary.name,
-            view: icon("strike"),
+            icon: icon("strike"),
             shortcut: "Mod-Shift-I",
-            active: ({ editor }) => editor.isActive(this.name),
-            action: ({ editor }) => editor.chain().toggleStrike().focus().run(),
+            active: editor => editor.isActive(this.name),
+            action: editor => editor.chain().toggleStrike().focus().run(),
           },
         ],
       },

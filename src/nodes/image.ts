@@ -173,9 +173,10 @@ export const Image = TImage.extend<ImageOptions>({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({
           editor: this.editor,
-          show: ({ editor }) => editor.isEditable && editor.isActive(this.name),
-          tippy: ({ options }) => ({ ...options, onMount: i => (i.popper.querySelector(`input[name="src"]`) as HTMLInputElement)?.focus() }),
-          onInit: ({ view, editor, element }) => {
+          show: ({ editor }) => {
+            return editor.isEditable && editor.isActive(this.name);
+          },
+          onInit: ({ view, editor, root }) => {
             const group1 = view.createGroup("row");
             const group2 = view.createGroup("column");
             const group3 = view.createGroup("column");
@@ -185,7 +186,7 @@ export const Image = TImage.extend<ImageOptions>({
               name: this.options.dictionary.inputSrc,
               onKey: ({ key }) => {
                 if (key === "ArrowDown") {
-                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
@@ -194,7 +195,7 @@ export const Image = TImage.extend<ImageOptions>({
                   editor.chain().focus().run();
                 }
                 if (boundary === "right") {
-                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
@@ -204,21 +205,21 @@ export const Image = TImage.extend<ImageOptions>({
               name: this.options.dictionary.inputAlt,
               onKey: ({ key }) => {
                 if (key === "ArrowUp") {
-                  const node = element.querySelector(`input[name="src"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="src"]`) as HTMLInputElement;
                   node?.focus();
                 }
                 if (key === "ArrowDown") {
-                  const node = element.querySelector(`input[name="title"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="title"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
               onBoundary: (boundary) => {
                 if (boundary === "left") {
-                  const node = element.querySelector(`input[name="src"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="src"]`) as HTMLInputElement;
                   node?.focus();
                 }
                 if (boundary === "right") {
-                  const node = element.querySelector(`input[name="title"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="title"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
@@ -228,13 +229,13 @@ export const Image = TImage.extend<ImageOptions>({
               name: this.options.dictionary.inputTitle,
               onKey: ({ key }) => {
                 if (key === "ArrowUp") {
-                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
               onBoundary: (boundary) => {
                 if (boundary === "left") {
-                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
                   node?.focus();
                 }
                 if (boundary === "right") {
@@ -246,7 +247,7 @@ export const Image = TImage.extend<ImageOptions>({
             const open = view.createButton({
               id: "open",
               name: this.options.dictionary.imageOpen,
-              view: icon("open"),
+              icon: icon("open"),
               onClick: () => {
                 const attrs = editor.getAttributes(this.name);
                 if (attrs.src) {
@@ -257,7 +258,7 @@ export const Image = TImage.extend<ImageOptions>({
             const upload = view.createUpload({
               id: "upload",
               name: this.options.dictionary.imageUpload,
-              view: icon("upload"),
+              icon: icon("upload"),
               accept: "image/*",
               onUpload: (element) => {
                 const uploader = this.editor.storage.uploader as UploaderStorage;
@@ -273,24 +274,27 @@ export const Image = TImage.extend<ImageOptions>({
             const remove = view.createButton({
               id: "remove",
               name: this.options.dictionary.imageDelete,
-              view: icon("remove"),
+              icon: icon("remove"),
               onClick: () => {
                 editor.chain().deleteSelection().focus().run();
               },
             });
             const alignLeft = view.createButton({
+              id: "align-left",
               name: this.options.dictionary.alignLeft,
-              view: icon("align-left"),
+              icon: icon("align-left"),
               onClick: () => editor.chain().updateAttributes(this.name, { align: "left" }).run(),
             });
             const alignCenter = view.createButton({
+              id: "align-center",
               name: this.options.dictionary.alignCenter,
-              view: icon("align-center"),
+              icon: icon("align-center"),
               onClick: () => editor.chain().updateAttributes(this.name, { align: "center" }).run(),
             });
             const alignRight = view.createButton({
+              id: "align-right",
               name: this.options.dictionary.alignRight,
-              view: icon("align-right"),
+              icon: icon("align-right"),
               onClick: () => editor.chain().updateAttributes(this.name, { align: "right" }).run(),
             });
 
@@ -299,9 +303,9 @@ export const Image = TImage.extend<ImageOptions>({
                 editor
                   .chain()
                   .updateAttributes(this.name, {
-                    src: src.input.value,
-                    alt: alt.input.value,
-                    title: title.input.value,
+                    src: src.value,
+                    alt: alt.value,
+                    title: title.value,
                   })
                   .focus()
                   .run();
@@ -310,27 +314,33 @@ export const Image = TImage.extend<ImageOptions>({
 
             const div1 = view.createGroup("row");
             const div2 = view.createGroup("row");
-            div1.append(open.button);
-            div1.append(upload.button);
-            div1.append(remove.button);
-            div2.append(alignLeft.button);
-            div2.append(alignCenter.button);
-            div2.append(alignRight.button);
-            group2.append(src.input);
-            group2.append(alt.input);
-            group2.append(title.input);
+            div1.append(open);
+            div1.append(upload);
+            div1.append(remove);
+            div2.append(alignLeft);
+            div2.append(alignCenter);
+            div2.append(alignRight);
+            group2.append(src);
+            group2.append(alt);
+            group2.append(title);
             group3.append(div1);
             group3.append(div2);
             group1.append(group2);
             group1.append(group3);
-            element.append(group1);
+            root.append(group1);
           },
-          onUpdate: ({ editor, element }) => {
+          onMount: ({ root }) => {
+            const src = root.querySelector(`input[name="src"]`) as HTMLInputElement;
+            if (src) {
+              src.focus();
+            }
+          },
+          onUpdate: ({ editor, root }) => {
             const attrs = editor.getAttributes(this.name);
 
-            const src = element.querySelector(`input[name="src"]`) as HTMLInputElement;
-            const alt = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
-            const title = element.querySelector(`input[name="title"]`) as HTMLInputElement;
+            const src = root.querySelector(`input[name="src"]`) as HTMLInputElement;
+            const alt = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
+            const title = root.querySelector(`input[name="title"]`) as HTMLInputElement;
 
             src.value = attrs.src ?? "";
             alt.value = attrs.alt ?? "";

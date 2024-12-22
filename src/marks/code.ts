@@ -51,10 +51,10 @@ export const Code = TCode.extend<CodeOptions>({
           {
             id: this.name,
             name: this.options.dictionary.name,
-            view: icon("code"),
+            icon: icon("code"),
             shortcut: "Mod-E",
-            active: ({ editor }) => editor.isActive(this.name),
-            action: ({ editor }) => editor.chain().toggleCode().focus().run(),
+            active: editor => editor.isActive(this.name),
+            action: editor => editor.chain().toggleCode().focus().run(),
           },
         ],
       },

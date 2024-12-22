@@ -51,10 +51,10 @@ export const Bold = TBold.extend<BoldOptions>({
           {
             id: this.name,
             name: this.options.dictionary.name,
-            view: icon("bold"),
+            icon: icon("bold"),
             shortcut: "Mod-B",
-            active: ({ editor }) => editor.isActive(this.name),
-            action: ({ editor }) => editor.chain().toggleBold().focus().run(),
+            active: editor => editor.isActive(this.name),
+            action: editor => editor.chain().toggleBold().focus().run(),
           },
         ],
       },

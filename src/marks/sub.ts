@@ -46,10 +46,10 @@ export const Subscript = TSubscript.extend<SubscriptOptions>({
           {
             id: this.name,
             name: this.options.dictionary.name,
-            view: icon("sub"),
+            icon: icon("sub"),
             shortcut: "Mod-,",
-            active: ({ editor }) => editor.isActive(this.name),
-            action: ({ editor }) => editor.chain().toggleSubscript().focus().run(),
+            active: editor => editor.isActive(this.name),
+            action: editor => editor.chain().toggleSubscript().focus().run(),
           },
         ],
       },

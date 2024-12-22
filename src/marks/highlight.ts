@@ -23,6 +23,7 @@ export const Highlight = THighlight.extend<HighlightOptions>({
       ...this.parent?.(),
       dictionary: {
         name: "Highlight",
+        none: "None",
         gray: "Gray",
         slate: "Slate",
         tomato: "Tomato",
@@ -100,14 +101,17 @@ export const Highlight = THighlight.extend<HighlightOptions>({
         items: [
           {
             id: this.name,
-            name: this.options.dictionary.name,
-            view: icon("highlight"),
-            shortcut: "Mod-Shift-H",
-            active: ({ editor }) => editor.isActive(this.name),
-            action: ({ editor }) => editor.chain().toggleHighlight().focus().run(),
-            onInit: ({ editor, element }) => {
-              const container = document.createElement("div");
-              container.classList.add("ProseMirror-fm-color-picker");
+            render: ({ editor, view, root }) => {
+              const node = view.createButton({
+                id: this.name,
+                name: this.options.dictionary.name,
+                icon: icon("highlight"),
+                shortcut: "Mod-Shift-H",
+              });
+
+              // color picker
+              const container1 = document.createElement("div");
+              const container2 = document.createElement("div");
               for (const color of [...colors.map(i => i[0]), ...colors.map(i => `b-${i[0]}`)]) {
                 const button = document.createElement("button");
                 button.textContent = "A";
@@ -131,21 +135,55 @@ export const Highlight = THighlight.extend<HighlightOptions>({
                 });
                 button.addEventListener("click", (e) => {
                   e.stopPropagation();
-                  editor.chain().toggleHighlight({ color }).focus().run();
+                  if (color === "none") {
+                    editor.chain().unsetHighlight().run();
+                  } else {
+                    editor.chain().setHighlight({ color }).focus().run();
+                  }
                 });
-                container.append(button);
+                if (color.startsWith("b-")) {
+                  container2.append(button);
+                } else {
+                  container1.append(button);
+                }
               }
-              tippy(element, {
-                appendTo: () => element,
+
+              const container = document.createElement("div");
+              container.classList.add("ProseMirror-fm-color-picker");
+              container.append(container1);
+              container.append(container2);
+
+              tippy(node, {
+                appendTo: () => node,
                 content: container,
                 arrow: false,
                 interactive: true,
+                hideOnClick: false,
                 theme: "ProseMirror",
-                placement: "bottom",
+                placement: "bottom-start",
                 maxWidth: "none",
                 animation: "shift-away",
                 duration: [200, 150],
               });
+
+              console.log(editor.isActive(this.name));
+
+              if (editor.isActive(this.name)) {
+                node.setAttribute("data-active", "true");
+              }
+
+              root.append(node);
+            },
+            update: ({ editor, root }) => {
+              const node = root.firstElementChild!;
+
+              console.log(editor.isActive(this.name));
+
+              if (editor.isActive(this.name)) {
+                node.setAttribute("data-active", "true");
+              } else {
+                node.removeAttribute("data-active");
+              }
             },
           },
         ],

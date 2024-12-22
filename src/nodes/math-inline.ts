@@ -161,10 +161,12 @@ export const MathInline = Node.create<MathInlineOptions>({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({
           editor: this.editor,
-          show: ({ editor }) => editor.isEditable && editor.isActive(this.name),
-          tippy: ({ options }) => ({ ...options, onMount: i => i.popper.querySelector("input")?.focus() }),
-          onInit: ({ view, editor, element }) => {
+          show: ({ editor }) => {
+            return editor.isEditable && editor.isActive(this.name);
+          },
+          onInit: ({ view, editor, root }) => {
             const code = view.createInput({
+              id: "code",
               name: this.options.dictionary.inputMath,
               onInput: (value) => {
                 editor.chain()
@@ -188,17 +190,24 @@ export const MathInline = Node.create<MathInlineOptions>({
               },
             });
             const help = view.createButton({
+              id: "help",
               name: this.options.dictionary.inputHelp,
-              view: icon("help"),
+              icon: icon("help"),
               onClick: () => window.open("https://katex.org/"),
             });
 
-            code.input.classList.add("ProseMirror-code");
-            element.append(code.input);
-            element.append(help.button);
+            code.classList.add("ProseMirror-code");
+            root.append(code);
+            root.append(help);
           },
-          onUpdate: ({ editor, element }) => {
-            const code = element.querySelector("input") as HTMLInputElement;
+          onMount: ({ root }) => {
+            const code = root.querySelector("input") as HTMLInputElement;
+            if (code) {
+              code.focus();
+            }
+          },
+          onUpdate: ({ editor, root }) => {
+            const code = root.querySelector("input") as HTMLInputElement;
             if (code) {
               code.value = editor.getAttributes(this.name)?.value ?? "";
             }

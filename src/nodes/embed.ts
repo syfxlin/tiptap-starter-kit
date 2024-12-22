@@ -227,10 +227,12 @@ export const Embed = Node.create<EmbedOptions>({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({
           editor: this.editor,
-          show: ({ editor }) => editor.isEditable && editor.isActive(this.name),
-          tippy: ({ options }) => ({ ...options, onMount: i => i.popper.querySelector("input")?.focus() }),
-          onInit: ({ view, editor, element }) => {
+          show: ({ editor }) => {
+            return editor.isEditable && editor.isActive(this.name);
+          },
+          onInit: ({ view, editor, root }) => {
             const href = view.createInput({
+              id: "href",
               name: this.options.dictionary.inputEmbed,
               onEnter: (value) => {
                 editor.chain()
@@ -248,8 +250,9 @@ export const Embed = Node.create<EmbedOptions>({
             });
 
             const open = view.createButton({
+              id: "open",
               name: this.options.dictionary.openEmbed,
-              view: icon("open"),
+              icon: icon("open"),
               onClick: () => {
                 const attrs = editor.getAttributes(this.name);
                 if (attrs.src) {
@@ -258,37 +261,47 @@ export const Embed = Node.create<EmbedOptions>({
               },
             });
             const remove = view.createButton({
+              id: "remove",
               name: this.options.dictionary.deleteEmbed,
-              view: icon("remove"),
+              icon: icon("remove"),
               onClick: () => {
                 editor.chain().deleteSelection().focus().run();
               },
             });
             const alignLeft = view.createButton({
+              id: "align-left",
               name: this.options.dictionary.alignLeft,
-              view: icon("align-left"),
+              icon: icon("align-left"),
               onClick: () => editor.chain().updateAttributes(this.name, { align: "left" }).run(),
             });
             const alignCenter = view.createButton({
+              id: "align-center",
               name: this.options.dictionary.alignCenter,
-              view: icon("align-center"),
+              icon: icon("align-center"),
               onClick: () => editor.chain().updateAttributes(this.name, { align: "center" }).run(),
             });
             const alignRight = view.createButton({
+              id: "align-right",
               name: this.options.dictionary.alignRight,
-              view: icon("align-right"),
+              icon: icon("align-right"),
               onClick: () => editor.chain().updateAttributes(this.name, { align: "right" }).run(),
             });
 
-            element.append(href.input);
-            element.append(alignLeft.button);
-            element.append(alignCenter.button);
-            element.append(alignRight.button);
-            element.append(open.button);
-            element.append(remove.button);
+            root.append(href);
+            root.append(alignLeft);
+            root.append(alignCenter);
+            root.append(alignRight);
+            root.append(open);
+            root.append(remove);
           },
-          onUpdate: ({ editor, element }) => {
-            const href = element.querySelector("input") as HTMLInputElement;
+          onMount: ({ root }) => {
+            const href = root.querySelector("input") as HTMLInputElement;
+            if (href) {
+              href.focus();
+            }
+          },
+          onUpdate: ({ editor, root }) => {
+            const href = root.querySelector("input") as HTMLInputElement;
             if (href) {
               href.value = editor.getAttributes(this.name).src ?? "";
             }

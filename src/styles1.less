@@ -188,3 +188,39 @@
 }
 
 // endregion
+
+// region float-menu
+
+.ProseMirror-fm {
+  &-color-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+
+    div {
+      display: grid;
+      grid-template-columns: repeat(13, 1fr);
+      gap: 0.5rem;
+    }
+
+    button {
+      appearance: none;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0.35rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid var(--tiptap-border);
+      transition-duration: 0.3s;
+      transition-property: color, border, box-shadow;
+
+      &:hover,
+      &[data-active] {
+        border: 1px solid var(--tiptap-operator-hover-color);
+        box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
+      }
+    }
+  }
+}
+
+// endregion

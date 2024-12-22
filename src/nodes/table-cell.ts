@@ -115,38 +115,43 @@ export const TableCell = TTableCell.extend<TableCellOptions>({
             }
             return posToDOMRect(view, state.selection.from, state.selection.to);
           },
-          onInit: ({ view, editor, element }) => {
+          onInit: ({ view, editor, root }) => {
             const mergeCells = view.createButton({
+              id: "merge-cells",
               name: this.options.dictionary.mergeCells,
-              view: icon("merge-cells"),
+              icon: icon("merge-cells"),
               onClick: () => editor.chain().mergeCells().run(),
             });
             const splitCells = view.createButton({
+              id: "split-cells",
               name: this.options.dictionary.splitCells,
-              view: icon("split-cells"),
+              icon: icon("split-cells"),
               onClick: () => editor.chain().splitCell().run(),
             });
             const alignLeft = view.createButton({
+              id: "align-left",
               name: this.options.dictionary.alignLeft,
-              view: icon("align-left"),
+              icon: icon("align-left"),
               onClick: () => editor.chain().setCellAttribute("align", "left").run(),
             });
             const alignCenter = view.createButton({
+              id: "align-center",
               name: this.options.dictionary.alignCenter,
-              view: icon("align-center"),
+              icon: icon("align-center"),
               onClick: () => editor.chain().setCellAttribute("align", "center").run(),
             });
             const alignRight = view.createButton({
+              id: "align-right",
               name: this.options.dictionary.alignRight,
-              view: icon("align-right"),
+              icon: icon("align-right"),
               onClick: () => editor.chain().setCellAttribute("align", "right").run(),
             });
 
-            element.append(mergeCells.button);
-            element.append(splitCells.button);
-            element.append(alignLeft.button);
-            element.append(alignCenter.button);
-            element.append(alignRight.button);
+            root.append(mergeCells);
+            root.append(splitCells);
+            root.append(alignLeft);
+            root.append(alignCenter);
+            root.append(alignRight);
           },
         }),
         props: {
