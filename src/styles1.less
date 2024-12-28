@@ -47,8 +47,12 @@
   --tiptap-radius: calc(var(--radius, 0.5rem) - 4px);
   // color
   --tiptap-border: hsl(var(--border, 240 5.9% 90%));
+  --tiptap-input: hsl(var(--input, 240 5.9% 90%));
+  --tiptap-ring: hsl(var(--ring, 240 5% 64.9%));
   --tiptap-foreground: hsl(var(--foreground, 240 10% 3.9%));
   --tiptap-background: hsl(var(--background, 0 0% 100%));
+  --tiptap-primary-foreground: hsl(var(--primary-foreground, 0 0% 98%));
+  --tiptap-primary-background: hsl(var(--primary, 240 5.9% 10%));
   --tiptap-muted-foreground: hsl(var(--muted-foreground, 240 3.8% 46.1%));
   --tiptap-muted-background: hsl(var(--muted, 240 4.8% 95.9%));
   --tiptap-accent-foreground: hsl(var(--accent-foreground, 240 5.9% 10%));
@@ -85,6 +89,118 @@
 
 // endregion
 
+// region popover
+
+.tippy-box[data-theme="ProseMirror"],
+.tippy-box[data-theme="ProseMirror-dark"],
+.tippy-box[data-theme="ProseMirror-none"] {
+  font-size: inherit;
+  line-height: inherit;
+  color: var(--tiptap-popover-foreground);
+  background: transparent;
+
+  .tippy-content {
+    padding: 0;
+  }
+}
+
+.tippy-box[data-theme="ProseMirror"] {
+  color: var(--tiptap-popover-foreground);
+  background-color: var(--tiptap-popover-background);
+  border: 1px solid var(--tiptap-border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -2px rgba(0, 0, 0, .1);
+}
+
+.tippy-box[data-theme="ProseMirror-dark"] {
+  color: var(--tiptap-primary-foreground);
+  background-color: var(--tiptap-primary-background);
+  border: 1px solid var(--tiptap-border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -2px rgba(0, 0, 0, .1);
+}
+
+// endregion
+
+// region colors
+
+.ProseMirror,
+.tippy-box[data-theme="ProseMirror"],
+.tippy-box[data-theme="ProseMirror-dark"],
+.tippy-box[data-theme="ProseMirror-none"] {
+  @colors: {
+    none: var(--tiptap-foreground);
+    gray: #8d8d8d;
+    tomato: #e54d2e;
+    red: #e5484d;
+    ruby: #e54666;
+    crimson: #e93d82;
+    pink: #d6409f;
+    plum: #ab4aba;
+    purple: #8e4ec6;
+    violet: #6e56cf;
+    iris: #5b5bd6;
+    indigo: #3e63dd;
+    blue: #0090ff;
+    cyan: #00a2c7;
+    teal: #12a594;
+    jade: #29a383;
+    green: #30a46c;
+    bronze: #a18072;
+    gold: #978365;
+    brown: #ad7f58;
+    orange: #f76b15;
+    amber: #ffc53d;
+    yellow: #ffe629;
+    lime: #bdee63;
+    mint: #86ead4;
+    sky: #7ce2fe;
+  };
+
+  @backgrounds: {
+    none: var(--tiptap-background);
+    gray: #f0f0f0;
+    tomato: #feebe7;
+    red: #feebec;
+    ruby: #feeaed;
+    crimson: #ffe9f0;
+    pink: #fee9f5;
+    plum: #fbebfb;
+    purple: #f7edfe;
+    violet: #f4f0fe;
+    iris: #f0f1fe;
+    indigo: #e1e9ff;
+    blue: #e6f4fe;
+    cyan: #def7f9;
+    teal: #e0f8f3;
+    jade: #e6f7ed;
+    green: #e6f6eb;
+    bronze: #f6edea;
+    gold: #f2f0e7;
+    brown: #f6eee7;
+    orange: #ffefd6;
+    amber: #fff7c2;
+    yellow: #fffab8;
+    lime: #eef6d6;
+    mint: #ddf9f2;
+    sky: #e1f6fd;
+  };
+
+  each(@colors, .(@v, @k) {
+    [data-color="@{k}"] {
+      color: @v;
+      fill: @v;
+      background: inherit;
+    }
+  });
+
+  each(@backgrounds, .(@v, @k) {
+    [data-color="b-@{k}"] {
+      background: @v;
+    }
+  });
+}
+
+// endregion
+
 // region block-menu
 
 .ProseMirror-bm {
@@ -97,8 +213,6 @@
   overflow-y: auto;
   border-width: 1px;
   border-radius: var(--tiptap-radius);
-  color: var(--tiptap-popover-foreground);
-  background-color: var(--tiptap-popover-background);
 
   &-empty {
     display: flex;
@@ -110,6 +224,7 @@
   }
 
   &-divider {
+    display: block;
     height: 1px;
     margin: 0.25rem -0.25rem;
     background-color: var(--tiptap-muted-background);
@@ -132,6 +247,8 @@
     padding: 0.375rem 0.5rem;
     border-radius: var(--tiptap-radius);
     background-color: transparent;
+    transition-duration: 0.15s;
+    transition-property: color, background-color, box-shadow;
 
     &:hover,
     &:focus,
@@ -192,6 +309,107 @@
 // region float-menu
 
 .ProseMirror-fm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.375rem 0.5rem;
+
+  &-divider {
+    display: block;
+    width: 1px;
+    height: 1.3rem;
+    background-color: var(--tiptap-muted-background);
+  }
+
+  &-group {
+    gap: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .ProseMirror-fm-button {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  &-button {
+    appearance: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 2rem;
+    height: 2rem;
+    margin: 0 0.1rem;
+    border-radius: var(--tiptap-radius);
+    background-color: transparent;
+    transition-duration: 0.15s;
+    transition-property: color, background-color, box-shadow;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &:hover,
+    &:focus,
+    &[data-active] {
+      color: var(--tiptap-accent-foreground);
+      background-color: var(--tiptap-accent-background);
+    }
+
+    &-popover {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      border-radius: var(--tiptap-radius);
+    }
+
+    &-shortcut {
+      color: var(--tiptap-muted-background);
+      font-family: var(--tiptap-font-family-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .ProseMirror-icon {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+  }
+
+  &-input {
+    flex-grow: 1;
+    display: flex;
+    height: 1.2rem;
+    outline: none;
+    border-radius: var(--tiptap-radius);
+    border: 1px solid var(--tiptap-border);
+    background-color: transparent;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    transition-duration: 0.15s;
+    transition-property: color, border, box-shadow;
+
+    &:focus {
+      border: 1px solid var(--tiptap-input);
+      box-shadow: 0 0 0 1px var(--tiptap-ring);
+    }
+
+    &::placeholder {
+      color: var(--tiptap-muted-foreground);
+    }
+  }
+
   &-color-picker {
     display: flex;
     flex-direction: column;
@@ -211,15 +429,37 @@
       padding: 0.35rem 0.5rem;
       border-radius: 4px;
       border: 1px solid var(--tiptap-border);
-      transition-duration: 0.3s;
+      transition-duration: 0.15s;
       transition-property: color, border, box-shadow;
 
       &:hover,
       &[data-active] {
-        border: 1px solid var(--tiptap-operator-hover-color);
-        box-shadow: 0 0 0 1px var(--tiptap-operator-hover-color);
+        border: 1px solid var(--tiptap-input);
+        box-shadow: 0 0 0 1px var(--tiptap-ring);
       }
     }
+  }
+
+  &-input + &-button,
+  &-group + &-button {
+    margin-left: 0.4rem;
+  }
+
+  &-button + &-input,
+  &-button + &-group {
+    margin-right: 0.4rem;
+  }
+}
+
+// endregion
+
+// region print
+
+@media print {
+  .ProseMirror-fm,
+  .ProseMirror-bm,
+  .ProseMirror-cm {
+    display: none;
   }
 }
 

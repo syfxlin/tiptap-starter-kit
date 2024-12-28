@@ -242,9 +242,6 @@ export class FloatMenuView implements PluginView {
       animation: "shift-away",
       duration: [200, 150],
       appendTo: () => document.body,
-      onShow: (i) => {
-        setTimeout(() => i.hide(), 3_000);
-      },
     });
 
     return root;
