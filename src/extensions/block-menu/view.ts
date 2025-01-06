@@ -18,12 +18,9 @@ export interface BlockMenuViewOptions {
   onMount?: (props: { editor: Editor; view: BlockMenuView; range: Range; root: HTMLElement }) => void;
   onUpdate?: (props: { editor: Editor; view: BlockMenuView; range: Range; root: HTMLElement }) => void;
   onDestroy?: (props: { editor: Editor; view: BlockMenuView; range: Range; root: HTMLElement }) => void;
-  dictionary?: {
-    empty?: string;
-  };
-  attributes?: {
-    [key: string]: string;
-  };
+  classes?: Array<string>;
+  attributes?: Record<string, string>;
+  dictionary?: { empty?: string };
 }
 
 export class BlockMenuView implements ReturnType<NonNullable<SuggestionOptions["render"]>> {
@@ -53,10 +50,13 @@ export class BlockMenuView implements ReturnType<NonNullable<SuggestionOptions["
 
     // Create root element
     this._element = document.createElement("div");
+    this._element.classList.add("ProseMirror-bm");
+    for (const clazz of this.options.classes ?? []) {
+      this._element.classList.add(clazz);
+    }
     for (const [key, val] of Object.entries(this.options.attributes ?? {})) {
       this._element.setAttribute(key, val);
     }
-    this._element.classList.add("ProseMirror-bm");
 
     // On init
     if (this.options.onInit) {

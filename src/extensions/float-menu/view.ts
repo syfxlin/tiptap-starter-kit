@@ -8,6 +8,7 @@ export interface FloatMenuInputViewOptions {
   name: string;
   type?: string;
   value?: string;
+  classes?: Array<string>;
   attributes?: Record<string, string>;
   onEnter?: (value: string, root: HTMLInputElement, event: KeyboardEvent) => void;
   onInput?: (value: string, root: HTMLInputElement, event: Event) => void;
@@ -16,11 +17,25 @@ export interface FloatMenuInputViewOptions {
   onBoundary?: (boundary: "left" | "right", value: string, root: HTMLInputElement, event: KeyboardEvent) => void;
 }
 
+export interface FloatMenuTextareaViewOptions {
+  id: string;
+  name: string;
+  value?: string;
+  classes?: Array<string>;
+  attributes?: Record<string, string>;
+  onEnter?: (value: string, root: HTMLTextAreaElement, event: KeyboardEvent) => void;
+  onInput?: (value: string, root: HTMLTextAreaElement, event: Event) => void;
+  onChange?: (value: string, root: HTMLTextAreaElement, event: Event) => void;
+  onKey?: (key: Pick<KeyboardEvent, "key" | "ctrlKey" | "altKey" | "metaKey" | "shiftKey">, root: HTMLTextAreaElement, event: KeyboardEvent) => void;
+  onBoundary?: (boundary: "left" | "right", value: string, root: HTMLTextAreaElement, event: KeyboardEvent) => void;
+}
+
 export interface FloatMenuButtonViewOptions {
   id: string;
   name: string;
   icon: string;
   shortcut?: string;
+  classes?: Array<string>;
   attributes?: Record<string, string>;
   onClick?: (root: HTMLButtonElement, event: MouseEvent) => void;
   onHover?: (root: HTMLButtonElement, event: MouseEvent) => void;
@@ -40,9 +55,8 @@ export interface FloatMenuViewOptions {
   onMount?: (props: { editor: Editor; view: FloatMenuView; range: Range; root: HTMLElement }) => void;
   onUpdate?: (props: { editor: Editor; view: FloatMenuView; range: Range; root: HTMLElement }) => void;
   onDestroy?: (props: { editor: Editor; view: FloatMenuView; range: Range; root: HTMLElement }) => void;
-  attributes?: {
-    [key: string]: string;
-  };
+  classes?: Array<string>;
+  attributes?: Record<string, string>;
 }
 
 export class FloatMenuView implements PluginView {
@@ -120,8 +134,175 @@ export class FloatMenuView implements PluginView {
     this.element.remove();
   }
 
+  public createInput2(options: FloatMenuInputViewOptions) {
+    const root = document.createElement("div");
+    root.classList.add("ProseMirror-fm-input2");
+    for (const clazz of options.classes ?? []) {
+      root.classList.add(clazz);
+    }
+    for (const [key, val] of Object.entries(options.attributes ?? {})) {
+      root.setAttribute(key, val);
+    }
+
+    const label = document.createElement("label");
+    label.htmlFor = options.id;
+    label.textContent = options.name;
+
+    const input = document.createElement("input");
+    input.name = options.id;
+    input.placeholder = options.name;
+    if (options.type) {
+      input.type = options.type;
+    }
+    if (options.value) {
+      input.value = options.value;
+    }
+    if (options.onEnter) {
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && options.onEnter) {
+          options.onEnter(input.value, input, e);
+        }
+        if (e.key === "Enter" && options.onEnter) {
+          options.onEnter(input.value, input, e);
+        }
+      });
+    }
+    if (options.onInput) {
+      input.addEventListener("input", (e) => {
+        if (options.onInput) {
+          options.onInput(input.value, input, e);
+        }
+      });
+    }
+    if (options.onChange) {
+      input.addEventListener("change", (e) => {
+        if (options.onChange) {
+          options.onChange(input.value, input, e);
+        }
+      });
+    }
+    if (options.onKey) {
+      input.addEventListener("keydown", (e) => {
+        if (options.onKey) {
+          options.onKey(e, input, e);
+        }
+      });
+    }
+    if (options.onBoundary) {
+      let pos = -1;
+      input.addEventListener("mouseup", () => {
+        if (input.selectionStart === null) {
+          return;
+        }
+        if (input.selectionStart !== input.selectionEnd) {
+          return;
+        }
+        pos = input.selectionStart;
+      });
+      input.addEventListener("keyup", (e) => {
+        if (input.selectionStart === null) {
+          return;
+        }
+        if (input.selectionStart !== input.selectionEnd) {
+          return;
+        }
+        if (options.onBoundary && e.key === "ArrowLeft" && pos === 0) {
+          options.onBoundary("left", input.value, input, e);
+        }
+        if (options.onBoundary && e.key === "ArrowRight" && (pos === -1 || pos === input.value.length)) {
+          options.onBoundary("right", input.value, input, e);
+        }
+        pos = input.selectionStart;
+      });
+    }
+
+    root.append(label);
+    root.append(input);
+    return root;
+  }
+
+  public createTextarea2(options: FloatMenuTextareaViewOptions) {
+    const root = document.createElement("textarea");
+    root.name = options.id;
+    root.placeholder = options.name;
+    root.classList.add("ProseMirror-fm-textarea2");
+    for (const clazz of options.classes ?? []) {
+      root.classList.add(clazz);
+    }
+    for (const [key, val] of Object.entries(options.attributes ?? {})) {
+      root.setAttribute(key, val);
+    }
+    if (options.value) {
+      root.value = options.value;
+    }
+    if (options.onEnter) {
+      root.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && options.onEnter) {
+          options.onEnter(root.value, root, e);
+        }
+        if (e.key === "Enter" && e.ctrlKey && options.onEnter) {
+          options.onEnter(root.value, root, e);
+        }
+      });
+    }
+    if (options.onInput) {
+      root.addEventListener("input", (e) => {
+        root.style.height = `auto`;
+        root.style.height = `${root.scrollHeight}px`;
+        if (options.onInput) {
+          options.onInput(root.value, root, e);
+        }
+      });
+    }
+    if (options.onChange) {
+      root.addEventListener("change", (e) => {
+        if (options.onChange) {
+          options.onChange(root.value, root, e);
+        }
+      });
+    }
+    if (options.onKey) {
+      root.addEventListener("keydown", (e) => {
+        if (options.onKey) {
+          options.onKey(e, root, e);
+        }
+      });
+    }
+    if (options.onBoundary) {
+      let pos = -1;
+      root.addEventListener("mouseup", () => {
+        if (root.selectionStart === null) {
+          return;
+        }
+        if (root.selectionStart !== root.selectionEnd) {
+          return;
+        }
+        pos = root.selectionStart;
+      });
+      root.addEventListener("keyup", (e) => {
+        if (root.selectionStart === null) {
+          return;
+        }
+        if (root.selectionStart !== root.selectionEnd) {
+          return;
+        }
+        if (options.onBoundary && e.key === "ArrowLeft" && pos === 0) {
+          options.onBoundary("left", root.value, root, e);
+        }
+        if (options.onBoundary && e.key === "ArrowRight" && (pos === -1 || pos === root.value.length)) {
+          options.onBoundary("right", root.value, root, e);
+        }
+        pos = root.selectionStart;
+      });
+    }
+    return root;
+  }
+
   public createInput(options: FloatMenuInputViewOptions) {
     const root = document.createElement("input");
+    for (const clazz of options.classes ?? []) {
+      root.classList.add(clazz);
+    }
     for (const [key, val] of Object.entries(options.attributes ?? {})) {
       root.setAttribute(key, val);
     }
@@ -136,6 +317,9 @@ export class FloatMenuView implements PluginView {
     }
     if (options.onEnter) {
       root.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && options.onEnter) {
+          options.onEnter(root.value, root, e);
+        }
         if (e.key === "Enter" && options.onEnter) {
           options.onEnter(root.value, root, e);
         }
@@ -194,6 +378,9 @@ export class FloatMenuView implements PluginView {
 
   public createButton(options: FloatMenuButtonViewOptions) {
     const root = document.createElement("button");
+    for (const clazz of options.classes ?? []) {
+      root.classList.add(clazz);
+    }
     for (const [key, val] of Object.entries(options.attributes ?? {})) {
       root.setAttribute(key, val);
     }
@@ -261,6 +448,18 @@ export class FloatMenuView implements PluginView {
     return this.createButton({ ...options, onClick: () => file.click() });
   }
 
+  public createForm() {
+    const root = document.createElement("div");
+    root.classList.add("ProseMirror-fm-form");
+    return root;
+  }
+
+  public createAction() {
+    const root = document.createElement("div");
+    root.classList.add("ProseMirror-fm-action");
+    return root;
+  }
+
   public createGroup(direction: "column" | "row") {
     const root = document.createElement("div");
     root.classList.add("ProseMirror-fm-group");
@@ -290,6 +489,9 @@ export class FloatMenuView implements PluginView {
 
   private _element() {
     const element = document.createElement("div");
+    for (const clazz of this.options.classes ?? []) {
+      element.classList.add(clazz);
+    }
     for (const [key, val] of Object.entries(this.options.attributes ?? {})) {
       element.setAttribute(key, val);
     }

@@ -114,16 +114,16 @@ export const Highlight = THighlight.extend<HighlightOptions>({
               const container2 = document.createElement("div");
               for (const color of [...colors.map(i => i[0]), ...colors.map(i => `b-${i[0]}`)]) {
                 const button = document.createElement("button");
-                button.textContent = "A";
+                button.innerHTML = `<span>A</span>`;
                 button.setAttribute("data-color", color);
                 const popover = document.createElement("span");
                 popover.classList.add("ProseMirror-fm-button-popover");
                 if (color.startsWith("b-")) {
                   // @ts-expect-error
-                  popover.textContent = `Background ${this.options.dictionary[color.replace("b-", "")]}`;
+                  popover.innerHTML = `Background ${this.options.dictionary[color.replace("b-", "")]}`;
                 } else {
                   // @ts-expect-error
-                  popover.textContent = this.options.dictionary[color];
+                  popover.innerHTML = this.options.dictionary[color];
                 }
                 tippy(button, {
                   appendTo: () => document.body,
@@ -148,14 +148,14 @@ export const Highlight = THighlight.extend<HighlightOptions>({
                 }
               }
 
-              const container = document.createElement("div");
-              container.classList.add("ProseMirror-fm-color-picker");
-              container.append(container1);
-              container.append(container2);
+              const pick = document.createElement("div");
+              pick.classList.add("ProseMirror-fm-color-picker");
+              pick.append(container1);
+              pick.append(container2);
 
               tippy(node, {
                 appendTo: () => node,
-                content: container,
+                content: pick,
                 arrow: false,
                 interactive: true,
                 hideOnClick: false,
@@ -164,9 +164,17 @@ export const Highlight = THighlight.extend<HighlightOptions>({
                 maxWidth: "none",
                 animation: "shift-away",
                 duration: [200, 150],
+                onShow: (i) => {
+                  const color = editor.getAttributes(this.name)?.color || "none";
+                  for (const item of i.popper.querySelectorAll(`[data-color]`)) {
+                    if (item.getAttribute("data-color") === color) {
+                      item.innerHTML = icon("check");
+                    } else {
+                      item.innerHTML = `<span>A</span>`;
+                    }
+                  }
+                },
               });
-
-              console.log(editor.isActive(this.name));
 
               if (editor.isActive(this.name)) {
                 node.setAttribute("data-active", "true");
@@ -176,8 +184,6 @@ export const Highlight = THighlight.extend<HighlightOptions>({
             },
             update: ({ editor, root }) => {
               const node = root.firstElementChild!;
-
-              console.log(editor.isActive(this.name));
 
               if (editor.isActive(this.name)) {
                 node.setAttribute("data-active", "true");

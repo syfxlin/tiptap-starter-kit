@@ -92,12 +92,11 @@ export const Link = TLink.extend<LinkOptions>({
             return editor.isEditable && editor.isActive(this.name);
           },
           onInit: ({ view, editor, root }) => {
-            const href = view.createInput({
+            const href = view.createInput2({
               id: "href",
               name: this.options.dictionary.inputLink,
               onEnter: (value) => {
                 editor.chain()
-                  .extendMarkRange(this.name)
                   .updateAttributes(this.name, { href: value })
                   .focus()
                   .run();
@@ -132,9 +131,13 @@ export const Link = TLink.extend<LinkOptions>({
               },
             });
 
-            root.append(href);
-            root.append(open);
-            root.append(remove);
+            const form = view.createForm();
+            const action = view.createAction();
+            root.append(form);
+            form.append(href);
+            form.append(action);
+            action.append(open);
+            action.append(remove);
           },
           onUpdate: ({ editor, root }) => {
             const href = root.querySelector("input") as HTMLInputElement;
