@@ -134,9 +134,9 @@ export class FloatMenuView implements PluginView {
     this.element.remove();
   }
 
-  public createInput2(options: FloatMenuInputViewOptions) {
+  public createInput(options: FloatMenuInputViewOptions) {
     const root = document.createElement("div");
-    root.classList.add("ProseMirror-fm-input2");
+    root.classList.add("ProseMirror-fm-input");
     for (const clazz of options.classes ?? []) {
       root.classList.add(clazz);
     }
@@ -221,11 +221,11 @@ export class FloatMenuView implements PluginView {
     return root;
   }
 
-  public createTextarea2(options: FloatMenuTextareaViewOptions) {
+  public createTextarea(options: FloatMenuTextareaViewOptions) {
     const root = document.createElement("textarea");
     root.name = options.id;
     root.placeholder = options.name;
-    root.classList.add("ProseMirror-fm-textarea2");
+    root.classList.add("ProseMirror-fm-textarea");
     for (const clazz of options.classes ?? []) {
       root.classList.add(clazz);
     }
@@ -249,84 +249,6 @@ export class FloatMenuView implements PluginView {
       root.addEventListener("input", (e) => {
         root.style.height = `auto`;
         root.style.height = `${root.scrollHeight}px`;
-        if (options.onInput) {
-          options.onInput(root.value, root, e);
-        }
-      });
-    }
-    if (options.onChange) {
-      root.addEventListener("change", (e) => {
-        if (options.onChange) {
-          options.onChange(root.value, root, e);
-        }
-      });
-    }
-    if (options.onKey) {
-      root.addEventListener("keydown", (e) => {
-        if (options.onKey) {
-          options.onKey(e, root, e);
-        }
-      });
-    }
-    if (options.onBoundary) {
-      let pos = -1;
-      root.addEventListener("mouseup", () => {
-        if (root.selectionStart === null) {
-          return;
-        }
-        if (root.selectionStart !== root.selectionEnd) {
-          return;
-        }
-        pos = root.selectionStart;
-      });
-      root.addEventListener("keyup", (e) => {
-        if (root.selectionStart === null) {
-          return;
-        }
-        if (root.selectionStart !== root.selectionEnd) {
-          return;
-        }
-        if (options.onBoundary && e.key === "ArrowLeft" && pos === 0) {
-          options.onBoundary("left", root.value, root, e);
-        }
-        if (options.onBoundary && e.key === "ArrowRight" && (pos === -1 || pos === root.value.length)) {
-          options.onBoundary("right", root.value, root, e);
-        }
-        pos = root.selectionStart;
-      });
-    }
-    return root;
-  }
-
-  public createInput(options: FloatMenuInputViewOptions) {
-    const root = document.createElement("input");
-    for (const clazz of options.classes ?? []) {
-      root.classList.add(clazz);
-    }
-    for (const [key, val] of Object.entries(options.attributes ?? {})) {
-      root.setAttribute(key, val);
-    }
-    root.name = options.id;
-    root.placeholder = options.name;
-    root.classList.add("ProseMirror-fm-input");
-    if (options.type) {
-      root.type = options.type;
-    }
-    if (options.value) {
-      root.value = options.value;
-    }
-    if (options.onEnter) {
-      root.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && options.onEnter) {
-          options.onEnter(root.value, root, e);
-        }
-        if (e.key === "Enter" && options.onEnter) {
-          options.onEnter(root.value, root, e);
-        }
-      });
-    }
-    if (options.onInput) {
-      root.addEventListener("input", (e) => {
         if (options.onInput) {
           options.onInput(root.value, root, e);
         }
@@ -460,13 +382,6 @@ export class FloatMenuView implements PluginView {
     return root;
   }
 
-  public createGroup(direction: "column" | "row") {
-    const root = document.createElement("div");
-    root.classList.add("ProseMirror-fm-group");
-    root.style.flexDirection = direction;
-    return root;
-  }
-
   public createDivider() {
     const root = document.createElement("span");
     root.classList.add("ProseMirror-fm-divider");
@@ -518,6 +433,7 @@ export class FloatMenuView implements PluginView {
       arrow: false,
       interactive: true,
       theme: "ProseMirror",
+      animation: "shift-away",
       trigger: "manual",
       placement: "top",
       maxWidth: "none",

@@ -287,12 +287,17 @@ export const Embed = Node.create<EmbedOptions>({
               onClick: () => editor.chain().updateAttributes(this.name, { align: "right" }).run(),
             });
 
-            root.append(href);
-            root.append(alignLeft);
-            root.append(alignCenter);
-            root.append(alignRight);
-            root.append(open);
-            root.append(remove);
+            const form = view.createForm();
+            const action = view.createAction();
+
+            form.append(href);
+            form.append(action);
+            action.append(open);
+            action.append(alignLeft);
+            action.append(alignCenter);
+            action.append(alignRight);
+            action.append(remove);
+            root.append(form);
           },
           onMount: ({ root }) => {
             const href = root.querySelector("input") as HTMLInputElement;

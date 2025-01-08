@@ -22,7 +22,7 @@ export const Link = TLink.extend<LinkOptions>({
       openOnClick: false,
       dictionary: {
         name: "Link",
-        inputLink: "Enter or paste link",
+        inputLink: "Enter link",
         openLink: "Open link",
         deleteLink: "Delete link",
       },
@@ -92,7 +92,7 @@ export const Link = TLink.extend<LinkOptions>({
             return editor.isEditable && editor.isActive(this.name);
           },
           onInit: ({ view, editor, root }) => {
-            const href = view.createInput2({
+            const href = view.createInput({
               id: "href",
               name: this.options.dictionary.inputLink,
               onEnter: (value) => {

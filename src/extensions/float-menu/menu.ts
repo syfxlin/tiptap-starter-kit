@@ -72,6 +72,9 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({
           editor: this.editor,
+          tippy: {
+            animation: "fade",
+          },
           show: ({ editor }) => {
             const { state, isEditable } = editor;
             if (!isEditable) {

@@ -46,7 +46,7 @@ export const Audio = Node.create<AudioOptions>({
       HTMLAttributes: {},
       dictionary: {
         name: "Audio",
-        inputSrc: "Enter or paste link",
+        inputSrc: "Audio link",
         inputAlt: "Audio description",
         inputTitle: "Audio title",
         audioOpen: "Open audio",
@@ -192,8 +192,6 @@ export const Audio = Node.create<AudioOptions>({
             return editor.isEditable && editor.isActive(this.name);
           },
           onInit: ({ view, editor, root }) => {
-            const group = view.createGroup("column");
-
             const src = view.createInput({
               id: "src",
               name: this.options.dictionary.inputSrc,
@@ -293,27 +291,31 @@ export const Audio = Node.create<AudioOptions>({
               },
             });
 
-            group.addEventListener("keydown", (e) => {
+            const form = view.createForm();
+            const action = view.createAction();
+
+            form.addEventListener("keydown", (e) => {
               if (e.key === "Enter") {
                 editor
                   .chain()
                   .updateAttributes(this.name, {
-                    src: src.value,
-                    alt: alt.value,
-                    title: title.value,
+                    src: src.querySelector("input")!.value,
+                    alt: alt.querySelector("input")!.value,
+                    title: title.querySelector("input")!.value,
                   })
                   .focus()
                   .run();
               }
             });
 
-            group.append(src);
-            group.append(alt);
-            group.append(title);
-            root.append(group);
-            root.append(open);
-            root.append(upload);
-            root.append(remove);
+            form.append(src);
+            form.append(alt);
+            form.append(title);
+            form.append(action);
+            action.append(open);
+            action.append(upload);
+            action.append(remove);
+            root.append(form);
           },
           onMount: ({ root }) => {
             const src = root.querySelector(`input[name="src"]`) as HTMLInputElement;

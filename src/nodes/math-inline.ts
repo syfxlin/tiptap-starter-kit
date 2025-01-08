@@ -163,11 +163,14 @@ export const MathInline = Node.create<MathInlineOptions>({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({
           editor: this.editor,
+          tippy: {
+            placement: "bottom",
+          },
           show: ({ editor }) => {
             return editor.isEditable && editor.isActive(this.name);
           },
           onInit: ({ view, editor, root }) => {
-            const code = view.createTextarea2({
+            const code = view.createTextarea({
               id: "code",
               name: this.options.dictionary.inputMath,
               classes: ["ProseMirror-code"],

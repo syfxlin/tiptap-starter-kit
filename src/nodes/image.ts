@@ -38,7 +38,7 @@ export const Image = TImage.extend<ImageOptions>({
         empty: "Add image",
         error: "Error loading image",
         loading: "Loading image...",
-        inputSrc: "Enter or paste link",
+        inputSrc: "Image url",
         inputAlt: "Image description",
         inputTitle: "Image title",
         imageOpen: "Open image",
@@ -177,10 +177,6 @@ export const Image = TImage.extend<ImageOptions>({
             return editor.isEditable && editor.isActive(this.name);
           },
           onInit: ({ view, editor, root }) => {
-            const group1 = view.createGroup("row");
-            const group2 = view.createGroup("column");
-            const group3 = view.createGroup("column");
-
             const src = view.createInput({
               id: "src",
               name: this.options.dictionary.inputSrc,
@@ -298,36 +294,34 @@ export const Image = TImage.extend<ImageOptions>({
               onClick: () => editor.chain().updateAttributes(this.name, { align: "right" }).run(),
             });
 
-            group2.addEventListener("keydown", (e) => {
+            const form = view.createForm();
+            const action = view.createAction();
+
+            form.addEventListener("keydown", (e) => {
               if (e.key === "Enter") {
                 editor
                   .chain()
                   .updateAttributes(this.name, {
-                    src: src.value,
-                    alt: alt.value,
-                    title: title.value,
+                    src: src.querySelector("input")!.value,
+                    alt: alt.querySelector("input")!.value,
+                    title: title.querySelector("input")!.value,
                   })
                   .focus()
                   .run();
               }
             });
 
-            const div1 = view.createGroup("row");
-            const div2 = view.createGroup("row");
-            div1.append(open);
-            div1.append(upload);
-            div1.append(remove);
-            div2.append(alignLeft);
-            div2.append(alignCenter);
-            div2.append(alignRight);
-            group2.append(src);
-            group2.append(alt);
-            group2.append(title);
-            group3.append(div1);
-            group3.append(div2);
-            group1.append(group2);
-            group1.append(group3);
-            root.append(group1);
+            form.append(src);
+            form.append(alt);
+            form.append(title);
+            form.append(action);
+            action.append(open);
+            action.append(upload);
+            action.append(alignLeft);
+            action.append(alignCenter);
+            action.append(alignRight);
+            action.append(remove);
+            root.append(form);
           },
           onMount: ({ root }) => {
             const src = root.querySelector(`input[name="src"]`) as HTMLInputElement;

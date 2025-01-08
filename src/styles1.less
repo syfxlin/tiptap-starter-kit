@@ -545,18 +545,6 @@
     background-color: var(--tiptap-muted-background);
   }
 
-  &-group {
-    gap: 0.375rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .ProseMirror-fm-button {
-      margin-left: 0;
-      margin-right: 0;
-    }
-  }
-
   &-button {
     appearance: none;
     display: flex;
@@ -612,29 +600,6 @@
   }
 
   &-input {
-    flex-grow: 1;
-    display: flex;
-    height: 1.2rem;
-    outline: none;
-    border-radius: var(--tiptap-radius);
-    border: 1px solid var(--tiptap-border);
-    background-color: transparent;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.875rem;
-    transition-duration: 0.15s;
-    transition-property: color, border, box-shadow;
-
-    &:focus {
-      border: 1px solid var(--tiptap-input);
-      box-shadow: 0 0 0 1px var(--tiptap-ring);
-    }
-
-    &::placeholder {
-      color: var(--tiptap-muted-foreground);
-    }
-  }
-
-  &-input2 {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -658,7 +623,6 @@
       line-height: 1.25rem;
       transition-duration: 0.15s;
       transition-property: color, border, box-shadow;
-      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
       box-sizing: border-box;
 
       &:focus {
@@ -672,28 +636,19 @@
     }
   }
 
-  &-textarea2 {
+  &-textarea {
     display: flex;
     resize: none;
     border: none;
     outline: none;
-    //border-radius: var(--tiptap-radius);
-    //border: 1px solid var(--tiptap-border);
     background-color: transparent;
-    //padding: 0.25rem 0.75rem;
     padding: 0;
     width: 100%;
     font-size: 0.875rem;
     line-height: 1.25rem;
     transition-duration: 0.15s;
     transition-property: color, border, box-shadow;
-    //box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
     box-sizing: border-box;
-
-    //&:focus {
-    //  border: 1px solid var(--tiptap-input);
-    //  box-shadow: 0 0 0 1px var(--tiptap-ring);
-    //}
 
     &::placeholder {
       color: var(--tiptap-muted-foreground);
@@ -761,6 +716,70 @@
   &-button + &-group {
     margin-right: 0.4rem;
   }
+}
+
+// endregion
+
+// region click-menu
+
+.ProseMirror-cm {
+  display: flex;
+  gap: 0.25rem;
+
+  &-plus,
+  &-drag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 0.25rem 0;
+    transition-duration: 0.15s;
+    transition-property: color, background-color, box-shadow;
+    border-radius: var(--tiptap-radius);
+
+    &:hover,
+    &:focus,
+    &[data-active] {
+      background-color: var(--tiptap-accent-background);
+    }
+  }
+
+  &-plus {
+    cursor: pointer;
+  }
+
+  &-drag {
+    cursor: grab;
+
+    &:focus,
+    &:active {
+      cursor: grabbing;
+    }
+  }
+}
+
+// endregion
+
+// region editor
+
+.ProseMirror {
+  //[data-type="details"] {
+  //  [data-type="detailsContainer"] {
+  //    [data-type="detailsContent"] {
+  //      position: relative;
+  //
+  //      &::before {
+  //        content: "";
+  //        position: absolute;
+  //        left: -4em;
+  //        width: 4em;
+  //        height: 100%;
+  //      }
+  //    }
+  //  }
+  //}
 }
 
 // endregion

@@ -76,6 +76,7 @@ export class BlockMenuView implements ReturnType<NonNullable<SuggestionOptions["
       arrow: false,
       interactive: true,
       theme: "ProseMirror",
+      animation: "shift-away",
       trigger: "manual",
       placement: "top-start",
       maxWidth: "none",
