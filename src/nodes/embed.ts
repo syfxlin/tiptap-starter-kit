@@ -227,6 +227,9 @@ export const Embed = Node.create<EmbedOptions>({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({
           editor: this.editor,
+          tippy: {
+            placement: "bottom",
+          },
           show: ({ editor }) => {
             return editor.isEditable && editor.isActive(this.name);
           },

@@ -111,7 +111,7 @@ export const MathInline = Node.create<MathInlineOptions>({
         try {
           if (!view.node.attrs.value) {
             const span = document.createElement("span");
-            span.classList.add("ProseMirror-empty");
+            span.classList.add("ProseMirror-info");
             span.textContent = this.options.dictionary.inputMath;
             view.$root.innerHTML = span.outerHTML;
           } else {
@@ -173,7 +173,7 @@ export const MathInline = Node.create<MathInlineOptions>({
             const code = view.createTextarea({
               id: "code",
               name: this.options.dictionary.inputMath,
-              classes: ["ProseMirror-code"],
+              classes: ["ProseMirror-mono"],
               onInput: (value) => {
                 editor.chain()
                   .updateAttributes(this.name, { value })

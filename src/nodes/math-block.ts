@@ -97,17 +97,19 @@ export const MathBlock = Node.create<MathBlockOptions>({
     return InnerEditorView.create({
       HTMLAttributes: this.options.HTMLAttributes,
       onRender: ({ view }) => {
-        view.$preview.classList.remove("ProseMirror-card-empty");
-        view.$preview.classList.remove("ProseMirror-card-error");
         try {
           if (!view.node.textContent) {
-            view.$preview.classList.add("ProseMirror-card-empty");
+            view.$preview.classList.remove("ProseMirror-error");
+            view.$preview.classList.add("ProseMirror-info");
             view.$preview.innerHTML = this.options.dictionary.inputMath;
           } else {
+            view.$preview.classList.remove("ProseMirror-error");
+            view.$preview.classList.remove("ProseMirror-info");
             katex.render(view.node.textContent, view.$preview);
           }
         } catch (e) {
-          view.$preview.classList.add("ProseMirror-card-error");
+          view.$preview.classList.remove("ProseMirror-info");
+          view.$preview.classList.add("ProseMirror-error");
           view.$preview.innerHTML = (e as Error).message;
         }
       },

@@ -125,27 +125,35 @@ export const Image = TImage.extend<ImageOptions>({
             img.setAttribute(key, value);
           }
         }
+
         img.src = view.node.attrs.src ?? "";
         img.alt = view.node.attrs.alt ?? "";
         img.title = view.node.attrs.title ?? "";
-
         view.$root.setAttribute("data-status", "loading");
-        view.$root.setAttribute("data-message", this.options.dictionary.loading);
         img.addEventListener("load", () => {
           view.$root.removeAttribute("data-status");
-          view.$root.removeAttribute("data-message");
         });
         img.addEventListener("error", () => {
           if (img.getAttribute("src")) {
             view.$root.setAttribute("data-status", "error");
-            view.$root.setAttribute("data-message", this.options.dictionary.error);
           } else {
             view.$root.setAttribute("data-status", "empty");
-            view.$root.setAttribute("data-message", this.options.dictionary.empty);
           }
         });
 
+        const empty = document.createElement("span");
+        empty.innerHTML = `${icon("empty")}<span>${this.options.dictionary.empty}</span>`;
+
+        const error = document.createElement("span");
+        error.innerHTML = `${icon("error")}<span>${this.options.dictionary.error}</span>`;
+
+        const loading = document.createElement("span");
+        loading.innerHTML = `${icon("loading")}<span>${this.options.dictionary.loading}</span>`;
+
         view.$root.append(img);
+        view.$root.append(empty);
+        view.$root.append(error);
+        view.$root.append(loading);
       },
       onUpdate: ({ view }) => {
         const img = view.$root.firstElementChild as HTMLImageElement;
@@ -173,6 +181,9 @@ export const Image = TImage.extend<ImageOptions>({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({
           editor: this.editor,
+          tippy: {
+            placement: "bottom",
+          },
           show: ({ editor }) => {
             return editor.isEditable && editor.isActive(this.name);
           },
