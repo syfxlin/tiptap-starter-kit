@@ -6,7 +6,7 @@ import tippy, { Instance, Props } from "tippy.js";
 export type BlockMenuViewItem = "|" | {
   id: string;
   name: string;
-  icon: string;
+  icon?: string;
   shortcut?: string;
   action: (editor: Editor) => void;
 };

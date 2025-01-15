@@ -143,13 +143,18 @@ export const Emoji = Node.create<EmojiOptions>({
               }
             }
             items.push({
-              action: ({ editor, range }) => {
-                editor.chain().deleteRange(range).setEmoji(name).focus().run();
+              id: name,
+              name: `${name} - ${html}`,
+              action: (editor) => {
+                editor.chain()
+                  .deleteRange({
+                    from: editor.state.selection.$from.start(),
+                    to: editor.state.selection.$from.pos,
+                  })
+                  .setEmoji(name)
+                  .focus()
+                  .run();
               },
-              render: ({ view }) => view.createButton({
-                id: name,
-                name: `${name} - ${html}`,
-              }),
             });
           }
           return items.slice(0, 20);

@@ -118,7 +118,7 @@ export const Details = Node.create<DetailsOptions>({
         dom.removeAttribute("open");
       }
 
-      ico.innerHTML = icon("right-line");
+      ico.innerHTML = icon("right");
       btn.addEventListener("click", () => {
         const open = !dom.hasAttribute("open");
         if (open) {
