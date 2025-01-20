@@ -1,11 +1,11 @@
+import { markInputRule, markPasteRule } from "@tiptap/core";
 import { Highlight as THighlight, HighlightOptions as THighlightOptions } from "@tiptap/extension-highlight";
 import tippy from "tippy.js";
-import { markInputRule, markPasteRule } from "@tiptap/core";
-import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { MarkMarkdownStorage } from "../extensions/markdown";
 import { DecorationData, remarkDecoration } from "../extensions/markdown/plugins/decoration";
-import { icon } from "../utils/icons";
 import { colors } from "../utils/colors";
+import { icon } from "../utils/icons";
 
 const INPUT_REGEX = /(?:^|[^=])(==(?!\s+==)([^=]+)==)$/;
 const PASTE_REGEX = /(?:^|[^=])(==(?!\s+==)([^=]+)==(?!\s+==))/g;
@@ -23,6 +23,7 @@ export const Highlight = THighlight.extend<HighlightOptions>({
       ...this.parent?.(),
       dictionary: {
         name: "Highlight",
+        none: "None",
         gray: "Gray",
         slate: "Slate",
         tomato: "Tomato",
@@ -100,26 +101,29 @@ export const Highlight = THighlight.extend<HighlightOptions>({
         items: [
           {
             id: this.name,
-            name: this.options.dictionary.name,
-            view: icon("highlight"),
-            shortcut: "Mod-Shift-H",
-            active: ({ editor }) => editor.isActive(this.name),
-            action: ({ editor }) => editor.chain().toggleHighlight().focus().run(),
-            onInit: ({ editor, element }) => {
-              const container = document.createElement("div");
-              container.classList.add("ProseMirror-fm-color-picker");
+            render: ({ editor, view, root }) => {
+              const node = view.createButton({
+                id: this.name,
+                name: this.options.dictionary.name,
+                icon: icon("highlight"),
+                shortcut: "Mod-Shift-H",
+              });
+
+              // color picker
+              const container1 = document.createElement("div");
+              const container2 = document.createElement("div");
               for (const color of [...colors.map(i => i[0]), ...colors.map(i => `b-${i[0]}`)]) {
                 const button = document.createElement("button");
-                button.textContent = "A";
+                button.innerHTML = `<span>A</span>`;
                 button.setAttribute("data-color", color);
                 const popover = document.createElement("span");
                 popover.classList.add("ProseMirror-fm-button-popover");
                 if (color.startsWith("b-")) {
                   // @ts-expect-error
-                  popover.textContent = `Background ${this.options.dictionary[color.replace("b-", "")]}`;
+                  popover.innerHTML = `Background ${this.options.dictionary[color.replace("b-", "")]}`;
                 } else {
                   // @ts-expect-error
-                  popover.textContent = this.options.dictionary[color];
+                  popover.innerHTML = this.options.dictionary[color];
                 }
                 tippy(button, {
                   appendTo: () => document.body,
@@ -131,21 +135,61 @@ export const Highlight = THighlight.extend<HighlightOptions>({
                 });
                 button.addEventListener("click", (e) => {
                   e.stopPropagation();
-                  editor.chain().toggleHighlight({ color }).focus().run();
+                  if (color === "none") {
+                    editor.chain().unsetHighlight().run();
+                  } else {
+                    editor.chain().setHighlight({ color }).focus().run();
+                  }
                 });
-                container.append(button);
+                if (color.startsWith("b-")) {
+                  container2.append(button);
+                } else {
+                  container1.append(button);
+                }
               }
-              tippy(element, {
-                appendTo: () => element,
-                content: container,
+
+              const pick = document.createElement("div");
+              pick.classList.add("ProseMirror-fm-color-picker");
+              pick.append(container1);
+              pick.append(container2);
+
+              tippy(node, {
+                appendTo: () => node,
+                content: pick,
                 arrow: false,
                 interactive: true,
+                hideOnClick: false,
                 theme: "ProseMirror",
-                placement: "bottom",
+                placement: "bottom-start",
                 maxWidth: "none",
                 animation: "shift-away",
                 duration: [200, 150],
+                onShow: (i) => {
+                  const color = editor.getAttributes(this.name)?.color || "none";
+                  for (const item of i.popper.querySelectorAll(`[data-color]`)) {
+                    if (item.getAttribute("data-color") === color) {
+                      item.innerHTML = icon("check");
+                    } else {
+                      item.innerHTML = `<span>A</span>`;
+                    }
+                  }
+                },
               });
+
+              if (editor.isActive(this.name)) {
+                node.setAttribute("data-active", "true");
+              }
+
+              root.append(node);
+            },
+            update: ({ editor, root }) => {
+              const node = root.firstElementChild!;
+
+              if (editor.isActive(this.name)) {
+                node.setAttribute("data-active", "true");
+              } else {
+                node.removeAttribute("data-active");
+              }
             },
           },
         ],

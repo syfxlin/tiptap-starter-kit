@@ -1,23 +1,27 @@
-import { Editor, Extension, Range, isActive, isNodeSelection, isTextSelection } from "@tiptap/core";
+import { Editor, Extension, isActive, isNodeSelection, isTextSelection, Range } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { FloatMenuView } from "./view";
 
-export interface FloatMenuItem {
+export interface FloatMenuButtonItem {
   id: string;
   name: string;
-  view: string;
+  icon: string;
   shortcut?: string;
-  active: (props: { editor: Editor; view: FloatMenuView; range: Range; element: HTMLElement }) => boolean;
-  action: (props: { editor: Editor; view: FloatMenuView; range: Range; element: HTMLElement }) => void;
-  onInit?: (props: { editor: Editor; view: FloatMenuView; range: Range; element: HTMLElement }) => void;
-  onUpdate?: (props: { editor: Editor; view: FloatMenuView; range: Range; element: HTMLElement }) => void;
-  onDestroy?: (props: { editor: Editor; view: FloatMenuView; range: Range; element: HTMLElement }) => void;
+  active: (editor: Editor, range: Range) => boolean;
+  action: (editor: Editor, range: Range) => void;
+}
+
+export interface FloatMenuRenderItem {
+  id: string;
+  render: (props: { editor: Editor; view: FloatMenuView; range: Range; root: HTMLElement }) => void;
+  update?: (props: { editor: Editor; view: FloatMenuView; range: Range; root: HTMLElement }) => void;
+  destroy?: (props: { editor: Editor; view: FloatMenuView; range: Range; root: HTMLElement }) => void;
 }
 
 export interface FloatMenuItemStorage {
   floatMenu?: {
     hide?: boolean;
-    items?: FloatMenuItem | Array<FloatMenuItem>;
+    items?: FloatMenuButtonItem | FloatMenuRenderItem | Array<FloatMenuButtonItem | FloatMenuRenderItem>;
   };
 }
 
@@ -46,7 +50,7 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
   },
   addProseMirrorPlugins() {
     const hiddens = new Set<string>();
-    const mappings = new Map<string, FloatMenuItem>();
+    const mappings = new Map<string, FloatMenuButtonItem | FloatMenuRenderItem>();
     for (const [name, storage] of Object.entries(this.editor.storage as Record<string, FloatMenuItemStorage>)) {
       if (storage?.floatMenu) {
         if (storage.floatMenu.hide) {
@@ -68,6 +72,9 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({
           editor: this.editor,
+          tippy: {
+            animation: "fade",
+          },
           show: ({ editor }) => {
             const { state, isEditable } = editor;
             if (!isEditable) {
@@ -88,50 +95,69 @@ export const FloatMenu = Extension.create<FloatMenuOptions>({
             }
             return !isNodeSelection(selection);
           },
-          onInit: ({ view, range, editor, element }) => {
+          onInit: ({ view, range, editor, root }) => {
             for (const name of this.options.items) {
               if (name !== "|") {
                 const item = mappings.get(name);
                 if (item) {
-                  const button = view.createButton({
-                    id: name,
-                    name: item.name,
-                    view: item.view,
-                    shortcut: item.shortcut,
-                    onClick: () => item.action({ view, range, editor, element: button.button }),
-                  });
-                  element.append(button.button);
-                  item.onInit?.({ view, range, editor, element: button.button });
+                  if ("render" in item) {
+                    const node = document.createElement("div");
+                    item.render({ view, editor, range, root: node });
+                    node.setAttribute("data-fm-id", name);
+                    root.append(node);
+                  } else {
+                    const node = view.createButton({
+                      id: item.id,
+                      name: item.name,
+                      icon: item.icon,
+                      shortcut: item.shortcut,
+                      onClick: () => item.action(editor, range),
+                    });
+                    if (item.active && item.active(editor, range)) {
+                      node.setAttribute("data-active", "true");
+                    }
+                    node.setAttribute("data-fm-id", name);
+                    root.append(node);
+                  }
                 }
               } else {
                 const divider = view.createDivider();
-                element.append(divider.divider);
+                root.append(divider);
               }
             }
           },
-          onUpdate: ({ view, range, editor, element }) => {
+          onUpdate: ({ view, range, editor, root }) => {
             for (const name of this.options.items) {
               if (name !== "|") {
-                const dom = element.querySelector(`[name="${name}"]`) as HTMLElement | undefined;
+                const node = root.querySelector(`[data-fm-id="${name}"]`) as HTMLElement | undefined;
                 const item = mappings.get(name);
-                if (dom && item) {
-                  item.onUpdate?.({ view, range, editor, element: dom });
-                  if (item.active({ view, range, editor, element: dom })) {
-                    dom.classList.add("active");
-                    continue;
+                if (node && item) {
+                  if ("render" in item) {
+                    if (item.update) {
+                      item.update({ view, editor, range, root: node });
+                    }
+                  } else {
+                    if (item.active && item.active(editor, range)) {
+                      node.setAttribute("data-active", "true");
+                    } else {
+                      node.removeAttribute("data-active");
+                    }
                   }
-                  dom.classList.remove("active");
                 }
               }
             }
           },
-          onDestroy: ({ view, range, editor, element }) => {
+          onDestroy: ({ view, range, editor, root }) => {
             for (const name of this.options.items) {
               if (name !== "|") {
-                const dom = element.querySelector(`[name="${name}"]`) as HTMLElement | undefined;
+                const node = root.querySelector(`[data-fm-id="${name}"]`) as HTMLElement | undefined;
                 const item = mappings.get(name);
-                if (dom && item) {
-                  item.onDestroy?.({ view, range, editor, element: dom });
+                if (node && item) {
+                  if ("render" in item) {
+                    if (item.destroy) {
+                      item.destroy({ view, editor, range, root: node });
+                    }
+                  }
                 }
               }
             }

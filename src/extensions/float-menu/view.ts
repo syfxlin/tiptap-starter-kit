@@ -1,47 +1,62 @@
-import tippy, { Instance, Props } from "tippy.js";
-import { EditorView } from "@tiptap/pm/view";
+import { Editor, isNodeSelection, posToDOMRect, Range } from "@tiptap/core";
 import { EditorState, PluginView } from "@tiptap/pm/state";
-import { Editor, Range, isNodeSelection, posToDOMRect } from "@tiptap/core";
+import { EditorView } from "@tiptap/pm/view";
+import tippy, { Instance, Props } from "tippy.js";
 
 export interface FloatMenuInputViewOptions {
-  id?: string;
+  id: string;
   name: string;
   type?: string;
   value?: string;
-  class?: string | string[];
-  style?: Partial<CSSStyleDeclaration> | Array<Partial<CSSStyleDeclaration>>;
-  onEnter?: (value: string, element: HTMLInputElement) => void;
-  onInput?: (value: string, element: HTMLInputElement) => void;
-  onChange?: (value: string, element: HTMLInputElement) => void;
-  onKey?: (key: Pick<KeyboardEvent, "key" | "ctrlKey" | "altKey" | "metaKey" | "shiftKey">, value: string, element: HTMLInputElement) => void;
-  onBoundary?: (boundary: "left" | "right", value: string, element: HTMLInputElement) => void;
+  classes?: Array<string>;
+  attributes?: Record<string, string>;
+  onEnter?: (value: string, root: HTMLInputElement, event: KeyboardEvent) => void;
+  onInput?: (value: string, root: HTMLInputElement, event: Event) => void;
+  onChange?: (value: string, root: HTMLInputElement, event: Event) => void;
+  onKey?: (key: Pick<KeyboardEvent, "key" | "ctrlKey" | "altKey" | "metaKey" | "shiftKey">, root: HTMLInputElement, event: KeyboardEvent) => void;
+  onBoundary?: (boundary: "left" | "right", value: string, root: HTMLInputElement, event: KeyboardEvent) => void;
+}
+
+export interface FloatMenuTextareaViewOptions {
+  id: string;
+  name: string;
+  value?: string;
+  classes?: Array<string>;
+  attributes?: Record<string, string>;
+  onEnter?: (value: string, root: HTMLTextAreaElement, event: KeyboardEvent) => void;
+  onInput?: (value: string, root: HTMLTextAreaElement, event: Event) => void;
+  onChange?: (value: string, root: HTMLTextAreaElement, event: Event) => void;
+  onKey?: (key: Pick<KeyboardEvent, "key" | "ctrlKey" | "altKey" | "metaKey" | "shiftKey">, root: HTMLTextAreaElement, event: KeyboardEvent) => void;
+  onBoundary?: (boundary: "left" | "right", value: string, root: HTMLTextAreaElement, event: KeyboardEvent) => void;
 }
 
 export interface FloatMenuButtonViewOptions {
-  id?: string;
+  id: string;
   name: string;
-  view: string;
+  icon: string;
   shortcut?: string;
-  class?: string | string[];
-  style?: Partial<CSSStyleDeclaration> | Array<Partial<CSSStyleDeclaration>>;
-  onClick?: (element: HTMLButtonElement) => void;
+  classes?: Array<string>;
+  attributes?: Record<string, string>;
+  onClick?: (root: HTMLButtonElement, event: MouseEvent) => void;
+  onHover?: (root: HTMLButtonElement, event: MouseEvent) => void;
 }
 
 export interface FloatMenuUploadViewOptions extends Omit<FloatMenuButtonViewOptions, "onClick"> {
   accept?: string;
-  onUpload?: (element: HTMLInputElement) => void;
+  onUpload?: (root: HTMLInputElement) => void;
 }
 
 export interface FloatMenuViewOptions {
   editor: Editor;
-  class?: string | string[];
-  style?: Partial<CSSStyleDeclaration> | Array<Partial<CSSStyleDeclaration>>;
-  rect?: (props: { view: FloatMenuView; editor: Editor }) => DOMRect;
+  tippy?: Partial<Props>;
   show?: (props: { view: FloatMenuView; editor: Editor }) => boolean;
-  tippy?: (props: { view: FloatMenuView; editor: Editor; options: Partial<Props> }) => Partial<Props>;
-  onInit?: (props: { view: FloatMenuView; editor: Editor; range: Range; element: HTMLElement }) => void;
-  onUpdate?: (props: { view: FloatMenuView; editor: Editor; range: Range; element: HTMLElement }) => void;
-  onDestroy?: (props: { view: FloatMenuView; editor: Editor; range: Range; element: HTMLElement }) => void;
+  rect?: (props: { view: FloatMenuView; editor: Editor }) => DOMRect;
+  onInit?: (props: { editor: Editor; view: FloatMenuView; range: Range; root: HTMLElement }) => void;
+  onMount?: (props: { editor: Editor; view: FloatMenuView; range: Range; root: HTMLElement }) => void;
+  onUpdate?: (props: { editor: Editor; view: FloatMenuView; range: Range; root: HTMLElement }) => void;
+  onDestroy?: (props: { editor: Editor; view: FloatMenuView; range: Range; root: HTMLElement }) => void;
+  classes?: Array<string>;
+  attributes?: Record<string, string>;
 }
 
 export class FloatMenuView implements PluginView {
@@ -72,23 +87,23 @@ export class FloatMenuView implements PluginView {
   public update(view: EditorView, prevState?: EditorState) {
     const state = view.state;
 
-    // skip render
+    // Skip render
     if (view.composing || (prevState && prevState.doc.eq(state.doc) && prevState.selection.eq(state.selection))) {
       return;
     }
 
-    // check should show
+    // Check should show
     if (!this.options.show?.({ view: this, editor: this.editor })) {
       this.hide();
       return;
     }
 
-    // on update
+    // On update
     if (this.options.onUpdate) {
       this.options.onUpdate({
         view: this,
+        root: this.element,
         editor: this.editor,
-        element: this.element,
         range: {
           from: Math.min(...this.editor.state.selection.ranges.map(range => range.$from.pos)),
           to: Math.max(...this.editor.state.selection.ranges.map(range => range.$to.pos)),
@@ -96,10 +111,10 @@ export class FloatMenuView implements PluginView {
       });
     }
 
-    // reset client rect
+    // Reset client rect
     this.popover.setProps({ getReferenceClientRect: () => this._rect() });
 
-    // switch to show
+    // Switch to show
     this.show();
   }
 
@@ -107,8 +122,8 @@ export class FloatMenuView implements PluginView {
     if (this.options.onDestroy) {
       this.options.onDestroy({
         view: this,
+        root: this.element,
         editor: this.editor,
-        element: this.element,
         range: {
           from: Math.min(...this.editor.state.selection.ranges.map(range => range.$from.pos)),
           to: Math.max(...this.editor.state.selection.ranges.map(range => range.$to.pos)),
@@ -120,59 +135,57 @@ export class FloatMenuView implements PluginView {
   }
 
   public createInput(options: FloatMenuInputViewOptions) {
+    const root = document.createElement("div");
+    root.classList.add("ProseMirror-fm-input");
+    for (const clazz of options.classes ?? []) {
+      root.classList.add(clazz);
+    }
+    for (const [key, val] of Object.entries(options.attributes ?? {})) {
+      root.setAttribute(key, val);
+    }
+
+    const label = document.createElement("label");
+    label.htmlFor = options.id;
+    label.textContent = options.name;
+
     const input = document.createElement("input");
-    input.classList.add("ProseMirror-fm-input");
-    if (options.id) {
-      input.name = options.id;
-    }
-    if (options.name) {
-      input.placeholder = options.name;
-    }
+    input.name = options.id;
+    input.placeholder = options.name;
     if (options.type) {
       input.type = options.type;
     }
     if (options.value) {
       input.value = options.value;
     }
-    if (options.class) {
-      for (const item of Array.isArray(options.class) ? options.class : [options.class]) {
-        input.classList.add(item);
-      }
-    }
-    if (options.style) {
-      for (const item of Array.isArray(options.style) ? options.style : [options.style]) {
-        for (const [key, val] of Object.entries(item)) {
-          // @ts-expect-error
-          input.style[key] = val;
-        }
-      }
-    }
     if (options.onEnter) {
       input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          options.onEnter?.(input.value, input);
+        if (e.key === "Escape" && options.onEnter) {
+          options.onEnter(input.value, input, e);
+        }
+        if (e.key === "Enter" && options.onEnter) {
+          options.onEnter(input.value, input, e);
         }
       });
     }
     if (options.onInput) {
-      input.addEventListener("input", () => {
-        options.onInput?.(input.value, input);
+      input.addEventListener("input", (e) => {
+        if (options.onInput) {
+          options.onInput(input.value, input, e);
+        }
       });
     }
     if (options.onChange) {
-      input.addEventListener("change", () => {
-        options.onChange?.(input.value, input);
+      input.addEventListener("change", (e) => {
+        if (options.onChange) {
+          options.onChange(input.value, input, e);
+        }
       });
     }
     if (options.onKey) {
       input.addEventListener("keydown", (e) => {
-        options.onKey?.({
-          key: e.key,
-          ctrlKey: e.ctrlKey,
-          altKey: e.altKey,
-          metaKey: e.metaKey,
-          shiftKey: e.shiftKey,
-        }, input.value, input);
+        if (options.onKey) {
+          options.onKey(e, input, e);
+        }
       });
     }
     if (options.onBoundary) {
@@ -194,42 +207,120 @@ export class FloatMenuView implements PluginView {
           return;
         }
         if (options.onBoundary && e.key === "ArrowLeft" && pos === 0) {
-          options.onBoundary("left", input.value, input);
+          options.onBoundary("left", input.value, input, e);
         }
         if (options.onBoundary && e.key === "ArrowRight" && (pos === -1 || pos === input.value.length)) {
-          options.onBoundary("right", input.value, input);
+          options.onBoundary("right", input.value, input, e);
         }
         pos = input.selectionStart;
       });
     }
-    return { input };
+
+    root.append(label);
+    root.append(input);
+    return root;
+  }
+
+  public createTextarea(options: FloatMenuTextareaViewOptions) {
+    const root = document.createElement("textarea");
+    root.name = options.id;
+    root.placeholder = options.name;
+    root.classList.add("ProseMirror-fm-textarea");
+    for (const clazz of options.classes ?? []) {
+      root.classList.add(clazz);
+    }
+    for (const [key, val] of Object.entries(options.attributes ?? {})) {
+      root.setAttribute(key, val);
+    }
+    if (options.value) {
+      root.value = options.value;
+    }
+    if (options.onEnter) {
+      root.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && options.onEnter) {
+          options.onEnter(root.value, root, e);
+        }
+        if (e.key === "Enter" && e.ctrlKey && options.onEnter) {
+          options.onEnter(root.value, root, e);
+        }
+      });
+    }
+    if (options.onInput) {
+      root.addEventListener("input", (e) => {
+        root.style.height = `auto`;
+        root.style.height = `${root.scrollHeight}px`;
+        if (options.onInput) {
+          options.onInput(root.value, root, e);
+        }
+      });
+    }
+    if (options.onChange) {
+      root.addEventListener("change", (e) => {
+        if (options.onChange) {
+          options.onChange(root.value, root, e);
+        }
+      });
+    }
+    if (options.onKey) {
+      root.addEventListener("keydown", (e) => {
+        if (options.onKey) {
+          options.onKey(e, root, e);
+        }
+      });
+    }
+    if (options.onBoundary) {
+      let pos = -1;
+      root.addEventListener("mouseup", () => {
+        if (root.selectionStart === null) {
+          return;
+        }
+        if (root.selectionStart !== root.selectionEnd) {
+          return;
+        }
+        pos = root.selectionStart;
+      });
+      root.addEventListener("keyup", (e) => {
+        if (root.selectionStart === null) {
+          return;
+        }
+        if (root.selectionStart !== root.selectionEnd) {
+          return;
+        }
+        if (options.onBoundary && e.key === "ArrowLeft" && pos === 0) {
+          options.onBoundary("left", root.value, root, e);
+        }
+        if (options.onBoundary && e.key === "ArrowRight" && (pos === -1 || pos === root.value.length)) {
+          options.onBoundary("right", root.value, root, e);
+        }
+        pos = root.selectionStart;
+      });
+    }
+    return root;
   }
 
   public createButton(options: FloatMenuButtonViewOptions) {
-    const button = document.createElement("button");
-    button.classList.add("ProseMirror-fm-button");
-    if (options.id) {
-      button.name = options.id;
+    const root = document.createElement("button");
+    for (const clazz of options.classes ?? []) {
+      root.classList.add(clazz);
     }
-    if (options.view) {
-      button.innerHTML = options.view;
+    for (const [key, val] of Object.entries(options.attributes ?? {})) {
+      root.setAttribute(key, val);
     }
-    if (options.class) {
-      for (const item of Array.isArray(options.class) ? options.class : [options.class]) {
-        button.classList.add(item);
-      }
-    }
-    if (options.style) {
-      for (const item of Array.isArray(options.style) ? options.style : [options.style]) {
-        for (const [key, val] of Object.entries(item)) {
-          // @ts-expect-error
-          button.style[key] = val;
-        }
-      }
-    }
+    root.name = options.id;
+    root.innerHTML = options.icon;
+    root.classList.add("ProseMirror-fm-button");
     if (options.onClick) {
-      button.addEventListener("click", () => {
-        options.onClick?.(button);
+      root.addEventListener("click", (e) => {
+        if (options.onClick) {
+          options.onClick(root, e);
+        }
+      });
+    }
+    if (options.onHover) {
+      root.addEventListener("mouseover", (e) => {
+        if (options.onHover) {
+          options.onHover(root, e);
+        }
       });
     }
 
@@ -238,33 +329,31 @@ export class FloatMenuView implements PluginView {
     popover.innerHTML = options.name;
     if (options.shortcut) {
       popover.innerHTML += "&nbsp;·&nbsp;";
-      options.shortcut.split("-").forEach((value, index) => {
-        if (index !== 0) {
-          const span = document.createElement("span");
-          span.innerHTML = "&nbsp;";
-          popover.append(span);
-        }
-        const kbd = document.createElement("kbd");
-        if (navigator.userAgent.includes("Mac")) {
-          kbd.textContent = value.replace(/mod/i, "Cmd");
-        } else {
-          kbd.textContent = value.replace(/mod/i, "Ctrl");
-        }
-        popover.append(kbd);
-      });
+      const shortcut = document.createElement("div");
+      shortcut.classList.add("ProseMirror-fm-button-shortcut");
+      shortcut.textContent = options.shortcut
+        .replace(/mod/i, navigator.userAgent.includes("Mac") ? "⌘" : "⌃")
+        .replace(/ctrl|control/i, "⌃")
+        .replace(/cmd|command/i, "⌘")
+        .replace(/shift/i, "⇧")
+        .replace(/alt|option/i, "⌥")
+        .replace(/[-\s]+/g, "");
+      popover.append(shortcut);
     }
-    const instance = tippy(button, {
-      appendTo: () => document.body,
+    tippy(root, {
       content: popover,
       arrow: false,
       inertia: true,
+      hideOnClick: false,
+      trigger: "mouseenter",
       theme: "ProseMirror-dark",
       placement: "top",
       animation: "shift-away",
       duration: [200, 150],
+      appendTo: () => document.body,
     });
 
-    return { button, popover, instance };
+    return root;
   }
 
   public createUpload(options: FloatMenuUploadViewOptions) {
@@ -274,23 +363,29 @@ export class FloatMenuView implements PluginView {
       file.accept = options.accept;
     }
     file.addEventListener("change", () => {
-      options.onUpload?.(file);
+      if (options.onUpload) {
+        options.onUpload(file);
+      }
     });
-    const button = this.createButton({ ...options, onClick: () => file.click() });
-    return { ...button, file };
+    return this.createButton({ ...options, onClick: () => file.click() });
   }
 
-  public createGroup(direction: "column" | "row") {
-    const element = document.createElement("div");
-    element.classList.add("ProseMirror-fm-group");
-    element.style.flexDirection = direction;
-    return element;
+  public createForm() {
+    const root = document.createElement("div");
+    root.classList.add("ProseMirror-fm-form");
+    return root;
+  }
+
+  public createAction() {
+    const root = document.createElement("div");
+    root.classList.add("ProseMirror-fm-action");
+    return root;
   }
 
   public createDivider() {
-    const divider = document.createElement("span");
-    divider.classList.add("ProseMirror-fm-divider");
-    return { divider };
+    const root = document.createElement("span");
+    root.classList.add("ProseMirror-fm-divider");
+    return root;
   }
 
   private _rect() {
@@ -309,24 +404,17 @@ export class FloatMenuView implements PluginView {
 
   private _element() {
     const element = document.createElement("div");
+    for (const clazz of this.options.classes ?? []) {
+      element.classList.add(clazz);
+    }
+    for (const [key, val] of Object.entries(this.options.attributes ?? {})) {
+      element.setAttribute(key, val);
+    }
     element.classList.add("ProseMirror-fm");
-    if (this.options.class) {
-      for (const item of Array.isArray(this.options.class) ? this.options.class : [this.options.class]) {
-        element.classList.add(item);
-      }
-    }
-    if (this.options.style) {
-      for (const item of Array.isArray(this.options.style) ? this.options.style : [this.options.style]) {
-        for (const [key, val] of Object.entries(item)) {
-          // @ts-expect-error
-          element.style[key] = val;
-        }
-      }
-    }
     if (this.options.onInit) {
       this.options.onInit({
-        element,
         view: this,
+        root: element,
         editor: this.editor,
         range: {
           from: Math.min(...this.editor.state.selection.ranges.map(range => range.$from.pos)),
@@ -338,17 +426,34 @@ export class FloatMenuView implements PluginView {
   }
 
   private _popover() {
-    const options: Partial<Props> = {
+    return tippy(document.body, {
       appendTo: () => document.body,
       getReferenceClientRect: null,
       content: this.element,
       arrow: false,
       interactive: true,
       theme: "ProseMirror",
+      animation: "shift-away",
       trigger: "manual",
       placement: "top",
       maxWidth: "none",
-    };
-    return tippy(document.body, this.options.tippy ? this.options.tippy({ options, view: this, editor: this.editor }) : options);
+      ...this.options.tippy,
+      onMount: (i) => {
+        if (this.options.tippy?.onMount) {
+          this.options.tippy.onMount(i);
+        }
+        if (this.element && this.options.onMount) {
+          this.options.onMount({
+            view: this,
+            root: this.element,
+            editor: this.editor,
+            range: {
+              from: Math.min(...this.editor.state.selection.ranges.map(range => range.$from.pos)),
+              to: Math.max(...this.editor.state.selection.ranges.map(range => range.$to.pos)),
+            },
+          });
+        }
+      },
+    });
   }
 }

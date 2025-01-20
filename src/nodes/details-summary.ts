@@ -1,5 +1,6 @@
-import { Node, defaultBlockAt, mergeAttributes } from "@tiptap/core";
+import { defaultBlockAt, mergeAttributes, Node } from "@tiptap/core";
 import { Selection } from "@tiptap/pm/state";
+import { ClickMenuItemStorage } from "../extensions/click-menu/menu";
 import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
 
 export interface DetailsSummaryOptions {
@@ -57,7 +58,10 @@ export const DetailsSummary = Node.create<DetailsSummaryOptions>({
           },
         },
       },
-    } satisfies NodeMarkdownStorage;
+      clickMenu: {
+        hide: true,
+      },
+    } satisfies NodeMarkdownStorage & ClickMenuItemStorage;
   },
   parseHTML() {
     return [

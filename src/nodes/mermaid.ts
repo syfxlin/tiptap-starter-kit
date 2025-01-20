@@ -1,11 +1,11 @@
+import { mergeAttributes, Node, textblockTypeInputRule } from "@tiptap/core";
 import mermaid from "mermaid";
-import { Node, mergeAttributes, textblockTypeInputRule } from "@tiptap/core";
-import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { icon } from "../utils/icons";
+import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
 import { InnerEditorView } from "../extensions/node-view/inner-editor";
-
 import { debounce } from "../utils/functions";
+
+import { icon } from "../utils/icons";
 
 mermaid.initialize({
   startOnLoad: false,
@@ -108,31 +108,33 @@ export const Mermaid = Node.create<MermaidOptions>({
   },
   addNodeView() {
     const render = debounce(300, (code: string, node: HTMLElement) => {
-      const dom = document.createElement("div");
-      dom.id = `${this.name}-${Math.random().toString(36).substring(2, 10)}`;
-      mermaid.render(dom.id, code)
-        .then(({ svg, bindFunctions }) => {
-          dom.innerHTML = svg;
-          bindFunctions?.(dom);
-          node.innerHTML = dom.outerHTML;
-        })
-        .catch((reason) => {
-          document.querySelector(`#d${dom.id}`)?.remove();
-          node.classList.add("ProseMirror-card-error");
-          node.innerHTML = reason;
-        });
+      if (code) {
+        const dom = document.createElement("div");
+        dom.id = `${this.name}-${Math.random().toString(36).substring(2, 10)}`;
+        mermaid.render(dom.id, code)
+          .then(({ svg, bindFunctions }) => {
+            dom.innerHTML = svg;
+            bindFunctions?.(dom);
+            node.classList.remove("ProseMirror-info");
+            node.classList.remove("ProseMirror-error");
+            node.innerHTML = dom.outerHTML;
+          })
+          .catch((reason) => {
+            document.querySelector(`#d${dom.id}`)?.remove();
+            node.classList.remove("ProseMirror-info");
+            node.classList.add("ProseMirror-error");
+            node.innerHTML = reason;
+          });
+      } else {
+        node.classList.remove("ProseMirror-error");
+        node.classList.add("ProseMirror-info");
+        node.innerHTML = this.options.dictionary.inputGraph;
+      }
     });
     return InnerEditorView.create({
       HTMLAttributes: this.options.HTMLAttributes,
       onRender: ({ view }) => {
-        view.$preview.classList.remove("ProseMirror-card-empty");
-        view.$preview.classList.remove("ProseMirror-card-error");
-        if (!view.node.textContent) {
-          view.$preview.classList.add("ProseMirror-card-empty");
-          view.$preview.innerHTML = this.options.dictionary.inputGraph;
-        } else {
-          render(view.node.textContent, view.$preview);
-        }
+        render(view.node.textContent, view.$preview);
       },
     });
   },

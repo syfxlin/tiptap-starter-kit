@@ -1,7 +1,7 @@
-import { Italic as TItalic, ItalicOptions as TItalicOptions } from "@tiptap/extension-italic";
 import { markInputRule, markPasteRule } from "@tiptap/core";
-import { MarkMarkdownStorage } from "../extensions/markdown";
+import { Italic as TItalic, ItalicOptions as TItalicOptions } from "@tiptap/extension-italic";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { MarkMarkdownStorage } from "../extensions/markdown";
 import { icon } from "../utils/icons";
 
 const STAR_INPUT_REGEX = /(?:^|[^*])(\*(?!\s+\*)([^*]+)\*)$/;
@@ -51,10 +51,10 @@ export const Italic = TItalic.extend<ItalicOptions>({
           {
             id: this.name,
             name: this.options.dictionary.name,
-            view: icon("italic"),
+            icon: icon("italic"),
             shortcut: "Mod-I",
-            active: ({ editor }) => editor.isActive(this.name),
-            action: ({ editor }) => editor.chain().toggleItalic().focus().run(),
+            active: editor => editor.isActive(this.name),
+            action: editor => editor.chain().toggleItalic().focus().run(),
           },
         ],
       },

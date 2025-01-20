@@ -1,6 +1,6 @@
 import { Underline as TUnderline, UnderlineOptions as TUnderlineOptions } from "@tiptap/extension-underline";
-import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { MarkMarkdownStorage } from "../extensions/markdown";
 import { remarkDecoration } from "../extensions/markdown/plugins/decoration";
 import { icon } from "../utils/icons";
 
@@ -49,10 +49,10 @@ export const Underline = TUnderline.extend<UnderlineOptions>({
           {
             id: this.name,
             name: this.options.dictionary.name,
-            view: icon("underline"),
+            icon: icon("underline"),
             shortcut: "Mod-U",
-            active: ({ editor }) => editor.isActive(this.name),
-            action: ({ editor }) => editor.chain().toggleUnderline().focus().run(),
+            active: editor => editor.isActive(this.name),
+            action: editor => editor.chain().toggleUnderline().run(),
           },
         ],
       },

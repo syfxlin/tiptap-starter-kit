@@ -1,6 +1,6 @@
 import { TaskList as TTaskList, TaskListOptions as TTaskListOptions } from "@tiptap/extension-task-list";
-import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
+import { NodeMarkdownStorage } from "../extensions/markdown";
 import { icon } from "../utils/icons";
 
 export interface TaskListOptions extends TTaskListOptions {

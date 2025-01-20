@@ -2,46 +2,51 @@ import { Extension, isActive } from "@tiptap/core";
 import { Slice } from "@tiptap/pm/model";
 import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 
-export interface ClipboardOptions {}
-
-export function isInCode(state: EditorState): boolean {
-  try {
-    return isActive(state, "codeBlock") || isActive(state, "code");
-  } catch (e) {
-    return false;
-  }
-}
-
-export function isMarkdown(value: string): boolean {
-  // code-ish
-  if (value.match(/^```/gm)) {
-    return true;
-  }
-
-  // link-ish
-  if (value.match(/\[[^]+]\(https?:\/\/\S+\)/gm)) {
-    return true;
-  }
-  if (value.match(/\[[^]+]\(\/\S+\)/gm)) {
-    return true;
-  }
-
-  // heading-ish
-  if (value.match(/^#{1,6}\s+\S+/gm)) {
-    return true;
-  }
-
-  // list-ish
-  // noinspection RedundantIfStatementJS
-  if (value.match(/^[\d-*].?\s\S+/gm)) {
-    return true;
-  }
-
-  return false;
+export interface ClipboardOptions {
+  isInCode: (state: EditorState) => boolean;
+  isMarkdown: (value: string) => boolean;
 }
 
 export const Clipboard = Extension.create<ClipboardOptions>({
   name: "clipboard",
+  addOptions() {
+    return {
+      isInCode: (state) => {
+        try {
+          return isActive(state, "codeBlock") || isActive(state, "code");
+        } catch {
+          return false;
+        }
+      },
+      isMarkdown: (value) => {
+        // code-ish
+        if (value.match(/^```/gm)) {
+          return true;
+        }
+
+        // link-ish
+        if (value.match(/\[[\s\S]+\]\(https?:\/\/\S+\)/g)) {
+          return true;
+        }
+        if (value.match(/\[[\s\S]+\]\(\/\S+\)/g)) {
+          return true;
+        }
+
+        // heading-ish
+        if (value.match(/^#{1,6}\s+\S+/gm)) {
+          return true;
+        }
+
+        // list-ish
+        // noinspection RedundantIfStatementJS
+        if (value.match(/^[-*\d].?\s\S+/gm)) {
+          return true;
+        }
+
+        return false;
+      },
+    };
+  },
   addProseMirrorPlugins() {
     return [
       new Plugin({
@@ -62,13 +67,13 @@ export const Clipboard = Extension.create<ClipboardOptions>({
               return false;
             }
 
-            if (isInCode(view.state)) {
+            if (this.options.isInCode(view.state)) {
               event.preventDefault();
               view.dispatch(view.state.tr.insertText(text));
               return true;
             }
 
-            if (isMarkdown(text)) {
+            if (this.options.isMarkdown(text)) {
               const slice = this.editor.storage.markdown.parse(text);
               if (!slice || typeof slice === "string") {
                 return false;

@@ -1,7 +1,7 @@
 import { Editor } from "@tiptap/core";
-import { Processor } from "unified";
 import { Fragment, Mark, Node } from "@tiptap/pm/model";
-import { MarkMarkdownStorage, MarkdownNode, NodeMarkdownStorage } from "../types";
+import { Processor } from "unified";
+import { MarkdownNode, MarkMarkdownStorage, NodeMarkdownStorage } from "../types";
 import { SerializerStack } from "./stack";
 
 export class SerializerState {
@@ -23,7 +23,6 @@ export class SerializerState {
         root = storage.markdown.hooks.beforeSerialize(root);
       }
     }
-    console.log(root);
     let markdown = this.processor.stringify(root) as string;
     for (const storage of Object.values(this.editor.storage as Record<string, NodeMarkdownStorage | MarkMarkdownStorage>)) {
       if (storage?.markdown?.hooks?.afterSerialize) {

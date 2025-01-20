@@ -1,7 +1,6 @@
 import { Paragraph as TParagraph, ParagraphOptions as TParagraphOptions } from "@tiptap/extension-paragraph";
 import { NodeMarkdownStorage } from "../extensions/markdown";
 
-// eslint-disable-next-line ts/no-empty-object-type
 export interface ParagraphOptions extends TParagraphOptions {
 }
 

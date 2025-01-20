@@ -1,11 +1,11 @@
-import { Node, mergeAttributes, textblockTypeInputRule } from "@tiptap/core";
+import { mergeAttributes, Node, textblockTypeInputRule } from "@tiptap/core";
 import { encode } from "plantuml-encoder";
-import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
-import { icon } from "../utils/icons";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
+import { MarkdownNode, NodeMarkdownStorage } from "../extensions/markdown";
 import { InnerEditorView } from "../extensions/node-view/inner-editor";
-
 import { debounce } from "../utils/functions";
+
+import { icon } from "../utils/icons";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -104,27 +104,29 @@ export const Plantuml = Node.create<PlantumlOptions>({
   },
   addNodeView() {
     const render = debounce(300, (code: string, node: HTMLElement) => {
-      try {
-        const dom = document.createElement("img");
-        dom.src = `https://www.plantuml.com/plantuml/svg/${encode(code)}`;
-        dom.alt = code;
-        node.innerHTML = dom.outerHTML;
-      } catch (e) {
-        node.classList.add("ProseMirror-card-error");
-        node.innerHTML = (e as Error).message;
+      if (code) {
+        try {
+          const dom = document.createElement("img");
+          dom.src = `https://www.plantuml.com/plantuml/svg/${encode(code)}`;
+          dom.alt = code;
+          node.classList.remove("ProseMirror-info");
+          node.classList.remove("ProseMirror-error");
+          node.innerHTML = dom.outerHTML;
+        } catch (e) {
+          node.classList.remove("ProseMirror-info");
+          node.classList.add("ProseMirror-error");
+          node.innerHTML = (e as Error).message;
+        }
+      } else {
+        node.classList.remove("ProseMirror-error");
+        node.classList.add("ProseMirror-info");
+        node.innerHTML = this.options.dictionary.inputGraph;
       }
     });
     return InnerEditorView.create({
       HTMLAttributes: this.options.HTMLAttributes,
       onRender: ({ view }) => {
-        view.$preview.classList.remove("ProseMirror-card-empty");
-        view.$preview.classList.remove("ProseMirror-card-error");
-        if (!view.node.textContent) {
-          view.$preview.classList.add("ProseMirror-card-empty");
-          view.$preview.innerHTML = this.options.dictionary.inputGraph;
-        } else {
-          render(view.node.textContent, view.$preview);
-        }
+        render(view.node.textContent, view.$preview);
       },
     });
   },

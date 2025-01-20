@@ -1,6 +1,6 @@
 export const colors = [
+  ["none", "s"],
   ["gray", "z"],
-  ["slate", "s"],
   ["tomato", "e"],
   ["red", "r"],
   ["ruby", "f"],

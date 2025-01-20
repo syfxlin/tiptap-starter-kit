@@ -1,6 +1,6 @@
 import { SuperscriptExtensionOptions, Superscript as TSuperscript } from "@tiptap/extension-superscript";
-import { MarkMarkdownStorage } from "../extensions/markdown";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
+import { MarkMarkdownStorage } from "../extensions/markdown";
 import { icon } from "../utils/icons";
 
 export interface SuperscriptOptions extends SuperscriptExtensionOptions {
@@ -46,10 +46,10 @@ export const Superscript = TSuperscript.extend<SuperscriptOptions>({
           {
             id: this.name,
             name: this.options.dictionary.name,
-            view: icon("sup"),
+            icon: icon("sup"),
             shortcut: "Mod-.",
-            active: ({ editor }) => editor.isActive(this.name),
-            action: ({ editor }) => editor.chain().toggleSuperscript().focus().run(),
+            active: editor => editor.isActive(this.name),
+            action: editor => editor.chain().toggleSuperscript().run(),
           },
         ],
       },

@@ -1,6 +1,6 @@
-import { Editor, NodeViewRendererProps, mergeAttributes } from "@tiptap/core";
-import { NodeView } from "@tiptap/pm/view";
+import { Editor, mergeAttributes, NodeViewRendererProps } from "@tiptap/core";
 import { Node } from "@tiptap/pm/model";
+import { NodeView } from "@tiptap/pm/view";
 
 export interface InnerRenderViewOptions extends NodeViewRendererProps {
   id?: string;

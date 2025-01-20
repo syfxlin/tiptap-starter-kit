@@ -1,8 +1,8 @@
-import { Node, findChildren, findParentNode, mergeAttributes, wrappingInputRule } from "@tiptap/core";
-import { NodeMarkdownStorage } from "../extensions/markdown";
-import { icon } from "../utils/icons";
+import { findChildren, findParentNode, mergeAttributes, Node, wrappingInputRule } from "@tiptap/core";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
+import { NodeMarkdownStorage } from "../extensions/markdown";
 import { setAttributes } from "../utils/editor";
+import { icon } from "../utils/icons";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -118,10 +118,17 @@ export const Details = Node.create<DetailsOptions>({
         dom.removeAttribute("open");
       }
 
-      ico.innerHTML = icon("right-line");
+      ico.innerHTML = icon("right");
       btn.addEventListener("click", () => {
         const open = !dom.hasAttribute("open");
-        setAttributes(editor, getPos, { ...node.attrs, open });
+        if (open) {
+          dom.setAttribute("open", "true");
+        } else {
+          dom.removeAttribute("open");
+        }
+        if (editor.isEditable) {
+          setAttributes(editor, getPos, { ...node.attrs, open });
+        }
       });
 
       btn.append(ico);

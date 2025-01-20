@@ -1,14 +1,14 @@
+import { mergeAttributes } from "@tiptap/core";
 import { Image as TImage, ImageOptions as TImageOptions } from "@tiptap/extension-image";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { mergeAttributes } from "@tiptap/core";
-import { NodeMarkdownStorage } from "../extensions/markdown";
 import { BlockMenuItemStorage } from "../extensions/block-menu/menu";
-import { FloatMenuView } from "../extensions/float-menu/view";
-import { icon } from "../utils/icons";
-import { UploaderItemStorage, UploaderStorage } from "../extensions/uploader";
 import { FloatMenuItemStorage } from "../extensions/float-menu/menu";
-import { InnerResizerView } from "../extensions/node-view/inner-resizer";
+import { FloatMenuView } from "../extensions/float-menu/view";
+import { NodeMarkdownStorage } from "../extensions/markdown";
 import { unwrap, wrap } from "../extensions/markdown/plugins/wrap";
+import { InnerResizerView } from "../extensions/node-view/inner-resizer";
+import { UploaderItemStorage, UploaderStorage } from "../extensions/uploader";
+import { icon } from "../utils/icons";
 
 export interface ImageOptions extends TImageOptions {
   dictionary: {
@@ -38,7 +38,7 @@ export const Image = TImage.extend<ImageOptions>({
         empty: "Add image",
         error: "Error loading image",
         loading: "Loading image...",
-        inputSrc: "Enter or paste link",
+        inputSrc: "Image url",
         inputAlt: "Image description",
         inputTitle: "Image title",
         imageOpen: "Open image",
@@ -125,27 +125,35 @@ export const Image = TImage.extend<ImageOptions>({
             img.setAttribute(key, value);
           }
         }
+
         img.src = view.node.attrs.src ?? "";
         img.alt = view.node.attrs.alt ?? "";
         img.title = view.node.attrs.title ?? "";
-
         view.$root.setAttribute("data-status", "loading");
-        view.$root.setAttribute("data-message", this.options.dictionary.loading);
         img.addEventListener("load", () => {
           view.$root.removeAttribute("data-status");
-          view.$root.removeAttribute("data-message");
         });
         img.addEventListener("error", () => {
           if (img.getAttribute("src")) {
             view.$root.setAttribute("data-status", "error");
-            view.$root.setAttribute("data-message", this.options.dictionary.error);
           } else {
             view.$root.setAttribute("data-status", "empty");
-            view.$root.setAttribute("data-message", this.options.dictionary.empty);
           }
         });
 
+        const empty = document.createElement("span");
+        empty.innerHTML = `${icon("empty")}<span>${this.options.dictionary.empty}</span>`;
+
+        const error = document.createElement("span");
+        error.innerHTML = `${icon("error")}<span>${this.options.dictionary.error}</span>`;
+
+        const loading = document.createElement("span");
+        loading.innerHTML = `${icon("loading")}<span>${this.options.dictionary.loading}</span>`;
+
         view.$root.append(img);
+        view.$root.append(empty);
+        view.$root.append(error);
+        view.$root.append(loading);
       },
       onUpdate: ({ view }) => {
         const img = view.$root.firstElementChild as HTMLImageElement;
@@ -173,19 +181,19 @@ export const Image = TImage.extend<ImageOptions>({
         key: new PluginKey(`${this.name}-float-menu`),
         view: FloatMenuView.create({
           editor: this.editor,
-          show: ({ editor }) => editor.isEditable && editor.isActive(this.name),
-          tippy: ({ options }) => ({ ...options, onMount: i => (i.popper.querySelector(`input[name="src"]`) as HTMLInputElement)?.focus() }),
-          onInit: ({ view, editor, element }) => {
-            const group1 = view.createGroup("row");
-            const group2 = view.createGroup("column");
-            const group3 = view.createGroup("column");
-
+          tippy: {
+            placement: "bottom",
+          },
+          show: ({ editor }) => {
+            return editor.isEditable && editor.isActive(this.name);
+          },
+          onInit: ({ view, editor, root }) => {
             const src = view.createInput({
               id: "src",
               name: this.options.dictionary.inputSrc,
               onKey: ({ key }) => {
                 if (key === "ArrowDown") {
-                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
@@ -194,7 +202,7 @@ export const Image = TImage.extend<ImageOptions>({
                   editor.chain().focus().run();
                 }
                 if (boundary === "right") {
-                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
@@ -204,21 +212,21 @@ export const Image = TImage.extend<ImageOptions>({
               name: this.options.dictionary.inputAlt,
               onKey: ({ key }) => {
                 if (key === "ArrowUp") {
-                  const node = element.querySelector(`input[name="src"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="src"]`) as HTMLInputElement;
                   node?.focus();
                 }
                 if (key === "ArrowDown") {
-                  const node = element.querySelector(`input[name="title"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="title"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
               onBoundary: (boundary) => {
                 if (boundary === "left") {
-                  const node = element.querySelector(`input[name="src"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="src"]`) as HTMLInputElement;
                   node?.focus();
                 }
                 if (boundary === "right") {
-                  const node = element.querySelector(`input[name="title"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="title"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
@@ -228,13 +236,13 @@ export const Image = TImage.extend<ImageOptions>({
               name: this.options.dictionary.inputTitle,
               onKey: ({ key }) => {
                 if (key === "ArrowUp") {
-                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
                   node?.focus();
                 }
               },
               onBoundary: (boundary) => {
                 if (boundary === "left") {
-                  const node = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
+                  const node = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
                   node?.focus();
                 }
                 if (boundary === "right") {
@@ -246,7 +254,7 @@ export const Image = TImage.extend<ImageOptions>({
             const open = view.createButton({
               id: "open",
               name: this.options.dictionary.imageOpen,
-              view: icon("open"),
+              icon: icon("open"),
               onClick: () => {
                 const attrs = editor.getAttributes(this.name);
                 if (attrs.src) {
@@ -257,7 +265,7 @@ export const Image = TImage.extend<ImageOptions>({
             const upload = view.createUpload({
               id: "upload",
               name: this.options.dictionary.imageUpload,
-              view: icon("upload"),
+              icon: icon("upload"),
               accept: "image/*",
               onUpload: (element) => {
                 const uploader = this.editor.storage.uploader as UploaderStorage;
@@ -273,64 +281,71 @@ export const Image = TImage.extend<ImageOptions>({
             const remove = view.createButton({
               id: "remove",
               name: this.options.dictionary.imageDelete,
-              view: icon("remove"),
+              icon: icon("remove"),
               onClick: () => {
                 editor.chain().deleteSelection().focus().run();
               },
             });
             const alignLeft = view.createButton({
+              id: "align-left",
               name: this.options.dictionary.alignLeft,
-              view: icon("align-left"),
+              icon: icon("align-left"),
               onClick: () => editor.chain().updateAttributes(this.name, { align: "left" }).run(),
             });
             const alignCenter = view.createButton({
+              id: "align-center",
               name: this.options.dictionary.alignCenter,
-              view: icon("align-center"),
+              icon: icon("align-center"),
               onClick: () => editor.chain().updateAttributes(this.name, { align: "center" }).run(),
             });
             const alignRight = view.createButton({
+              id: "align-right",
               name: this.options.dictionary.alignRight,
-              view: icon("align-right"),
+              icon: icon("align-right"),
               onClick: () => editor.chain().updateAttributes(this.name, { align: "right" }).run(),
             });
 
-            group2.addEventListener("keydown", (e) => {
+            const form = view.createForm();
+            const action = view.createAction();
+
+            form.addEventListener("keydown", (e) => {
               if (e.key === "Enter") {
                 editor
                   .chain()
                   .updateAttributes(this.name, {
-                    src: src.input.value,
-                    alt: alt.input.value,
-                    title: title.input.value,
+                    src: src.querySelector("input")!.value,
+                    alt: alt.querySelector("input")!.value,
+                    title: title.querySelector("input")!.value,
                   })
                   .focus()
                   .run();
               }
             });
 
-            const div1 = view.createGroup("row");
-            const div2 = view.createGroup("row");
-            div1.append(open.button);
-            div1.append(upload.button);
-            div1.append(remove.button);
-            div2.append(alignLeft.button);
-            div2.append(alignCenter.button);
-            div2.append(alignRight.button);
-            group2.append(src.input);
-            group2.append(alt.input);
-            group2.append(title.input);
-            group3.append(div1);
-            group3.append(div2);
-            group1.append(group2);
-            group1.append(group3);
-            element.append(group1);
+            form.append(src);
+            form.append(alt);
+            form.append(title);
+            form.append(action);
+            action.append(open);
+            action.append(upload);
+            action.append(alignLeft);
+            action.append(alignCenter);
+            action.append(alignRight);
+            action.append(remove);
+            root.append(form);
           },
-          onUpdate: ({ editor, element }) => {
+          onMount: ({ root }) => {
+            const src = root.querySelector(`input[name="src"]`) as HTMLInputElement;
+            if (src) {
+              src.focus();
+            }
+          },
+          onUpdate: ({ editor, root }) => {
             const attrs = editor.getAttributes(this.name);
 
-            const src = element.querySelector(`input[name="src"]`) as HTMLInputElement;
-            const alt = element.querySelector(`input[name="alt"]`) as HTMLInputElement;
-            const title = element.querySelector(`input[name="title"]`) as HTMLInputElement;
+            const src = root.querySelector(`input[name="src"]`) as HTMLInputElement;
+            const alt = root.querySelector(`input[name="alt"]`) as HTMLInputElement;
+            const title = root.querySelector(`input[name="title"]`) as HTMLInputElement;
 
             src.value = attrs.src ?? "";
             alt.value = attrs.alt ?? "";

@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-exports */
 import "./styles.css";
 
 // marks
