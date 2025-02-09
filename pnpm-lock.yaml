@@ -191,7 +191,7 @@ importers:
         version: 1.0.1(eslint@9.18.0(jiti@2.4.2))
       less:
         specifier: ^4.2.1
-        version: 4.2.1
+        version: 4.2.2
       less-plugin-autoprefix:
         specifier: ^2.0.0
         version: 2.0.0
@@ -200,7 +200,7 @@ importers:
         version: 5.7.3
       vite:
         specifier: ^6.0.7
-        version: 6.0.7(@types/node@22.10.6)(jiti@2.4.2)(less@4.2.1)(tsx@4.19.2)(yaml@2.7.0)
+        version: 6.0.7(@types/node@22.10.6)(jiti@2.4.2)(less@4.2.2)(tsx@4.19.2)(yaml@2.7.0)
 
 packages:
 
@@ -272,13 +272,13 @@ packages:
     resolution: {integrity: sha512-Ed61U6XJc3CVRfkERJWDz4dJwKe7iLmmJsbOGu9wSloNSFttHV0I8g6UAgb7qnK5ly5bGLPd4oXZlxCdANBOWQ==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/parser@7.26.5':
-    resolution: {integrity: sha512-SRJ4jYmXRqV1/Xc+TIVG84WjHBXKlxO9sHQnA2Pf12QQEAp1LOh6kDzNHXcUnbH1QI0FDoPPVOt+vyUDucxpaw==}
+  '@babel/parser@7.26.8':
+    resolution: {integrity: sha512-TZIQ25pkSoaKEYYaHbbxkfL36GNsQ6iFiBbeuzAkLnXayKR1yP1zFe+NxuZWWsUyvt8icPU9CCq0sgWGXR1GEw==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
-  '@babel/types@7.26.5':
-    resolution: {integrity: sha512-L6mZmwFDK6Cjh1nRCLXpa6no13ZIioJDz7mdkzHv399pThrTa/k0nUlNaenOeh2kWu/iaOQYElEpKPUswUa9Vg==}
+  '@babel/types@7.26.8':
+    resolution: {integrity: sha512-eUuWapzEGWFEpHFxgEaBG8e3n6S8L3MSu0oda755rOfabWPnh0Our1AozNFVUxGFIhbKgd1ksprsoDGMinTOTA==}
     engines: {node: '>=6.9.0'}
 
   '@braintree/sanitize-url@7.1.1':
@@ -2607,8 +2607,8 @@ packages:
     resolution: {integrity: sha512-UktaMtHAhCVTIQxjlceo1MiiQiUZws7gi3hfcpxkCLn1CJdVdlRGCb4n1/M64hniw2DLd7YzOl7ojshs1tWYcQ==}
     engines: {node: '>=4.0.0'}
 
-  less@4.2.1:
-    resolution: {integrity: sha512-CasaJidTIhWmjcqv0Uj5vccMI7pJgfD9lMkKtlnTHAdJdYK/7l8pM9tumLyJ0zhbD4KJLo/YvTj+xznQd5NBhg==}
+  less@4.2.2:
+    resolution: {integrity: sha512-tkuLHQlvWUTeQ3doAqnHbNn8T6WX1KA8yvbKG9x4VtKtIjHsVKQZCH11zRgAfbDAXC2UNIg/K9BYAAcEzUIrNg==}
     engines: {node: '>=6'}
     hasBin: true
 
@@ -3353,6 +3353,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  semver@7.7.1:
+    resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
     engines: {node: '>=8'}
@@ -3817,11 +3822,11 @@ snapshots:
 
   '@babel/helper-validator-identifier@7.25.9': {}
 
-  '@babel/parser@7.26.5':
+  '@babel/parser@7.26.8':
     dependencies:
-      '@babel/types': 7.26.5
+      '@babel/types': 7.26.8
 
-  '@babel/types@7.26.5':
+  '@babel/types@7.26.8':
     dependencies:
       '@babel/helper-string-parser': 7.25.9
       '@babel/helper-validator-identifier': 7.25.9
@@ -4858,7 +4863,7 @@ snapshots:
       fast-glob: 3.3.3
       is-glob: 4.0.3
       minimatch: 9.0.5
-      semver: 7.6.3
+      semver: 7.7.1
       ts-api-utils: 2.0.0(typescript@5.7.3)
       typescript: 5.7.3
     transitivePeerDependencies:
@@ -4910,7 +4915,7 @@ snapshots:
 
   '@vue/compiler-core@3.5.13':
     dependencies:
-      '@babel/parser': 7.26.5
+      '@babel/parser': 7.26.8
       '@vue/shared': 3.5.13
       entities: 4.5.0
       estree-walker: 2.0.2
@@ -4923,7 +4928,7 @@ snapshots:
 
   '@vue/compiler-sfc@3.5.13':
     dependencies:
-      '@babel/parser': 7.26.5
+      '@babel/parser': 7.26.8
       '@vue/compiler-core': 3.5.13
       '@vue/compiler-dom': 3.5.13
       '@vue/compiler-ssr': 3.5.13
@@ -5516,7 +5521,7 @@ snapshots:
   eslint-compat-utils@0.6.4(eslint@9.18.0(jiti@2.4.2)):
     dependencies:
       eslint: 9.18.0(jiti@2.4.2)
-      semver: 7.6.3
+      semver: 7.7.1
 
   eslint-config-flat-gitignore@0.3.0(eslint@9.18.0(jiti@2.4.2)):
     dependencies:
@@ -6284,7 +6289,7 @@ snapshots:
       autoprefixer: 8.6.5
       postcss: 6.0.23
 
-  less@4.2.1:
+  less@4.2.2:
     dependencies:
       copy-anything: 2.0.6
       parse-node-version: 1.0.1
@@ -7332,6 +7337,8 @@ snapshots:
 
   semver@7.6.3: {}
 
+  semver@7.7.1: {}
+
   shebang-command@2.0.0:
     dependencies:
       shebang-regex: 3.0.0
@@ -7625,7 +7632,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  vite@6.0.7(@types/node@22.10.6)(jiti@2.4.2)(less@4.2.1)(tsx@4.19.2)(yaml@2.7.0):
+  vite@6.0.7(@types/node@22.10.6)(jiti@2.4.2)(less@4.2.2)(tsx@4.19.2)(yaml@2.7.0):
     dependencies:
       esbuild: 0.24.2
       postcss: 8.5.1
@@ -7634,7 +7641,7 @@ snapshots:
       '@types/node': 22.10.6
       fsevents: 2.3.3
       jiti: 2.4.2
-      less: 4.2.1
+      less: 4.2.2
       tsx: 4.19.2
       yaml: 2.7.0
 
