@@ -157,7 +157,7 @@ export const StarterKit = Extension.create<StarterKitOptions>({
     // tiptap
     configure(extensions, History, this.options.history);
     configure(extensions, Gapcursor, this.options.gapCursor);
-    configure(extensions, Dropcursor, this.options.dropCursor, { color: "var(--tiptap-color-primary)", width: 2 });
+    configure(extensions, Dropcursor, this.options.dropCursor, { color: "var(--tiptap-primary-background)", width: 2 });
 
     return extensions;
   },
