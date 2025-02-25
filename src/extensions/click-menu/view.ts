@@ -149,8 +149,7 @@ export class ClickMenuView {
       if (this._active) {
         const { pos, node } = this._active;
         this.editor.chain()
-          .insertContentAt(pos.pos + node.nodeSize, { type: "paragraph" })
-          .setTextSelection(pos.pos + node.nodeSize)
+          .insertContentAt(pos.pos - (node.isLeaf ? 0 : 1) + node.nodeSize, { type: "paragraph" })
           .focus()
           .run();
       }
