@@ -97,6 +97,7 @@ export const Link = TLink.extend<LinkOptions>({
               name: this.options.dictionary.inputLink,
               onEnter: (value) => {
                 editor.chain()
+                  .extendMarkRange(this.name)
                   .updateAttributes(this.name, { href: value })
                   .focus()
                   .run();
