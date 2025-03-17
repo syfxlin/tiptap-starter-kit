@@ -85,10 +85,10 @@
     "lowlight": "^3.3.0",
     "mdast-util-from-markdown": "^2.0.2",
     "mdast-util-to-markdown": "^2.1.2",
-    "mermaid": "^11.4.1",
+    "mermaid": "^11.5.0",
     "plantuml-encoder": "^1.4.0",
     "plyr": "^3.7.8",
-    "remark-directive": "^3.0.1",
+    "remark-directive": "^4.0.0",
     "remark-gemoji": "^8.0.0",
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
@@ -108,12 +108,12 @@
     "@types/mdast": "^4.0.4",
     "@types/plantuml-encoder": "^1.4.2",
     "@types/unist": "^3.0.3",
-    "bunchee": "^6.4.0",
-    "eslint": "^9.21.0",
+    "bunchee": "^6.5.0",
+    "eslint": "^9.22.0",
     "eslint-plugin-format": "^1.0.1",
     "less": "^4.2.2",
     "less-plugin-autoprefix": "^2.0.0",
-    "typescript": "^5.7.3",
-    "vite": "^6.2.0"
+    "typescript": "^5.8.2",
+    "vite": "^6.2.2"
   }
 }
