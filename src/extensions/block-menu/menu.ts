@@ -43,8 +43,6 @@ export const BlockMenu = Extension.create<BlockMenuOptions>({
         "taskList",
         "|",
         "image",
-        "audio",
-        "video",
         "|",
         "blockquote",
         "codeBlock",

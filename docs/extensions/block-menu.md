@@ -20,8 +20,6 @@ BlockMenu.configure({
     "taskList",
     "|",
     "image",
-    "audio",
-    "video",
     "|",
     "blockquote",
     "codeBlock",

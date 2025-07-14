@@ -36,8 +36,6 @@ export * from "./nodes/table-header";
 export * from "./nodes/emoji";
 export * from "./nodes/embed";
 export * from "./nodes/image";
-export * from "./nodes/audio";
-export * from "./nodes/video";
 export * from "./nodes/mermaid";
 export * from "./nodes/paragraph";
 export * from "./nodes/math-block";

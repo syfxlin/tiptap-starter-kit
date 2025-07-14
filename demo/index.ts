@@ -815,24 +815,6 @@ const editor = new Editor({
         },
       },
       {
-        type: "audio",
-        attrs: {
-          src: "https://cdn.plyr.io/static/demo/Kishi_Bashi_-_It_All_Began_With_a_Burst.mp3",
-          title: "",
-          align: "center",
-          width: 500,
-        },
-      },
-      {
-        type: "video",
-        attrs: {
-          src: "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4",
-          title: "",
-          align: "center",
-          width: 500,
-        },
-      },
-      {
         type: "mermaid",
         content: [
           {

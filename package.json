@@ -87,7 +87,6 @@
     "mdast-util-to-markdown": "^2.1.2",
     "mermaid": "^11.5.0",
     "plantuml-encoder": "^1.4.0",
-    "plyr": "^3.7.8",
     "remark-directive": "^4.0.0",
     "remark-gemoji": "^8.0.0",
     "remark-gfm": "^4.0.1",

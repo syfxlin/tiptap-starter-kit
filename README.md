@@ -1,3 +1,14 @@
+# Custom Dependencies
+- `@syfxlin/tiptap-starter-kit`: Custom fork with Plyr removed
+  - Source: https://github.com/your-username/tiptap-starter-kit
+  - Reason: Remove SSR-incompatible Plyr dependency
+  - Update Strategy: Manual review of upstream changes
+
+## Details
+- Removed `plyr` dependency
+- Removed `audio` node
+- Removed `video` node
+
 # Tiptap StarterKit
 
 @syfxlin/tiptap-starter-kit is a collection of unofficial [Tiptap](https://tiptap.dev) extensions. Support for Markdown, Float Menu, Slash Menu and more.
@@ -58,8 +69,6 @@
 - [Emoji](./docs/nodes/emoji.md)
 - [Embed](./docs/nodes/embed.md)
 - [Image](./docs/nodes/image.md)
-- [Audio](./docs/nodes/audio.md)
-- [Video](./docs/nodes/video.md)
 - [Mermaid](./docs/nodes/mermaid.md)
 - [Plantuml](./docs/nodes/plantuml.md)
 - [MathBlock](./docs/nodes/math-block.md)

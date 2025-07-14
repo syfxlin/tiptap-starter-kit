@@ -1,4 +1,3 @@
-@import (inline) "plyr/dist/plyr.css";
 @import (inline) "katex/dist/katex.css";
 @import (inline) "tippy.js/dist/tippy.css";
 @import (inline) "tippy.js/animations/shift-away.css";
@@ -272,14 +271,6 @@
 
   &-math {
     --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M10 2a4 4 0 0 0-4 4v3H3v2h3v7a2 2 0 0 1-2 2H3v2h1a4 4 0 0 0 4-4v-7h3V9H8V6a2 2 0 0 1 2-2h1V2zm5.202 14.997L11.891 21h2.595l2.014-2.434L18.514 21h2.595l-3.311-4.003L21.105 13h-2.596L16.5 15.428L14.491 13h-2.595z'/%3E%3C/svg%3E");
-  }
-
-  &-audio {
-    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2'/%3E%3C/svg%3E");
-  }
-
-  &-video {
-    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='m16 13l5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5'/%3E%3Crect width='14' height='12' x='2' y='6' rx='2'/%3E%3C/g%3E%3C/svg%3E");
   }
 
   &-embed {
@@ -1087,39 +1078,6 @@
 
       > span:nth-of-type(3) {
         display: inline-flex;
-      }
-    }
-  }
-
-  [data-type="audio"],
-  [data-type="video"] {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0.5em 0;
-    border-radius: var(--tiptap-radius);
-    border: 1px solid var(--tiptap-border);
-
-    video,
-    audio,
-    .plyr,
-    .plyr__controls {
-      --plyr-color-main: var(--tiptap-accent-foreground);
-      --plyr-menu-background: var(--tiptap-popover-background);
-      --plyr-audio-control-color: var(--tiptap-accent-foreground);
-
-      width: 100%;
-      border-radius: var(--tiptap-radius);
-
-      .plyr__menu__container {
-        --plyr-audio-controls-background: var(--tiptap-popover-background);
-        --plyr-audio-control-color-hover: var(--tiptap-muted-foreground);
-        --plyr-audio-control-background-hover: var(--tiptap-muted-background);
-        --plyr-video-control-color: var(--tiptap-accent-foreground);
-        --plyr-video-controls-background: var(--tiptap-popover-background);
-        --plyr-video-control-color-hover: var(--tiptap-muted-foreground);
-        --plyr-video-control-background-hover: var(--tiptap-muted-background);
       }
     }
   }
